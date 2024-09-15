@@ -64,18 +64,18 @@ function Info() {
   }, [])
   // TODO: 优化页面展示
   return (
-    <div>
+    <div className="ml-16">
       <h1 className="mt-4">Info:</h1>
       <h2 className="mt-4">Browser:</h2>
-      <p>{ua.browser.name}</p>
-      <p>{ua.browser.version}</p>
-      <p>{ua.device.type}</p>
-      <p>{ua.device.vendor}</p>
-      <p>{ua.engine.name}</p>
-      <p>{ua.engine.version}</p>
-      <p>{ua.os.name}</p>
-      <p>{ua.os.version}</p>
-      <p>{ua.cpu.architecture}</p>
+      <p>name: {ua.browser.name}</p>
+      <p>version: {ua.browser.version}</p>
+      <p>type: {ua.device.type}</p>
+      <p>vendor: {ua.device.vendor}</p>
+      <p>name: {ua.engine.name}</p>
+      <p>version: {ua.engine.version}</p>
+      <p>name: {ua.os.name}</p>
+      <p>version: {ua.os.version}</p>
+      <p>architecture: {ua.cpu.architecture}</p>
       <h2 className="mt-4">Plugins:</h2>
       <ul>
         {ua.plugins?.map((item: Plugin) => (
@@ -85,31 +85,31 @@ function Info() {
         ))}
       </ul>
       <h2 className="mt-4">Location:</h2>
-      <p>{location.longtitute}</p>
-      <p>{location.latitude}</p>
-      <p>{location.timezone}</p>
-      <p>{location.localTime}</p>
-      <p>{location.ip}</p>
-      <p>{location.isp}</p>
-      <p>{location.geocode}</p>
-      <p>{location.region}</p>
-      <p>{location.city}</p>
+      <p>longtitute: {location.longtitute}</p>
+      <p>latitude: {location.latitude}</p>
+      <p>timezone: {location.timezone}</p>
+      <p>localTime: {location.localTime}</p>
+      <p>ip: {location.ip}</p>
+      <p>isp: {location.isp}</p>
+      <p>geocode: {location.geocode}</p>
+      <p>region: {location.region}</p>
+      <p>city: {location.city}</p>
       <h2 className="mt-4">Hardware:</h2>
-      <p>{hardware.canvas}</p>
-      <p>{hardware.webGL}</p>
-      <p>{hardware.audio}</p>
-      <p>{hardware.video}</p>
-      <p>{hardware.screenSize}</p>
-      <p>{hardware.resolution}</p>
-      <p>{hardware.colorDepth}</p>
+      <p>canvas: {hardware.canvas}</p>
+      <p>webGL: {hardware.webGL}</p>
+      <p>audio: {hardware.audio}</p>
+      <p>video: {hardware.video}</p>
+      <p>screenSize: {hardware.screenSize}</p>
+      <p>resolution: {hardware.resolution}</p>
+      <p>colorDepth: {hardware.colorDepth}</p>
       <h2 className="mt-4">General:</h2>
-      <p>{general.language}</p>
-      <p>{general.fonts}</p>
-      <p>{general.cpu}</p>
-      <p>{general.cookie}</p>
-      <p>{general.header.DNT}</p>
-      <p>{general.header.referrer}</p>
-      <p>{general.header.acceptLanguage}</p>
+      <p>language: {general.language}</p>
+      <p>fonts: {general.fonts}</p>
+      <p>cpu: {general.cpu}</p>
+      <p>cookie: {general.cookie}</p>
+      <p>DNT: {general.header.DNT}</p>
+      <p>referrer: {general.header.referrer}</p>
+      <p>acceptLanguage: {general.header.acceptLanguage}</p>
     </div>
   )
 }
