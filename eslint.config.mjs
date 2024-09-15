@@ -8,11 +8,6 @@ export default [
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
   {
-    env: {
-      node: true,
-      browser: true,
-      es2021: true
-    },
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     rules: {
       '@typescript-eslint/no-explicit-any': 0
