@@ -1,5 +1,5 @@
 import React from 'react'
-import Info from './pages/info/index'
+import Info from '../pages/info/index'
 
 function App() {
   return (
