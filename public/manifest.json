@@ -17,6 +17,10 @@
       "js": ["./static/js/content.js"]
     }
   ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "action": {
     "default_popup": "index.html"
   },
