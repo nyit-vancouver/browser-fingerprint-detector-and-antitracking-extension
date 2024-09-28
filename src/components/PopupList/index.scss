@@ -1,0 +1,9 @@
+.list-item {
+  @apply grid gap-4 w-full;
+
+  grid-template-columns: auto 1fr;
+}
+
+.icon {
+  font-size: 24px;
+}

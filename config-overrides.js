@@ -1,11 +1,14 @@
-const { override, addWebpackAlias } = require('customize-cra')
+const { override, addWebpackAlias, addWebpackPlugin } = require('customize-cra')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
+// get current environment and check it is dev or prod
+const isDev = process.env.NODE_ENV === 'development'
 
 const overrideEntry = (config) => {
   config.entry = {
     main: './src/popup', // the extension UI
-    background: './src/background',
+    background: isDev ? './src/background/dev' : './src/background',
     content: './src/content',
     options: './src/options'
   }
@@ -32,12 +35,12 @@ const overridePlugins = (config) => {
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       filename: 'index.html',
-      chunks: ['main', 'background', 'content'],
+      chunks: ['main', 'background', 'content']
     }),
     new HtmlWebpackPlugin({
       template: 'public/options.html',
       filename: 'options.html',
-      chunks: ['options'],
+      chunks: ['options']
     })
   )
 
@@ -52,6 +55,11 @@ module.exports = {
       overridePlugins,
       addWebpackAlias({
         '@': path.resolve(__dirname, 'src')
-      })
+      }),
+      addWebpackPlugin(
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        })
+      )
     )(config)
 }
