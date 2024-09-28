@@ -24,5 +24,9 @@
   "action": {
     "default_popup": "index.html"
   },
-  "permissions": ["storage", "tabs"]
+  "permissions": [
+    "webRequest",
+    "storage",
+    "<all_urls>"
+  ]
 }

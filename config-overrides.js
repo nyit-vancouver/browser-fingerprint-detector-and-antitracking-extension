@@ -1,11 +1,12 @@
-const { override, addWebpackAlias } = require('customize-cra')
+const { override, addWebpackAlias, addWebpackPlugin, addWebpackModuleRule } = require('customize-cra')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
 
 const overrideEntry = (config) => {
   config.entry = {
     main: './src/popup', // the extension UI
-    background: './src/background',
+    background: './src/background',  // 更新这一行
     content: './src/content',
     options: './src/options'
   }
@@ -32,12 +33,12 @@ const overridePlugins = (config) => {
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       filename: 'index.html',
-      chunks: ['main', 'background', 'content'],
+      chunks: ['main', 'background', 'content']
     }),
     new HtmlWebpackPlugin({
       template: 'public/options.html',
       filename: 'options.html',
-      chunks: ['options'],
+      chunks: ['options']
     })
   )
 
@@ -45,13 +46,43 @@ const overridePlugins = (config) => {
 }
 
 module.exports = {
-  webpack: (config) =>
-    override(
-      overrideEntry,
-      overrideOutput,
-      overridePlugins,
-      addWebpackAlias({
-        '@': path.resolve(__dirname, 'src')
+  webpack: override(
+    overrideEntry,
+    overrideOutput,
+    overridePlugins,
+    addWebpackAlias({
+      '@': path.resolve(__dirname, 'src')
+    }),
+    (config) => {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        crypto: require.resolve('crypto-browserify'),
+        stream: require.resolve('stream-browserify'),
+        assert: require.resolve('assert'),
+        http: require.resolve('stream-http'),
+        https: require.resolve('https-browserify'),
+        os: require.resolve('os-browserify'),
+        url: require.resolve('url')
+      }
+      return config
+    },
+    addWebpackPlugin(
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+        Buffer: ['buffer', 'Buffer']
       })
-    )(config)
+    ),
+    addWebpackModuleRule({
+      test: /\.m?js/,
+      resolve: {
+        fullySpecified: false
+      }
+    }),
+    (config) => {
+      config.resolve.plugins = config.resolve.plugins.filter(
+        (plugin) => !(plugin.constructor.name === 'ModuleScopePlugin')
+      )
+      return config
+    }
+  )
 }

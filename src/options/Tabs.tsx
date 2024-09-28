@@ -9,8 +9,8 @@ const Tabs: React.FC<TabsProps> = ({ children }) => {
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="flex border-b border-gray-200">
+    <div className="w-full">
+      <div className="flex border-b border-gray-200 bg-white">
         {React.Children.map(children, (child, index) => (
           <button
             className={`py-2 px-4 font-medium text-sm focus:outline-none ${
@@ -24,7 +24,9 @@ const Tabs: React.FC<TabsProps> = ({ children }) => {
           </button>
         ))}
       </div>
-      <div className="py-4">{React.Children.toArray(children)[activeTab]}</div>
+      <div className="w-full">
+        {React.Children.toArray(children)[activeTab]}
+      </div>
     </div>
   )
 }
