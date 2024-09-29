@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Info from '@/pages/Info'
 import Config from '@/pages/Config'
 import PopupList from '@/components/PopupList'
+import Layout from '@/components/Layout'
 import './index.css'
 
 const router = createBrowserRouter([
@@ -12,12 +13,18 @@ const router = createBrowserRouter([
     element: <PopupList />
   },
   {
-    path: '/info',
-    element: <Info />
-  },
-  {
-    path: '/config',
-    element: <Config />
+    path: '/details',
+    element: <Layout />,
+    children: [
+      {
+        path: 'info',
+        element: <Info />
+      },
+      {
+        path: 'config',
+        element: <Config />
+      }
+    ]
   }
 ])
 

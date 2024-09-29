@@ -20,24 +20,24 @@ function App() {
   return (
     <List size="large">
       <List.Item>
-        <div className="list-item">
+        <div className="popup-list-item">
           <span className="icon">👣</span>
           <h1 className="font-bold flex items-center">Anti - Tracking</h1>
         </div>
       </List.Item>
       <List.Item className="bg-amber-500">
-        <div className="list-item">
+        <div className="popup-list-item">
           <span className="icon">🛡️</span>
           <div className="flex justify-between items-center">
             <span>Risk of being tracking : 90%</span>
-            <Link className="text-white" to={'/info'}>
+            <Link className="text-white" to={'/details/info'}>
               Details →
             </Link>
           </div>
         </div>
       </List.Item>
       <List.Item>
-        <div className="list-item">
+        <div className="popup-list-item">
           <span className="icon">👤</span>
           <div className="flex justify-between items-center">
             <span>Hide Digital Fingerprint</span>
@@ -46,11 +46,11 @@ function App() {
         </div>
       </List.Item>
       <List.Item>
-        <div className="list-item">
+        <div className="popup-list-item">
           <span className="icon">🔧</span>
           <div className="flex justify-between items-center">
             <span>Custom Configuration</span>
-            <Link className="text-blue-400" to={'/config'}>
+            <Link className="text-blue-400" to={'/details/config'}>
               Configuration →
             </Link>
           </div>
