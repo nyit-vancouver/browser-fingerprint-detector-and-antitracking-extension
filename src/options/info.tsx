@@ -5,111 +5,259 @@ import {
   getHardwareInfos,
   getGeneralInfos
 } from '@/utils/getInfos'
+import {
+  GlobeAltIcon,
+  ComputerDesktopIcon,
+  CpuChipIcon,
+  MapPinIcon,
+  ServerIcon,
+  Cog6ToothIcon,
+  PuzzlePieceIcon,
+  InformationCircleIcon // 新增
+} from '@heroicons/react/24/outline'
+
+interface LocationInfo {
+  longitude: string
+  latitude: string
+  timezone: string
+  timeZoneBasedOnIP: string
+  timeFromJavascript: string
+  timeFromIP: string
+  ip: string
+  webRTCIP: string
+  webRTCStunIP: string
+  isp: string
+  geocode: string
+  region: string
+  city: string
+}
 
 type UaType = Record<string, any>
 
+interface GeneralInfo {
+  language: string
+  fonts: string
+  cpu: number
+  cookie: boolean
+  doNotTrack: string
+  referrer: string
+  flash: string
+  activeX: string
+  java: string
+  javascript: string
+}
+
+interface Plugin {
+  name: string
+  description: string
+  filename?: string
+  extensionId?: string
+}
+
 function Info() {
   const [ua, setUa] = useState<UaType>({
-    browser: { name: '-', version: '-' },
-    device: { type: '-', vendor: '-' },
+    browser: { name: '-', version: '-', header: '-', javascript: '-' },
+    device: { type: '-', vendor: '-', model: '-' },
     engine: { name: '-', version: '-' },
     os: { name: '-', version: '-' },
-    cpu: { architecture: '-' },
     plugins: []
   })
-  const [location, setLocation] = useState({
-    longtitute: 0,
-    latitude: 0,
+  const [location, setLocation] = useState<LocationInfo>({
+    longitude: '0',
+    latitude: '0',
     timezone: '',
-    localTime: '',
+    timeZoneBasedOnIP: '',
+    timeFromJavascript: '',
+    timeFromIP: '',
     ip: '',
+    webRTCIP: '',
+    webRTCStunIP: '',
     isp: '',
     geocode: '',
     region: '',
     city: ''
   })
   const [hardware, setHardware] = useState({
-    canvas: '',
+    canvasFingerprint: '',
     webGL: '',
     audio: '',
     video: '',
     screenSize: '',
     resolution: '',
-    colorDepth: ''
+    colorDepth: '',
+    cpu: { architecture: '-' }
   })
-  const [general, setGeneral] = useState({
+  const [general, setGeneral] = useState<GeneralInfo>({
     language: '',
     fonts: '',
-    cpu: '',
-    cookie: '',
-    header: {
-      DNT: '',
-      referrer: '',
-      acceptLanguage: ''
-    }
+    cpu: 0,
+    cookie: false,
+    doNotTrack: '',
+    referrer: '',
+    flash: '',
+    activeX: '',
+    java: '',
+    javascript: ''
   })
 
   useEffect(() => {
     const fetchData = async () => {
-      const ua = await getBroswerInfos()
-      setUa(ua)
-      const location = await getLocationInfos()
-      setLocation(location)
-      const hardware = await getHardwareInfos()
-      setHardware(hardware)
-      const general = await getGeneralInfos()
-      setGeneral(general)
+      try {
+        const uaInfo = await getBroswerInfos()
+        setUa(uaInfo)
+        const locationInfo = await getLocationInfos()
+        setLocation(locationInfo)
+        const hardwareInfo = await getHardwareInfos()
+        setHardware(hardwareInfo)
+        const generalInfo = await getGeneralInfos()
+        setGeneral(generalInfo)
+      } catch (error) {
+        console.error('Error fetching information:', error)
+      }
     }
     fetchData()
   }, [])
-  // TODO: 优化页面展示
-  return (
-    <div className="ml-16">
-      <h1 className="mt-4">Info:</h1>
-      <h2 className="mt-4">Browser:</h2>
-      <p>name: {ua.browser.name}</p>
-      <p>version: {ua.browser.version}</p>
-      <p>type: {ua.device.type}</p>
-      <p>vendor: {ua.device.vendor}</p>
-      <p>name: {ua.engine.name}</p>
-      <p>version: {ua.engine.version}</p>
-      <p>name: {ua.os.name}</p>
-      <p>version: {ua.os.version}</p>
-      <p>architecture: {ua.cpu.architecture}</p>
-      <h2 className="mt-4">Plugins:</h2>
-      <ul>
-        {ua.plugins?.map((item: Plugin) => (
-          <li key={item.name}>
-            {item.name}: {item.description}
-          </li>
+
+  const InfoSection = ({
+    title,
+    data,
+    icon: Icon
+  }: {
+    title: string
+    data: Record<string, any>
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+  }) => (
+    <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-100">
+      <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+        <Icon className="w-5 h-5 mr-2 text-blue-500" />
+        {title}
+      </h2>
+      <div className="grid grid-cols-1 gap-2">
+        {Object.entries(data).map(([key, value]) => (
+          <div key={key} className="flex flex-col">
+            <span className="text-xs font-medium text-gray-500 flex items-center">
+              {key}
+              {key.includes('WebRTC') && (
+                <span className="relative group ml-1">
+                  <InformationCircleIcon className="w-4 h-4 text-gray-400 cursor-help" />
+                  <span className="absolute bottom-full left-0 w-64 bg-black text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                    When WebRTC IP leaks occur, this information will show your
+                    real IP address.
+                  </span>
+                </span>
+              )}
+            </span>
+            <span className="text-sm text-gray-800 break-words">
+              {key === 'canvasFingerprint'
+                ? (value as string).substring(0, 16) + '...'
+                : typeof value === 'object'
+                  ? JSON.stringify(value)
+                  : value?.toString() || 'N/A'}
+            </span>
+          </div>
         ))}
-      </ul>
-      <h2 className="mt-4">Location:</h2>
-      <p>longtitute: {location.longtitute}</p>
-      <p>latitude: {location.latitude}</p>
-      <p>timezone: {location.timezone}</p>
-      <p>localTime: {location.localTime}</p>
-      <p>ip: {location.ip}</p>
-      <p>isp: {location.isp}</p>
-      <p>geocode: {location.geocode}</p>
-      <p>region: {location.region}</p>
-      <p>city: {location.city}</p>
-      <h2 className="mt-4">Hardware:</h2>
-      <p>canvas: {hardware.canvas}</p>
-      <p>webGL: {hardware.webGL}</p>
-      <p>audio: {hardware.audio}</p>
-      <p>video: {hardware.video}</p>
-      <p>screenSize: {hardware.screenSize}</p>
-      <p>resolution: {hardware.resolution}</p>
-      <p>colorDepth: {hardware.colorDepth}</p>
-      <h2 className="mt-4">General:</h2>
-      <p>language: {general.language}</p>
-      <p>fonts: {general.fonts}</p>
-      <p>cpu: {general.cpu}</p>
-      <p>cookie: {general.cookie}</p>
-      <p>DNT: {general.header.DNT}</p>
-      <p>referrer: {general.header.referrer}</p>
-      <p>acceptLanguage: {general.header.acceptLanguage}</p>
+      </div>
+    </div>
+  )
+
+  const PluginItem = ({ plugin }: { plugin: Plugin }) => (
+    <li className="text-sm text-gray-700">
+      <span className="font-medium">{plugin.name}:</span> {plugin.description}
+      {plugin.filename && (
+        <span className="text-xs text-gray-500 ml-1">
+          (Filename: {plugin.filename})
+        </span>
+      )}
+      {plugin.extensionId && (
+        <span className="text-xs text-gray-500 ml-1">
+          (Extension ID: {plugin.extensionId})
+        </span>
+      )}
+    </li>
+  )
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-4 px-2 sm:px-4 lg:px-6">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-2xl font-semibold text-center text-gray-900 mb-6">
+          System Information
+        </h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-auto">
+          <InfoSection
+            title="Browser"
+            data={{
+              name: ua.browser.name,
+              version: ua.browser.version,
+              'Header UA': ua.browser.header,
+              'JavaScript UA': ua.browser.javascript
+            }}
+            icon={GlobeAltIcon}
+          />
+          <InfoSection
+            title="Device"
+            data={ua.device}
+            icon={ComputerDesktopIcon}
+          />
+          <InfoSection
+            title="Operating System"
+            data={{ ...ua.os, details: ua.os.details }}
+            icon={ServerIcon}
+          />
+          <InfoSection
+            title="Location"
+            data={{
+              longitude: location.longitude,
+              latitude: location.latitude,
+              'Time Zone': location.timezone,
+              'Time Zone Based on IP': location.timeZoneBasedOnIP,
+              'Time From Javascript': location.timeFromJavascript,
+              'Time From IP': location.timeFromIP,
+              'IP (from API)': location.ip,
+              'WebRTC IP': location.webRTCIP,
+              'WebRTC STUN IP': location.webRTCStunIP,
+              isp: location.isp,
+              geocode: location.geocode,
+              region: location.region,
+              city: location.city
+            }}
+            icon={MapPinIcon}
+          />
+          <InfoSection
+            title="Hardware"
+            data={{ ...hardware, cpu: hardware.cpu.architecture }}
+            icon={CpuChipIcon}
+          />
+          <InfoSection
+            title="Software"
+            data={{
+              language: general.language,
+              fonts: general.fonts,
+              cpu: general.cpu,
+              cookie: general.cookie ? 'Enabled' : 'Disabled',
+              'Do Not Track': general.doNotTrack,
+              'Referrer (Source Page)': general.referrer,
+              Flash: general.flash,
+              ActiveX: general.activeX,
+              Java: general.java,
+              JavaScript: general.javascript
+            }}
+            icon={Cog6ToothIcon}
+          />
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-sm p-4 mt-4 border border-gray-100">
+          <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+            <PuzzlePieceIcon className="w-5 h-5 mr-2 text-blue-500" />
+            Plugins
+          </h2>
+          <ul className="space-y-1 max-h-40 overflow-y-auto">
+            {ua.plugins?.map((plugin: Plugin, index: number) => (
+              <PluginItem key={index} plugin={plugin} />
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   )
 }

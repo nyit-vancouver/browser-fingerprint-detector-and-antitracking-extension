@@ -1,8 +1,13 @@
-const { override, addWebpackAlias, addWebpackPlugin } = require('customize-cra')
+const {
+  override,
+  addWebpackAlias,
+  addWebpackPlugin,
+  addWebpackModuleRule
+} = require('customize-cra')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
-// get current environment and check it is dev or prod
+
 const isDev = process.env.NODE_ENV === 'development'
 
 const overrideEntry = (config) => {
@@ -48,18 +53,43 @@ const overridePlugins = (config) => {
 }
 
 module.exports = {
-  webpack: (config) =>
-    override(
-      overrideEntry,
-      overrideOutput,
-      overridePlugins,
-      addWebpackAlias({
-        '@': path.resolve(__dirname, 'src')
-      }),
-      addWebpackPlugin(
-        new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-        })
+  webpack: override(
+    overrideEntry,
+    overrideOutput,
+    overridePlugins,
+    addWebpackAlias({
+      '@': path.resolve(__dirname, 'src')
+    }),
+    (config) => {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        crypto: require.resolve('crypto-browserify'),
+        stream: require.resolve('stream-browserify'),
+        assert: require.resolve('assert'),
+        http: require.resolve('stream-http'),
+        https: require.resolve('https-browserify'),
+        os: require.resolve('os-browserify'),
+        url: require.resolve('url')
+      }
+      return config
+    },
+    addWebpackPlugin(
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+        Buffer: ['buffer', 'Buffer']
+      })
+    ),
+    addWebpackModuleRule({
+      test: /\.m?js/,
+      resolve: {
+        fullySpecified: false
+      }
+    }),
+    (config) => {
+      config.resolve.plugins = config.resolve.plugins.filter(
+        (plugin) => !(plugin.constructor.name === 'ModuleScopePlugin')
       )
-    )(config)
+      return config
+    }
+  )
 }
