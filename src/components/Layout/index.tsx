@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Link, Outlet } from 'react-router-dom'
 import { Menu, Layout as _Layout, ConfigProvider } from 'antd'
+import Info from '@/pages/Info'
+import Config from '@/pages/Config'
 
-const { Sider, Header } = _Layout
+const { Sider, Content } = _Layout
 
 const Layout = () => {
   const [header, setHeader] = useState('Information')
@@ -24,24 +25,21 @@ const Layout = () => {
             </Menu.Item>
             <Menu.Divider />
             <Menu.Item key="info">
-              <Link to="/details/info" onClick={() => setHeader('Information')}>
-                Information
-              </Link>
+              <span onClick={() => setHeader('Information')}>Information</span>
             </Menu.Item>
             <Menu.Divider />
             <Menu.Item key="config">
-              <Link
-                to="/details/config"
-                onClick={() => setHeader('Configuration')}
-              >
+              <span onClick={() => setHeader('Configuration')}>
                 Configuration
-              </Link>
+              </span>
             </Menu.Item>
           </Menu>
         </Sider>
         <_Layout>
-          <Header>{header}</Header>
-          <Outlet />
+          <Content>
+            {/* TODO: 优化 */}
+            {header === 'Information' ? <Info /> : <Config />}
+          </Content>
         </_Layout>
       </_Layout>
     </ConfigProvider>

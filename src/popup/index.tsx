@@ -1,37 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Info from '@/pages/Info'
-import Config from '@/pages/Config'
 import PopupList from '@/components/PopupList'
-import Layout from '@/components/Layout'
 import './index.css'
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <PopupList />
-  },
-  {
-    path: '/details',
-    element: <Layout />,
-    children: [
-      {
-        path: 'info',
-        element: <Info />
-      },
-      {
-        path: 'config',
-        element: <Config />
-      }
-    ]
-  }
-])
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <PopupList />
   </React.StrictMode>
 )
 

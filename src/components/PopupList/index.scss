@@ -1,9 +1,14 @@
-.popup-list-item {
-  @apply grid gap-4 w-full;
+.popup-content {
+  width: 320px;
 
-  grid-template-columns: auto 1fr;
+  .popup-list-item {
+    @apply grid gap-4 w-full items-center px-4;
 
-  .icon {
-    font-size: 24px;
+    grid-template-columns: 24px 1fr;
+
+    .icon {
+      @apply w-6 h-6 mr-3;
+      font-size: 24px;
+    }
   }
 }

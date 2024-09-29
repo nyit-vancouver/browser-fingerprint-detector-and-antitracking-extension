@@ -1,63 +1,93 @@
-import React from 'react'
-import { List, Switch } from 'antd'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { List, Switch, Button } from 'antd'
+import {
+  ShieldCheckIcon,
+  ExclamationTriangleIcon,
+  FingerPrintIcon,
+  Cog6ToothIcon
+} from '@heroicons/react/24/solid'
+
 import './index.scss'
+import Layout from '../Layout'
+import _isDev from '@/utils/getEnv'
 
-function App() {
-  // const handlerDetailsClick = () => {
-  //   window.location.href = '/info'
-  //   if (chrome.runtime.openOptionsPage) {
-  //     chrome.runtime.openOptionsPage()
-  //   } else {
-  //     window.open(chrome.runtime.getURL('options.html'))
-  //   }
-  // }
+function PopupList() {
+  const [showDetail, setShowDetail] = useState(false)
+  const handleClick = (page: string) => {
+    const isDev = _isDev()
+    if (!isDev) {
+      chrome.storage.sync.set({ page }, function () {
+        console.log('set page.')
+      })
+      if (chrome.runtime.openOptionsPage) {
+        chrome.runtime.openOptionsPage()
+      } else {
+        window.open(chrome.runtime.getURL('options.html'))
+      }
+      return
+    }
+    setShowDetail(true)
+  }
 
-  const onChange = (checked: boolean) => {
+  const handleSwitch = (checked: boolean) => {
     console.log(`switch to ${checked}`)
   }
 
-  return (
-    <List size="large">
-      <List.Item>
-        <div className="popup-list-item">
-          <span className="icon">👣</span>
-          <h1 className="font-bold flex items-center">Anti - Tracking</h1>
-        </div>
-      </List.Item>
-      <List.Item className="bg-amber-500">
-        <div className="popup-list-item">
-          <span className="icon">🛡️</span>
-          <div className="flex justify-between items-center">
-            <span>Risk of being tracking : 90%</span>
-            <Link className="text-white" to={'/details/info'}>
-              Details →
-            </Link>
+  return showDetail ? (
+    <Layout />
+  ) : (
+    <div className="popup-content">
+      <List>
+        <List.Item>
+          <div className="popup-list-item">
+            <ShieldCheckIcon className="icon text-blue-600" />
+            <h1 className="font-bold flex items-center text-xl">
+              Anti - Tracking
+            </h1>
           </div>
-        </div>
-      </List.Item>
-      <List.Item>
-        <div className="popup-list-item">
-          <span className="icon">👤</span>
-          <div className="flex justify-between items-center">
-            <span>Hide Digital Fingerprint</span>
-            <Switch onChange={onChange} />
+        </List.Item>
+        <List.Item className="bg-amber-100">
+          <div className="popup-list-item">
+            <ExclamationTriangleIcon className="icon text-yellow-600" />
+            <div className="flex justify-between items-center">
+              <span>Risk of being tracking : 90%</span>
+              <Button
+                type="link"
+                className="px-0"
+                onClick={() => handleClick('info')}
+              >
+                Details
+              </Button>
+            </div>
           </div>
-        </div>
-      </List.Item>
-      <List.Item>
-        <div className="popup-list-item">
-          <span className="icon">🔧</span>
-          <div className="flex justify-between items-center">
-            <span>Custom Configuration</span>
-            <Link className="text-blue-400" to={'/details/config'}>
-              Configuration →
-            </Link>
+        </List.Item>
+        <List.Item>
+          <div className="popup-list-item">
+            <FingerPrintIcon className="icon text-gray-600" />{' '}
+            <div className="flex justify-between items-center">
+              <span>Hide Digital Fingerprint</span>
+              <Switch onChange={handleSwitch} />
+            </div>
           </div>
-        </div>
-      </List.Item>
-    </List>
+        </List.Item>
+        <List.Item>
+          <div className="popup-list-item">
+            <Cog6ToothIcon className="icon text-gray-600" />
+            <div className="flex justify-between items-center">
+              <span>Custom Configuration</span>
+              <Button
+                type="link"
+                className="px-0"
+                onClick={() => handleClick('config')}
+              >
+                Configurate
+              </Button>
+            </div>
+          </div>
+        </List.Item>
+      </List>
+    </div>
   )
 }
 
-export default App
+export default PopupList
