@@ -1,6 +1,7 @@
 import { getAudioFingerprint } from './getAudioFingerprint'
 import { getCanvasFingerprint } from './getCanvasFingerprint'
 import { getWebGLInfo } from './getWebGLInfo'
+import { getDeviceResolution } from './getDeviceResolution'
 
 export async function getHardwareInfos() {
   let audio = 'unknown'
@@ -10,18 +11,19 @@ export async function getHardwareInfos() {
     console.error('Error getting audio fingerprint:', e)
   }
 
+  const { width, height } = getDeviceResolution()
+  const deviceMemory = (navigator as any).deviceMemory
+
   return {
     canvas: getCanvasFingerprint(),
     webGL: getWebGLInfo(),
     audio,
-    video: document.createElement('video').canPlayType('video/mp4'), // TODO
-    screenSize: `${window.screen.width}x${window.screen.height}`, // TODO
-    resolution: `${window.screen.availWidth}x${window.screen.availHeight}`, // TODO
+    screenSize: `${window.screen.width}x${window.screen.height}`, // will not change after resizing
+    resolution: `${width}x${height}`,
     colorDepth: window.screen.colorDepth.toString(),
-    cpu: {
-      architecture: navigator.hardwareConcurrency
-        ? `${navigator.hardwareConcurrency} cores`
-        : 'unknown'
-    }
+    cpu: navigator.hardwareConcurrency
+      ? `${navigator.hardwareConcurrency} cores`
+      : 'unknown',
+    deviceMemory: deviceMemory ? `${deviceMemory} GB` : 'unknown'
   }
 }

@@ -8,11 +8,10 @@ function Hardware() {
     canvas: '',
     webGL: '',
     audio: '',
-    video: '',
     screenSize: '',
     resolution: '',
     colorDepth: '',
-    cpu: { architecture: '-' }
+    cpu: ''
   })
 
   const fetchData = async () => {
@@ -35,11 +34,7 @@ function Hardware() {
     <>
       {/* TODO: audio interaction */}
       {/* <span onClick={fetchData}>click me</span> */}
-      <InfoSection
-        title="Hardware"
-        data={{ ...hardware, cpu: hardware.cpu.architecture }}
-        icon={CpuChipIcon}
-      />
+      <InfoSection title="Hardware" data={hardware} icon={CpuChipIcon} />
       <canvas className="hidden" width={240} height={60} id="canvas2D"></canvas>
       <canvas
         className="hidden"
