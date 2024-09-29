@@ -34,8 +34,8 @@ function InfoSection({
               )}
             </span>
             <span className="text-sm text-gray-800 break-words">
-              {key === 'canvasFingerprint'
-                ? (value as string).substring(0, 16) + '...'
+              {key === 'canvas'
+                ? value
                 : typeof value === 'object'
                   ? JSON.stringify(value)
                   : value?.toString() || 'N/A'}
