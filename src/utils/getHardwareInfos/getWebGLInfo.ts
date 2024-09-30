@@ -124,21 +124,27 @@ export function getWebGLInfo() {
   const canvasElement =
     (document.getElementById('canvasWebGL') as HTMLCanvasElement) ||
     document.createElement('canvas')
+
+  canvasElement.width = 240
+  canvasElement.height = 60
+
   const gl =
     canvasElement.getContext('webgl') ||
     (canvasElement.getContext('experimental-webgl') as WebGLRenderingContext)
   console.log('context webgl', gl)
   if (!gl) {
-    return JSON.stringify({
-      // get WebGL vendor and renderer info
-      deviceInfo: 'Not available',
-      fingerprint: 'Not available'
-    })
+    return `- vendor: Not available\n
+        - renderer: Not available\n
+      - WebGL Fingerprint: Not available\n
+    `
   }
-
-  return JSON.stringify({
-    // get WebGL vendor and renderer info
-    deviceInfo: getWebGLDeviceInfo(gl),
-    fingerprint: getWebGLFingerprint(gl, canvasElement)
-  })
+  const deviceInfo = getWebGLDeviceInfo(gl)
+  const fingerprint = getWebGLFingerprint(gl, canvasElement)
+  return `- vendor: ${deviceInfo.vendor}
+      - renderer: ${deviceInfo.renderer}
+      - unmaskedVendor: ${deviceInfo.unmaskedVendor}
+      - unmaskedRenderer: ${deviceInfo.unmaskedRenderer}
+    - WebGL Fingerprint: 
+      ${fingerprint}
+  `
 }

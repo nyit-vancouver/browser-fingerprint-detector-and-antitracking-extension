@@ -4,6 +4,9 @@ export function getCanvasFingerprint() {
   const canvasElement =
     (document.getElementById('canvas2D') as HTMLCanvasElement) ||
     document.createElement('canvas')
+
+  canvasElement.width = 240
+  canvasElement.height = 60
   const ctx = canvasElement.getContext('2d')
   if (!ctx) {
     return 'Not available'
@@ -21,5 +24,6 @@ export function getCanvasFingerprint() {
   ctx.fillText(txt, 4, 17)
 
   const canvasData = canvasElement.toDataURL()
+  console.log('canvasData', canvasData)
   return crypto.createHash('md5').update(canvasData).digest('hex')
 }
