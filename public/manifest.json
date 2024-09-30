@@ -4,9 +4,10 @@
   "version": "0.0.1",
   "description": "A simple Chrome extension with React.",
   "icons": {
-    "16": "logo.svg",
-    "48": "logo.svg",
-    "128": "logo.svg"
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
   },
   "background": {
     "service_worker": "./static/js/background.js"
