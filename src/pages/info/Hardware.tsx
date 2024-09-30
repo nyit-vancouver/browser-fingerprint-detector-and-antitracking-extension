@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getHardwareInfos } from '@/utils/getHardwareInfos/index'
 import { CpuChipIcon } from '@heroicons/react/24/outline'
-import { Button, Card, List } from 'antd'
-import { getAudioFingerprint } from '@/utils/getHardwareInfos/getAudioFingerprint'
+import { Card, List } from 'antd'
 import { useObject2List } from '@/hooks/useObject2List'
 
 function Hardware() {
@@ -19,14 +18,6 @@ function Hardware() {
   const fetchData = async () => {
     const hardwareInfo = await getHardwareInfos()
     setHardware(hardwareInfo)
-  }
-
-  const updateAudio = async () => {
-    const audio = await getAudioFingerprint()
-    setHardware((prev) => ({
-      ...prev,
-      audio
-    }))
   }
 
   const hardwareList = useObject2List(hardware)
@@ -70,18 +61,6 @@ function Hardware() {
                 <span className="font-medium text-slate-500 text-xs">
                   {item.title}
                 </span>
-                {item.title === 'audio' ? (
-                  <Button
-                    className="px-0"
-                    size="small"
-                    type="link"
-                    onClick={updateAudio}
-                  >
-                    <span className="text-xs">
-                      Click to get your audio fingerprint
-                    </span>
-                  </Button>
-                ) : null}
               </div>
               {item.title === 'webGL' ? (
                 <div

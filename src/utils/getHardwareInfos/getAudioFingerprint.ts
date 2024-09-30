@@ -16,7 +16,7 @@ export async function getAudioFingerprint(): Promise<string> {
 
       oscillator.type = 'triangle'
       oscillator.frequency.setValueAtTime(10000, audioContext.currentTime)
-      gain.gain.setValueAtTime(1, audioContext.currentTime)
+      gain.gain.setValueAtTime(0, audioContext.currentTime)
 
       oscillator.connect(gain)
       gain.connect(analyser)

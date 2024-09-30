@@ -49,7 +49,9 @@ const Layout = () => {
           <Header className="flex items-center px-0">
             <div className="flex-1 flex justify-center items-center py-4">
               <ShieldCheckIcon className="w-8 h-8 text-blue-600 mr-2" />
-              <h1 className="font-extrabold text-xl">Anti-Tracking</h1>
+              <h1 className="font-extrabold text-xl text-black mb-0">
+                Anti-Tracking
+              </h1>
             </div>
           </Header>
           <Content>
