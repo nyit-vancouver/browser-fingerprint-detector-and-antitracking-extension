@@ -7,7 +7,7 @@ export function getCanvasFingerprint() {
 
   canvasElement.width = 240
   canvasElement.height = 60
-  const ctx = canvasElement.getContext('2d')
+  const ctx = canvasElement.getContext('2d', { willReadFrequently: true })
   if (!ctx) {
     return 'Not available'
   }

@@ -26,7 +26,8 @@ function Hardware() {
     // DONT DELETE THIS: or getContext('2d') will return null
     console.log(
       (document.getElementById('canvas2D') as HTMLCanvasElement)?.getContext(
-        '2d'
+        '2d',
+        { willReadFrequently: true }
       )
     )
     console.log('WebGLRenderingContext', window.WebGLRenderingContext)

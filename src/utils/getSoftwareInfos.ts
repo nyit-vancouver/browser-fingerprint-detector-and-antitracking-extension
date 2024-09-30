@@ -205,7 +205,7 @@ async function detectAvailableFonts() {
   // 方法3: Canvas 检测
   function canvasDetect(font: string) {
     const canvas = document.createElement('canvas')
-    const context = canvas.getContext('2d')
+    const context = canvas.getContext('2d', { willReadFrequently: true })
     if (!context) return false
 
     const testText = 'abcdefghijklmnopqrstuvwxyz0123456789'
