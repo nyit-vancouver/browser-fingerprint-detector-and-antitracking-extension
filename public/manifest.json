@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Fringerprint Detector",
+  "name": "Anti-Tracking",
   "version": "0.0.1",
   "description": "A simple Chrome extension with React.",
   "icons": {

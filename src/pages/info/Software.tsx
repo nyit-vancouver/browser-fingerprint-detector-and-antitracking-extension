@@ -6,7 +6,6 @@ import InfoSection from '@/components/InfoSection'
 interface SoftwareInfo {
   language: string
   fonts: string
-  cpu: number
   cookie: boolean
   doNotTrack: string
   referrer: string
@@ -20,7 +19,6 @@ function Software() {
   const [info, setInfo] = useState<SoftwareInfo>({
     language: '',
     fonts: '',
-    cpu: 0,
     cookie: false,
     doNotTrack: '',
     referrer: '',
@@ -45,7 +43,6 @@ function Software() {
       data={{
         language: info.language,
         fonts: info.fonts,
-        cpu: info.cpu,
         cookie: info.cookie ? 'Enabled' : 'Disabled',
         'Do Not Track': info.doNotTrack,
         'Referrer (Source Page)': info.referrer,

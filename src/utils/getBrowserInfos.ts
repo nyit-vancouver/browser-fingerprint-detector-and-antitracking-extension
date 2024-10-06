@@ -17,8 +17,11 @@ export async function getBroswerInfos() {
     // 使用 UAParser 解析 JavaScript UA
     const parser = new UAParser(javascriptUA)
     const browserInfo = parser.getBrowser()
+    const ua = await navigator.userAgentData?.getHighEntropyValues?.([
+      'uaFullVersion'
+    ])
     browserName = browserInfo.name || 'Unknown'
-    browserVersion = browserInfo.version || 'Unknown'
+    browserVersion = ua?.uaFullVersion || browserInfo.version || 'Unknown'
   } catch (error) {
     console.error('Error getting browser info:', error)
   }

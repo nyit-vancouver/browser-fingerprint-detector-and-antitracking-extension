@@ -10,7 +10,6 @@ export async function getSoftwareInfos() {
   return {
     language: navigator.language,
     fonts: await detectAvailableFonts(),
-    cpu: navigator.hardwareConcurrency,
     cookie: navigator.cookieEnabled,
     doNotTrack,
     referrer: document.referrer || 'Direct visit',

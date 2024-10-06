@@ -20,18 +20,23 @@ const siderStyle: React.CSSProperties = {
 }
 
 const Layout = () => {
-  const [header, setHeader] = useState('Information')
+  const [header, setHeader] = useState('info')
 
   const menuItems = [
     {
       key: 'info',
-      label: 'Information',
-      onClick: () => setHeader('Information')
+      label: 'Fingerprint Information',
+      onClick: () => setHeader('info')
     },
     {
       key: 'config',
-      label: 'Configuration',
-      onClick: () => setHeader('Configuration')
+      label: 'Fingerprint Configuration',
+      onClick: () => setHeader('config')
+    },
+    {
+      key: 'dashboard',
+      label: 'Tracking Dashboard',
+      onClick: () => setHeader('dashboard')
     }
   ]
   return (
@@ -64,8 +69,9 @@ const Layout = () => {
         </Sider>
         <_Layout>
           <Content>
-            {/* TODO: 优化 */}
-            {header === 'Information' ? <Info /> : <Config />}
+            {header === 'info' && <Info />}
+            {header === 'config' && <Config />}
+            {/* {header === 'dashboard' && <Dashboard />} */}
           </Content>
         </_Layout>
       </_Layout>

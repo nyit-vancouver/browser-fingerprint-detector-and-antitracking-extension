@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
-import { List, Switch, Button } from 'antd'
+import { List, Switch, Tooltip } from 'antd'
 import {
   ShieldCheckIcon,
-  ExclamationTriangleIcon,
   FingerPrintIcon,
-  Cog6ToothIcon
+  Cog6ToothIcon,
+  DocumentTextIcon,
+  PresentationChartLineIcon
 } from '@heroicons/react/24/solid'
 
 import './index.scss'
 import Layout from '../Layout'
 import _isDev from '@/utils/getEnv'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 
 function PopupList() {
   const [showDetail, setShowDetail] = useState(false)
@@ -40,49 +42,54 @@ function PopupList() {
       <List>
         <List.Item>
           <div className="popup-list-item">
-            <ShieldCheckIcon className="icon text-blue-600" />
-            <h1 className="font-bold flex items-center text-xl">
-              Anti - Tracking
+            <ShieldCheckIcon className="icon !text-blue-600" />
+            <h1 className="font-bold flex items-center text-xl cursor-default">
+              Anti-Tracking
             </h1>
-          </div>
-        </List.Item>
-        <List.Item className="bg-amber-100">
-          <div className="popup-list-item">
-            <ExclamationTriangleIcon className="icon text-yellow-600" />
-            <div className="flex justify-between items-center">
-              <span>Risk of being tracking : 90%</span>
-              <Button
-                type="link"
-                className="px-0"
-                onClick={() => handleClick('info')}
-              >
-                Details
-              </Button>
-            </div>
           </div>
         </List.Item>
         <List.Item>
           <div className="popup-list-item">
-            <FingerPrintIcon className="icon text-gray-600" />{' '}
-            <div className="flex justify-between items-center">
-              <span>Hide Digital Fingerprint</span>
+            <FingerPrintIcon className="icon" />
+            <div className="flex justify-between items-center cursor-default">
+              <span className="flex items-center">
+                Hide Digital Fingerprint
+                <Tooltip
+                  placement="top"
+                  title="Enable to randomize your fingerprint"
+                >
+                  <InformationCircleIcon className="w-4 h-4 ml-2 text-gray-400 cursor-pointer" />
+                </Tooltip>
+              </span>
               <Switch onChange={handleSwitch} />
             </div>
           </div>
         </List.Item>
-        <List.Item>
-          <div className="popup-list-item">
-            <Cog6ToothIcon className="icon text-gray-600" />
-            <div className="flex justify-between items-center">
-              <span>Custom Configuration</span>
-              <Button
-                type="link"
-                className="px-0"
-                onClick={() => handleClick('config')}
-              >
-                Configurate
-              </Button>
-            </div>
+        <List.Item
+          className="cursor-pointer"
+          onClick={() => handleClick('info')}
+        >
+          <div className="popup-list-item--clickable">
+            <DocumentTextIcon className="icon" />
+            <span>View Fingerprint Details</span>
+          </div>
+        </List.Item>
+        <List.Item
+          className="cursor-pointer"
+          onClick={() => handleClick('config')}
+        >
+          <div className="popup-list-item--clickable">
+            <Cog6ToothIcon className="icon" />
+            <span>Configure your Fingerprint</span>
+          </div>
+        </List.Item>
+        <List.Item
+          className="cursor-pointer"
+          onClick={() => handleClick('dashboard')}
+        >
+          <div className="popup-list-item--clickable">
+            <PresentationChartLineIcon className="icon" />
+            <span>Tracking Dashboard</span>
           </div>
         </List.Item>
       </List>
