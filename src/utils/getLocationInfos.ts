@@ -7,6 +7,7 @@ export async function getLocationInfos() {
     const data = await response.json()
     const webRTCIP = await getWebRTCIP()
     const webRTCStunIP = await getWebRTCStunIP()
+    console.log(webRTCIP, webRTCStunIP)
     return {
       longitude: decimalToDMS(data.longitude || 0, false),
       latitude: decimalToDMS(data.latitude || 0, true),
@@ -16,9 +17,10 @@ export async function getLocationInfos() {
       timeFromIP: new Date().toLocaleString('en-US', {
         timeZone: data.timezone
       }),
-      ip: data.ip || '',
-      webRTCIP,
-      webRTCStunIP,
+      // TODO: add a switch to hide the IP address
+      ip: '***', // data.ip || '',
+      webRTCIP: '***',
+      webRTCStunIP: '***',
       isp: data.org || '',
       geocode:
         data.country_code && data.postal

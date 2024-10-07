@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { List, Switch, Tooltip } from 'antd'
 import {
   ShieldCheckIcon,
-  FingerPrintIcon,
   Cog6ToothIcon,
   DocumentTextIcon,
   PresentationChartLineIcon
@@ -49,20 +48,17 @@ function PopupList() {
           </div>
         </List.Item>
         <List.Item>
-          <div className="popup-list-item">
-            <FingerPrintIcon className="icon" />
-            <div className="flex justify-between items-center cursor-default">
-              <span className="flex items-center">
-                Hide Digital Fingerprint
-                <Tooltip
-                  placement="top"
-                  title="Enable to randomize your fingerprint"
-                >
-                  <InformationCircleIcon className="w-4 h-4 ml-2 text-gray-400 cursor-pointer" />
-                </Tooltip>
-              </span>
-              <Switch onChange={handleSwitch} />
-            </div>
+          <div className="flex justify-between items-center cursor-default px-5 w-full">
+            <span className="flex items-center">
+              Hide Digital Fingerprint
+              <Tooltip
+                placement="top"
+                title="Enable to randomize your fingerprint"
+              >
+                <InformationCircleIcon className="w-4 h-4 ml-2 text-gray-400 cursor-pointer" />
+              </Tooltip>
+            </span>
+            <Switch size="small" onChange={handleSwitch} />
           </div>
         </List.Item>
         <List.Item
