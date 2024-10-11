@@ -1,0 +1,20 @@
+.popup-content {
+  width: 260px;
+
+  .popup-list-item {
+    @apply grid gap-4 w-full items-center px-4;
+
+    grid-template-columns: 24px 1fr;
+
+    .icon {
+      @apply w-6 h-6 mr-3 text-gray-600;
+      font-size: 24px;
+    }
+    &--clickable {
+      @extend .popup-list-item;
+      :hover {
+        @apply text-blue-400;
+      }
+    }
+  }
+}
