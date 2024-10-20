@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Menu, Layout as _Layout, ConfigProvider } from 'antd'
 import { ShieldCheckIcon } from '@heroicons/react/24/solid'
 
-import Info from '@/pages/Info'
+import Info from '@/pages/info/index'
 import Config from '@/pages/Config'
 import { Header } from 'antd/es/layout/layout'
 
