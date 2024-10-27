@@ -1563,11 +1563,18 @@ export class Generator {
     } else if (profileData[0].includes('and')) {
       platform = 'android'
     }
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     const result = this.browsers[profileData[1]](
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       this.profiles[platform].find((p) => p.id === profileData[0])
     )
+    // const browserKey = profileData[1] as BrowserKey
+    // const result = this.browsers[browserKey](
+    //   this.profiles[platform].find((p) => p.id === profileData[0])
+    // )
     console.log('result', result)
     return result
   }
@@ -1600,33 +1607,33 @@ export class Generator {
     let profilesCanUse: string[]
 
     if (os === 'windows') {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       profilesCanUse = this.profileIds.desktop.filter(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         (p) => p.includes('win') && !this.excludedProfiles.includes(p)
       )
     } else if (os === 'macOS') {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       profilesCanUse = this.profileIds.desktop.filter(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         (p) => p.includes('mac') && !this.excludedProfiles.includes(p)
       )
     } else if (os === 'linux') {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       profilesCanUse = this.profileIds.desktop.filter(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         (p) => p.includes('lin') && !this.excludedProfiles.includes(p)
       )
     } else if (os === 'iOS') {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       profilesCanUse = this.profileIds.mobile.filter(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         (p) => p.includes('ios') && !this.excludedProfiles.includes(p)
       )
     } else if (os === 'android') {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       profilesCanUse = this.profileIds.mobile.filter(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         (p) => p.includes('and') && !this.excludedProfiles.includes(p)
       )
     } else {
