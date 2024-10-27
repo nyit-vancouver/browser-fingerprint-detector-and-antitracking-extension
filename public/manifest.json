@@ -18,6 +18,12 @@
       "js": ["./static/js/content.js"]
     }
   ],
+  "web_accessible_resources": [
+    {
+      "resources": ["static/js/inject.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
@@ -28,6 +34,8 @@
   "permissions": [
     "webRequest",
     "storage",
-    "<all_urls>"
+    "<all_urls>",
+    "activeTab",
+    "scripting"
   ]
 }
