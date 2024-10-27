@@ -10,7 +10,20 @@ export default [
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     rules: {
-      '@typescript-eslint/no-explicit-any': 0
+      '@typescript-eslint/no-explicit-any': 0,
+      'prefer-const': 'off',  // 禁用强制使用 const 的规则
+      'no-var': 'off' , // 允许使用 var
+      'no-param-reassign': [
+        'error',
+        {
+          props: true,
+          ignorePropertyModificationsFor: [
+            'state', // for vuex state
+            'acc', // for reduce accumulators
+            'e', // for e.returnvalue
+          ],
+        },
+      ],
     }
   },
   {

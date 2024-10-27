@@ -10,12 +10,19 @@
     "128": "icon128.png"
   },
   "background": {
-    "service_worker": "./static/js/background.js"
+    "service_worker": "./static/js/background.js",
+    "scripts": [
+      "./static/js/background.js"
+    ]
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["./static/js/content.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "./static/js/content.js"
+      ]
     }
   ],
   "web_accessible_resources": [
@@ -33,6 +40,7 @@
   },
   "permissions": [
     "webRequest",
+    "webRequestBlocking",
     "storage",
     "<all_urls>",
     "activeTab",
