@@ -1,93 +1,79 @@
-import { Interceptor, ProfileCache, Settings, TempStore } from '@/lib/intercept'
-import { runtime } from 'webextension-polyfill'
+import { initAPIs } from '@/utils/initAPIs'
 
-const settings: Settings = {
-  config: {
-    enabled: true
+let ruleId = 2
+
+const getInitialRule = () => ({
+  id: ruleId++,
+  priority: 2,
+  action: {
+    type: chrome.declarativeNetRequest?.RuleActionType?.MODIFY_HEADERS, // 参考：https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/#type-RuleActionType
+    requestHeaders: []
+    // [
+    //   {
+    //     header: "myheader",
+    //     operation: chrome.declarativeNetRequest?.HeaderOperation?.SET, //还可以是 append remove 等
+    //     value: "123456",
+    //   },
+    // ],
   },
-  options: {
-    webSockets: 'block'
-  },
-  profile: {
-    selected: 'win1-edg'
-  },
-  excluded: [],
-  headers: {
-    spoofAcceptLang: {
-      enabled: true,
-      value: 'en-US,en;q=0.9'
-    },
-    blockEtag: true,
-    enableDNT: true,
-    spoofIP: {
-      enabled: true,
-      value: '1.2.3.4'
+  condition: {
+    urlFilter: 'www.baidu.com', // TODO
+    resourceTypes: [
+      chrome.declarativeNetRequest.ResourceType.XMLHTTPREQUEST,
+      chrome.declarativeNetRequest.ResourceType.WEBSOCKET
+    ]
+  }
+})
+
+// rewrite APIs
+chrome.runtime.onInstalled.addListener(() => {
+  initAPIs()
+})
+
+// 监听来自 content.js 的消息
+chrome.runtime.onMessage.addListener((message) => {
+  console.log('background message', message)
+  if (message.type === 'setHeader') {
+    const requestHeaders = message.requestHeaders
+
+    chrome.declarativeNetRequest.getDynamicRules(function (res) {
+      console.log('getDynamicRules', res)
+
+      const rule = getInitialRule()
+      rule.action.requestHeaders = requestHeaders
+
+      chrome.declarativeNetRequest.updateSessionRules(
+        {
+          addRules: [rule],
+          removeRuleIds: []
+        },
+        (res: any) => {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError)
+          } else {
+            console.log('Rule added successfully', res)
+          }
+        }
+      )
+    })
+  }
+  // TODO: delete rule
+})
+
+// tab 关闭时清除规则
+chrome.tabs.onRemoved.addListener((tabId) => {
+  console.log('tab removed', tabId)
+  chrome.declarativeNetRequest.getDynamicRules(function (res) {
+    console.log('getDynamicRules', res)
+    let deleteId = res.find((e) => e.id === tabId)?.id
+    if (deleteId === undefined) {
+      console.error('deleteId is undefined')
+      return
     }
-  },
-  os: 'win1-edg'
-}
-const tempStore: TempStore = {
-  profile: 'mac3-edg',
-  ipInfo: {
-    lang: 'en-US'
-  },
-  spoofIP: '1.2.3.4'
-}
-
-const profileCache: ProfileCache = {}
-
-const interceptor = new Interceptor(settings, tempStore, profileCache, true)
-
-runtime.onInstalled.addListener(() => {
-  console.log('[background] loaded ')
-
-  chrome.webRequest.onBeforeSendHeaders.addListener(
-    (details: chrome.webRequest.WebRequestHeadersDetails) => {
-      // if (details.requestHeaders) {
-      //   for (let i = 0; i < details.requestHeaders.length; ++i) {
-      //     if (details.requestHeaders[i].name === 'User-Agent') {
-      //       details.requestHeaders[i].value = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.55";
-
-      //       break;
-      //     }
-      //   }
-      // }
-      // console.log("result0", details)
-
-      // // console.log(" result headers", details.requestHeaders)
-      if (details.requestHeaders) {
-        interceptor.modifyRequest(details)
-      }
-      // console.log("result1", result)
-      // console.log("result2", details)
-      // if (details.requestHeaders) {
-      //   for (let i = 0; i < details.requestHeaders.length; ++i) {
-      //     if (details.requestHeaders[i].name === 'User-Agent') {
-      //       details.requestHeaders[i].value = "Firefox 123";
-      //       break;
-      //     }
-      //   }
-      // }
-      // console.log("result2", result)
-      return { requestHeaders: details.requestHeaders }
-    },
-    { urls: ['<all_urls>'] },
-    ['blocking', 'requestHeaders']
-  )
-
-  // chrome.webRequest.onSendHeaders.addListener(
-  //   (details) => {
-  //     const uaHeader = details.requestHeaders?.find(
-  //       (h) => h.name.toLowerCase() === 'user-agent'
-  //     )
-  //     console.log("ua header", uaHeader)
-  //     if (uaHeader) {
-  //       storage.local.set({ headerUA: uaHeader.value })
-  //     }
-  //   },
-  //   { urls: ['<all_urls>'] },
-  //   ['requestHeaders']
-  // )
+    chrome.declarativeNetRequest.updateDynamicRules({
+      removeRuleIds: [deleteId]
+    })
+  })
 })
 
 export {}

@@ -10,7 +10,10 @@
     "128": "icon128.png"
   },
   "background": {
-    "service_worker": "./static/js/background.js"
+    "service_worker": "./static/js/background.js",
+    "scripts": [
+      "./static/js/background.js"
+    ]
   },
   "content_scripts": [
     {
@@ -35,9 +38,11 @@
   "action": {
     "default_popup": "index.html"
   },
+  "host_permissions": ["https://www.baidu.com/*"],
   "permissions": [
-    "webRequest",
-    "webRequestBlocking",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "declarativeNetRequestFeedback",
     "storage",
     "<all_urls>",
     "activeTab",

@@ -123,9 +123,23 @@ function Config() {
                 <span>Random Profile</span>
                 <Switch
                   checked={config.randomProfile}
-                  onChange={(checked) =>
+                  onChange={(checked) => {
                     handleConfigChange('randomProfile', checked)
-                  }
+                    // try call background.js
+                    chrome.runtime.sendMessage({
+                      type: 'setHeader',
+                      requestHeaders: [
+                        {
+                          header: 'myheader',
+                          operation:
+                            chrome.declarativeNetRequest?.HeaderOperation?.SET, //还可以是 append remove 等
+                          value: '123456'
+                        }
+                      ]
+                    })
+                    // TODO: 第一步，use TabStorage to save the config
+                    // TODO: 第二步，random数据
+                  }}
                 />
               </div>
               {/* <Select 

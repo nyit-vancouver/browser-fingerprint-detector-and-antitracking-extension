@@ -1,8 +1,3 @@
-Object.defineProperty(window.navigator, 'platform', {
-  get: function () {
-    return 'Win32'
-  }
-})
-console.log(window.navigator.platform) // Win32
+// TODO: inject content script, should be deleted if not needed
 
 export {}
