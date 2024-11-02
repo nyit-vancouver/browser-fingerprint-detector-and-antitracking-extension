@@ -1,76 +1,120 @@
 import { initAPIs } from '@/utils/initAPIs'
-
-let ruleId = 2
+import { storage } from '@/utils/storage'
 
 const getInitialRule = () => ({
-  id: ruleId++,
-  priority: 2,
+  id: Math.floor(Math.random() * Math.pow(10, 9)),
+  priority: 1,
   action: {
     type: chrome.declarativeNetRequest?.RuleActionType?.MODIFY_HEADERS, // 参考：https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/#type-RuleActionType
-    requestHeaders: []
-    // [
-    //   {
-    //     header: "myheader",
-    //     operation: chrome.declarativeNetRequest?.HeaderOperation?.SET, //还可以是 append remove 等
-    //     value: "123456",
-    //   },
-    // ],
+    requestHeaders: [] as chrome.declarativeNetRequest.ModifyHeaderInfo[]
   },
   condition: {
-    urlFilter: 'www.baidu.com', // TODO
+    tabIds: [] as number[],
+    urlFilter: '*://*/*',
     resourceTypes: [
       chrome.declarativeNetRequest.ResourceType.XMLHTTPREQUEST,
-      chrome.declarativeNetRequest.ResourceType.WEBSOCKET
+      chrome.declarativeNetRequest.ResourceType.WEBSOCKET,
+      chrome.declarativeNetRequest.ResourceType.MAIN_FRAME,
+      chrome.declarativeNetRequest.ResourceType.SUB_FRAME,
+      chrome.declarativeNetRequest.ResourceType.IMAGE,
+      chrome.declarativeNetRequest.ResourceType.STYLESHEET,
+      chrome.declarativeNetRequest.ResourceType.SCRIPT,
+      chrome.declarativeNetRequest.ResourceType.FONT,
+      chrome.declarativeNetRequest.ResourceType.OBJECT,
+      chrome.declarativeNetRequest.ResourceType.MEDIA,
+      // chrome.declarativeNetRequest.ResourceType.DATA,
+      chrome.declarativeNetRequest.ResourceType.PING,
+      chrome.declarativeNetRequest.ResourceType.CSP_REPORT,
+      chrome.declarativeNetRequest.ResourceType.OTHER
     ]
   }
 })
 
 // rewrite APIs
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(async () => {
+  console.log('onInstalled')
+  // TODO: check init:
+  // const rules = await chrome.declarativeNetRequest.getSessionRules()
+  // console.log('setHeader deleteAll', rules)
+  // const ids = rules.map((rule) =>
+  //   rule.id
+  // )
+  // await chrome.declarativeNetRequest.updateSessionRules({
+  //   removeRuleIds: ids, // remove existing rules
+  // });
+  // console.log('Rules delete successfully')
   initAPIs()
 })
 
 // 监听来自 content.js 的消息
-chrome.runtime.onMessage.addListener((message) => {
-  console.log('background message', message)
-  if (message.type === 'setHeader') {
-    const requestHeaders = message.requestHeaders
-
-    chrome.declarativeNetRequest.getDynamicRules(function (res) {
-      console.log('getDynamicRules', res)
-
-      const rule = getInitialRule()
-      rule.action.requestHeaders = requestHeaders
-
-      chrome.declarativeNetRequest.updateSessionRules(
-        {
-          addRules: [rule],
-          removeRuleIds: []
-        },
-        (res: any) => {
-          if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError)
-          } else {
-            console.log('Rule added successfully', res)
-          }
-        }
-      )
-    })
+chrome.runtime.onMessage.addListener(async (message, sender) => {
+  console.log('background message', message, sender)
+  const { type, requestHeader, tabId } = message
+  if (tabId === undefined) {
+    console.error('tab id is undefined')
+    return
   }
-  // TODO: delete rule
+  if (type === 'setHeader') {
+    const rules = await chrome.declarativeNetRequest.getSessionRules()
+    console.log('setHeader getSessionRules', rules)
+    const rule = getInitialRule()
+    rule.action.requestHeaders.push(requestHeader)
+    rule.condition.tabIds = [tabId]
+    await chrome.declarativeNetRequest.updateSessionRules({
+      addRules: [rule]
+    })
+    console.log('Rule added successfully')
+  } else if (type === 'deleteHeader') {
+    const rules = await chrome.declarativeNetRequest.getSessionRules()
+    console.log('setHeader deleteHeader', rules)
+    const id = rules.find(
+      (rule) =>
+        rule.condition.tabIds?.includes(tabId) &&
+        rule.action?.requestHeaders?.some(
+          (item) => item.header === requestHeader.header
+        )
+    )?.id
+    if (!id) {
+      console.error('id is undefined')
+      return
+    }
+    await chrome.declarativeNetRequest.updateSessionRules({
+      removeRuleIds: [id] // remove existing rules
+    })
+    console.log('Rule delete successfully')
+  } else if (type === 'check') {
+    chrome.declarativeNetRequest.getSessionRules(function (rules) {
+      console.log('check getSessionRules', rules)
+    })
+  } else if (type === 'deleteAll') {
+    const rules = await chrome.declarativeNetRequest.getSessionRules()
+    console.log('setHeader deleteAll', rules)
+    const ids = rules.map((rule) => rule.id)
+    await chrome.declarativeNetRequest.updateSessionRules({
+      removeRuleIds: ids // remove existing rules
+    })
+    console.log('Rules delete successfully')
+  }
 })
-
+// 监听规则匹配
+chrome.declarativeNetRequest.onRuleMatchedDebug.addListener(function (o) {
+  console.log('rule matched:', o)
+})
 // tab 关闭时清除规则
 chrome.tabs.onRemoved.addListener((tabId) => {
   console.log('tab removed', tabId)
-  chrome.declarativeNetRequest.getDynamicRules(function (res) {
-    console.log('getDynamicRules', res)
-    let deleteId = res.find((e) => e.id === tabId)?.id
+  // clear local storage
+  // chrome.tabs.sendMessage(tabId, { msgType: "deleteStorage" });
+  storage.deleteAll(tabId)
+  // clear rules
+  chrome.declarativeNetRequest.getSessionRules(function (res) {
+    console.log('getSessionRules', res)
+    let deleteId = res.find((e) => e.condition.tabIds?.[0] === tabId)?.id
     if (deleteId === undefined) {
       console.error('deleteId is undefined')
       return
     }
-    chrome.declarativeNetRequest.updateDynamicRules({
+    chrome.declarativeNetRequest.updateSessionRules({
       removeRuleIds: [deleteId]
     })
   })

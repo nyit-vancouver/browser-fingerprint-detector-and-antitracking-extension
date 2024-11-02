@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { List, Switch, Tooltip } from 'antd'
 import {
   ShieldCheckIcon,
@@ -6,14 +6,17 @@ import {
   DocumentTextIcon,
   PresentationChartLineIcon
 } from '@heroicons/react/24/solid'
+import { tabStorage } from '@/utils/TabStorage'
 
 import './index.scss'
 import Layout from '../Layout'
 import _isDev from '@/utils/getEnv'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { getCurrentTabId } from '@/utils/getCurrentTabId'
 
 function PopupList() {
   const [showDetail, setShowDetail] = useState(false)
+  const [switchValue, setSwitchValue] = useState(false)
   const handleClick = (page: string) => {
     const isDev = _isDev()
     if (!isDev) {
@@ -30,9 +33,37 @@ function PopupList() {
     setShowDetail(true)
   }
 
-  const handleSwitch = (checked: boolean) => {
+  const handleSwitch = async (checked: boolean) => {
     console.log(`switch to ${checked}`)
+    setSwitchValue(checked)
+    const currentTabId = await getCurrentTabId()
+    if (!currentTabId) {
+      console.error('tab id is undefined')
+      return
+    }
+    if (checked)
+      tabStorage.set(
+        currentTabId,
+        'user-agent',
+        'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.55'
+      )
+    else tabStorage.delete(currentTabId, 'user-agent')
   }
+
+  const init = async () => {
+    const currentTabId = await getCurrentTabId()
+    if (!currentTabId) {
+      console.error('tab id is undefined')
+      return
+    }
+    const header = await tabStorage.get(currentTabId, 'user-agent')
+    console.log('init header', header)
+    setSwitchValue(!!header)
+  }
+
+  useEffect(() => {
+    init()
+  }, [])
 
   return showDetail ? (
     <Layout />
@@ -58,7 +89,7 @@ function PopupList() {
                 <InformationCircleIcon className="w-4 h-4 ml-2 text-gray-400 cursor-pointer" />
               </Tooltip>
             </span>
-            <Switch size="small" onChange={handleSwitch} />
+            <Switch size="small" value={switchValue} onChange={handleSwitch} />
           </div>
         </List.Item>
         <List.Item

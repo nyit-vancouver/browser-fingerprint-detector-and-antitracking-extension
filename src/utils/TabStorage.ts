@@ -1,19 +1,42 @@
+import { sendMessage } from './sendMessage'
+import { storage } from './storage'
+
+// TabStorage 用来处理header/其他fingerprint数据的存储
+// call background.js来处理header的设置/删除，其他数据直接存储在localStorage
+
 export class TabStorage {
-  constructor() {
-    // TODO: 用sessionStorage存储数据
+  constructor() {}
+  set(currentTabId: number, key: string, value: any) {
+    // TODO：key设置类型
+    console.log('set', key, value)
+
+    if (key === 'user-agent') {
+      // TODO
+      // call background.js
+      sendMessage('setHeader', currentTabId, key, value)
+    }
+    storage.set(currentTabId, key, value)
   }
-  // TODO: set, delete要存储/删除数据+call background.js
-  // set(tabId, key, value) {
-  //     if (!this.storage.has(tabId)) {
-  //         this.storage.set(tabId, new Map());
-  //     }
-  //     this.storage.get(tabId).set(key, value);
-  // }
-  // get(tabId, key) {
-  //     return this.storage.get(tabId)?.get(key);
-  // }
-  // delete(tabId, key) {
-  //     this.storage.get(tabId)?.delete(key);
-  // }
+  get(currentTabId: number, key: string) {
+    console.log('get', key)
+    return storage.get(currentTabId, key)
+  }
+  delete(currentTabId: number, key: string) {
+    console.log('delete', key)
+
+    storage.delete(currentTabId, key)
+    if (key === 'user-agent') {
+      // TODO
+      // call background.js
+      sendMessage('deleteHeader', currentTabId, key)
+    }
+  }
+  deleteAll(currentTabId: number) {
+    console.log('delete all')
+    storage.deleteAll(currentTabId)
+    // call background.js
+    sendMessage('deleteAll', currentTabId)
+  }
   // TODO: random数据
 }
+export const tabStorage = new TabStorage()
