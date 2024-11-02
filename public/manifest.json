@@ -38,11 +38,12 @@
   "action": {
     "default_popup": "index.html"
   },
-  "host_permissions": ["https://www.baidu.com/*"],
+  "host_permissions": ["<all_urls>"],
   "permissions": [
     "declarativeNetRequest",
     "declarativeNetRequestWithHostAccess",
     "declarativeNetRequestFeedback",
+    "webRequest",
     "storage",
     "<all_urls>",
     "activeTab",

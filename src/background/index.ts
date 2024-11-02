@@ -22,11 +22,12 @@ const getInitialRule = () => ({
       chrome.declarativeNetRequest.ResourceType.FONT,
       chrome.declarativeNetRequest.ResourceType.OBJECT,
       chrome.declarativeNetRequest.ResourceType.MEDIA,
-      // chrome.declarativeNetRequest.ResourceType.DATA,
       chrome.declarativeNetRequest.ResourceType.PING,
       chrome.declarativeNetRequest.ResourceType.CSP_REPORT,
-      chrome.declarativeNetRequest.ResourceType.OTHER
-    ]
+      chrome.declarativeNetRequest.ResourceType.OTHER,
+      'webbundle',
+      'webtransport'
+    ] as chrome.declarativeNetRequest.ResourceType[]
   }
 })
 
@@ -55,6 +56,7 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
     return
   }
   if (type === 'setHeader') {
+    // set request header
     const rules = await chrome.declarativeNetRequest.getSessionRules()
     console.log('setHeader getSessionRules', rules)
     const rule = getInitialRule()
@@ -65,6 +67,7 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
     })
     console.log('Rule added successfully')
   } else if (type === 'deleteHeader') {
+    // delete request header
     const rules = await chrome.declarativeNetRequest.getSessionRules()
     console.log('setHeader deleteHeader', rules)
     const id = rules.find(
@@ -83,10 +86,12 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
     })
     console.log('Rule delete successfully')
   } else if (type === 'check') {
+    // check session rules
     chrome.declarativeNetRequest.getSessionRules(function (rules) {
       console.log('check getSessionRules', rules)
     })
   } else if (type === 'deleteAll') {
+    // delete all session rules
     const rules = await chrome.declarativeNetRequest.getSessionRules()
     console.log('setHeader deleteAll', rules)
     const ids = rules.map((rule) => rule.id)
@@ -119,5 +124,14 @@ chrome.tabs.onRemoved.addListener((tabId) => {
     })
   })
 })
+
+// ??为什么加了这个监听，所有的请求都能被拦截了
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  function (details) {
+    console.log('onBeforeSendHeaders', details)
+  },
+  { urls: ['<all_urls>'] },
+  ['requestHeaders']
+)
 
 export {}
