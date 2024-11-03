@@ -1,35 +1,7 @@
 import { initAPIs } from '@/utils/initAPIs'
 import { storage } from '@/utils/storage'
-
-const getInitialRule = () => ({
-  id: Math.floor(Math.random() * Math.pow(10, 9)),
-  priority: 1,
-  action: {
-    type: chrome.declarativeNetRequest?.RuleActionType?.MODIFY_HEADERS, // 参考：https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/#type-RuleActionType
-    requestHeaders: [] as chrome.declarativeNetRequest.ModifyHeaderInfo[]
-  },
-  condition: {
-    tabIds: [] as number[],
-    urlFilter: '*://*/*',
-    resourceTypes: [
-      chrome.declarativeNetRequest.ResourceType.XMLHTTPREQUEST,
-      chrome.declarativeNetRequest.ResourceType.WEBSOCKET,
-      chrome.declarativeNetRequest.ResourceType.MAIN_FRAME,
-      chrome.declarativeNetRequest.ResourceType.SUB_FRAME,
-      chrome.declarativeNetRequest.ResourceType.IMAGE,
-      chrome.declarativeNetRequest.ResourceType.STYLESHEET,
-      chrome.declarativeNetRequest.ResourceType.SCRIPT,
-      chrome.declarativeNetRequest.ResourceType.FONT,
-      chrome.declarativeNetRequest.ResourceType.OBJECT,
-      chrome.declarativeNetRequest.ResourceType.MEDIA,
-      chrome.declarativeNetRequest.ResourceType.PING,
-      chrome.declarativeNetRequest.ResourceType.CSP_REPORT,
-      chrome.declarativeNetRequest.ResourceType.OTHER,
-      'webbundle',
-      'webtransport'
-    ] as chrome.declarativeNetRequest.ResourceType[]
-  }
-})
+import { getRule } from '@/utils/getRule'
+import { deleteRule } from '@/utils/deleteRule'
 
 // rewrite APIs
 chrome.runtime.onInstalled.addListener(async () => {
@@ -50,39 +22,53 @@ chrome.runtime.onInstalled.addListener(async () => {
 // 监听来自 content.js 的消息
 chrome.runtime.onMessage.addListener(async (message, sender) => {
   console.log('background message', message, sender)
-  const { type, requestHeader, tabId } = message
+  const { type, data, tabId } = message
+
   if (tabId === undefined) {
     console.error('tab id is undefined')
     return
   }
+
   if (type === 'setHeader') {
     // set request header
     const rules = await chrome.declarativeNetRequest.getSessionRules()
     console.log('setHeader getSessionRules', rules)
-    const rule = getInitialRule()
-    rule.action.requestHeaders.push(requestHeader)
-    rule.condition.tabIds = [tabId]
+    const preRule = rules.find((rule) => rule.condition.tabIds?.includes(tabId))
+    const preRuleId = preRule?.id
+    const rule = getRule(data, [tabId], preRule)
     await chrome.declarativeNetRequest.updateSessionRules({
-      addRules: [rule]
+      // rule是包含了之前规则的新规则
+      addRules: [rule],
+      // 如果preRuleId存在，则删除之前的规则
+      removeRuleIds: preRuleId ? [preRuleId] : undefined
     })
     console.log('Rule added successfully')
   } else if (type === 'deleteHeader') {
     // delete request header
-    const rules = await chrome.declarativeNetRequest.getSessionRules()
-    console.log('setHeader deleteHeader', rules)
-    const id = rules.find(
+    const preRules = await chrome.declarativeNetRequest.getSessionRules()
+    console.log('setHeader deleteHeader', preRules)
+    const preRule = preRules.find(
       (rule) =>
         rule.condition.tabIds?.includes(tabId) &&
-        rule.action?.requestHeaders?.some(
-          (item) => item.header === requestHeader.header
+        rule.action?.requestHeaders?.some((item) =>
+          data.includes(item.header.toLowerCase())
         )
-    )?.id
-    if (!id) {
-      console.error('id is undefined')
+    )
+    const preRuleId = preRule?.id
+    // 如果找不到对应的规则，则直接返回
+    if (!preRuleId) {
+      console.error('preRuleId is undefined')
+      return
+    }
+    // 删除了指定的header后的rules
+    const rule = deleteRule(data, preRule)
+    if (!rule) {
+      console.error('rule is undefined')
       return
     }
     await chrome.declarativeNetRequest.updateSessionRules({
-      removeRuleIds: [id] // remove existing rules
+      addRules: rule.action.requestHeaders.length === 0 ? undefined : [rule],
+      removeRuleIds: [preRuleId]
     })
     console.log('Rule delete successfully')
   } else if (type === 'check') {
@@ -102,9 +88,9 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
   }
 })
 // 监听规则匹配
-chrome.declarativeNetRequest.onRuleMatchedDebug.addListener(function (o) {
-  console.log('rule matched:', o)
-})
+// chrome.declarativeNetRequest.onRuleMatchedDebug.addListener(function (o) {
+//   console.log('rule matched:', o)
+// })
 // tab 关闭时清除规则
 chrome.tabs.onRemoved.addListener((tabId) => {
   console.log('tab removed', tabId)
@@ -127,8 +113,8 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 
 // ??为什么加了这个监听，所有的请求都能被拦截了
 chrome.webRequest.onBeforeSendHeaders.addListener(
-  function (details) {
-    console.log('onBeforeSendHeaders', details)
+  function () {
+    // console.log('onBeforeSendHeaders', details)
   },
   { urls: ['<all_urls>'] },
   ['requestHeaders']

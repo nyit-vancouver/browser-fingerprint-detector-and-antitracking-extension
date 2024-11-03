@@ -42,12 +42,23 @@ function PopupList() {
       return
     }
     if (checked)
-      tabStorage.set(
-        currentTabId,
+      tabStorage.set(currentTabId, {
+        'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit',
+        'accept-language': 'en-US,en;q=0.1',
+        'x-forwarded-for': '111.8.203.1',
+        referer: '',
+        dnt: '',
+        etags: ''
+      })
+    else
+      tabStorage.delete(currentTabId, [
         'user-agent',
-        'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.55'
-      )
-    else tabStorage.delete(currentTabId, 'user-agent')
+        'x-forwarded-for',
+        'accept-language',
+        'referer',
+        'dnt',
+        'etags'
+      ])
   }
 
   const init = async () => {

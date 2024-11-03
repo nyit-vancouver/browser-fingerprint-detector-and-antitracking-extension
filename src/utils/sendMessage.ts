@@ -1,16 +1,14 @@
+import { MODIFIED_REQ_HEADERS } from '@/config/constants'
+
 export function sendMessage(
   msgType: string,
   tabId: number,
-  header?: string,
-  value?: any
+  data?: Record<string, any> | (typeof MODIFIED_REQ_HEADERS)[number][][]
 ) {
+  console.log('sendMessage', msgType, tabId, data)
   chrome.runtime.sendMessage({
     type: msgType,
     tabId,
-    requestHeader: {
-      header,
-      operation: chrome.declarativeNetRequest?.HeaderOperation?.SET, //还可以是 append remove
-      value
-    }
+    data
   })
 }
