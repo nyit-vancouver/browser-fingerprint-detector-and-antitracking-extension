@@ -46,9 +46,10 @@ function PopupList() {
         'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit',
         'accept-language': 'en-US,en;q=0.1',
         'x-forwarded-for': '111.8.203.1',
-        referer: '',
-        dnt: '',
-        etags: ''
+        referer: false,
+        dnt: '1',
+        etag: false,
+        'if-none-match': false
       })
     else
       tabStorage.delete(currentTabId, [
@@ -57,7 +58,8 @@ function PopupList() {
         'accept-language',
         'referer',
         'dnt',
-        'etags'
+        'etag',
+        'if-none-match'
       ])
   }
 

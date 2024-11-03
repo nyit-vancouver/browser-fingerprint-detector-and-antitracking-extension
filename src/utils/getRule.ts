@@ -1,17 +1,21 @@
-import etag from '@/config/responseHeaders/etag'
-import userAgent from '@/config/responseHeaders/userAgent'
-import acceptLanguage from '@/config/responseHeaders/acceptLanguage'
-import referer from '@/config/responseHeaders/referer'
-import dnt from '@/config/responseHeaders/DNT'
-import xForwardedFor from '@/config/responseHeaders/xForwardedFor'
+import {
+  etag,
+  userAgent,
+  acceptLanguage,
+  referer,
+  dnt,
+  xForwardedFor,
+  ifNoneMatch
+} from '@/config/responseHeaders'
 
-const MAP: Record<string, chrome.declarativeNetRequest.ModifyHeaderInfo[]> = {
+const MAP: Record<string, chrome.declarativeNetRequest.ModifyHeaderInfo> = {
   etag: etag,
   'user-agent': userAgent,
   'accept-language': acceptLanguage,
   referer: referer,
   dnt: dnt,
-  'x-forwarded-for': xForwardedFor
+  'x-forwarded-for': xForwardedFor,
+  'if-none-match': ifNoneMatch
 }
 
 const getRequestHeaders = (
@@ -23,22 +27,19 @@ const getRequestHeaders = (
 
   Object.entries(data).forEach(([key, value]) => {
     // 从MAP中获取对应的header配置
-    const templateRules = [
-      ...(MAP[key] as chrome.declarativeNetRequest.ModifyHeaderInfo[])
-    ]
+    const rule = {
+      ...MAP[key]
+    }
     // 如果value存在，则将value赋值给header
-    const rules = templateRules.map((item) => {
-      if (item.operation === 'set' && value) {
-        return { ...item, value }
-      }
-      return item
-    })
-    console.log('rules', rules)
+    if (rule.operation === 'set' && value) {
+      rule.value = value
+    }
+    console.log('rules', rule)
 
-    // 如果preRequestHeaders存在，则将其push到headers中
-    headers.push(...rules)
+    headers.push(rule)
   })
   console.log('new headers', headers)
+
   if (preRequestHeaders) {
     preRequestHeaders.forEach((item) => {
       // 如果preRequestHeaders中的header在headers中不存在，则push到headers中

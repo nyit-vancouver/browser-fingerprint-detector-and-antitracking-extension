@@ -3,7 +3,9 @@ export const MODIFIED_REQ_HEADERS = [
   'accept-language',
   'referer',
   'dnt',
-  'x-forwarded-for'
+  'x-forwarded-for',
+  'etag',
+  'if-none-match'
 ]
 
 export const MODIFIED_ATTRS = []
