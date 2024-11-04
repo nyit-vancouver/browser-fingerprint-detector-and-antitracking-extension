@@ -22,12 +22,13 @@
       ],
       "js": [
         "./static/js/content.js"
-      ]
+      ],
+      "run_at": "document_start"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["static/js/inject.js"],
+      "resources": ["static/js/content.js"],
       "matches": ["<all_urls>"]
     }
   ],
@@ -47,6 +48,7 @@
     "storage",
     "<all_urls>",
     "activeTab",
+    "tabs",
     "scripting"
   ]
 }

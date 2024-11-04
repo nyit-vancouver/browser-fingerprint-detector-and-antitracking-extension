@@ -11,7 +11,7 @@ import {
 export class TabStorage {
   constructor() {}
 
-  set(
+  async set(
     currentTabId: number,
     data: Record<(typeof ALL_MODIFIED_FINGERPRINTS)[number], any>
   ) {
@@ -23,19 +23,22 @@ export class TabStorage {
         res[key] = value
       }
     })
-    storage.set(currentTabId, data)
     if (JSON.stringify(res) !== '{}') {
       // call background.js
       sendMessage('setHeader', currentTabId, res)
     }
+    await storage.set(currentTabId, data)
   }
 
-  get(currentTabId: number, key: (typeof ALL_MODIFIED_FINGERPRINTS)[number]) {
+  async get(
+    currentTabId: number,
+    key: (typeof ALL_MODIFIED_FINGERPRINTS)[number]
+  ) {
     console.log('get', key)
-    return storage.get(currentTabId, key)
+    return await storage.get(currentTabId, key)
   }
 
-  delete(
+  async delete(
     currentTabId: number,
     keys: (typeof ALL_MODIFIED_FINGERPRINTS)[number][]
   ) {
@@ -47,15 +50,15 @@ export class TabStorage {
         res.push(key)
       }
     })
-    storage.delete(currentTabId, keys)
     sendMessage('deleteHeader', currentTabId, res)
+    await storage.delete(currentTabId, keys)
   }
 
-  deleteAll(currentTabId: number) {
+  async deleteAll(currentTabId: number) {
     console.log('delete all')
-    storage.deleteAll(currentTabId)
     // call background.js
     sendMessage('deleteAll', currentTabId)
+    await storage.deleteAll(currentTabId)
   }
   // TODO: random数据
 }

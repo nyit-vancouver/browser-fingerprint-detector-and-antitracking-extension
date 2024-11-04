@@ -3,6 +3,20 @@ import { storage } from '@/utils/storage'
 import { getRule } from '@/utils/getRule'
 import { deleteRule } from '@/utils/deleteRule'
 
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  console.log('tab onUpdated', tabId, changeInfo, tab)
+  if (tab.url?.includes('chrome://')) {
+    return
+  }
+  // 例如：只在打开特定网址（比如新标签页或特定站点）时注入脚本
+  if (changeInfo.status !== 'loading') {
+    return
+  }
+  chrome.scripting.executeScript({
+    target: { tabId },
+    files: ['static/js/content.js']
+  })
+})
 // rewrite APIs
 chrome.runtime.onInstalled.addListener(async () => {
   console.log('onInstalled')

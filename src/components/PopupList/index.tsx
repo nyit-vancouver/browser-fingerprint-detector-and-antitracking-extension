@@ -69,6 +69,7 @@ function PopupList() {
       console.error('tab id is undefined')
       return
     }
+    // TODO: 如果有SessionStorage，读取SessionStorage中的数据
     const header = await tabStorage.get(currentTabId, 'user-agent')
     console.log('init header', header)
     setSwitchValue(!!header)
