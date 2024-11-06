@@ -3,6 +3,8 @@ import { throttle } from 'throttle-debounce'
 window.addEventListener(
   'injectData',
   throttle(100, (event: Event) => {
+    console.warn('inject loaded', new Date().getTime())
+
     const customEvent = event as CustomEvent
     const { data } = customEvent.detail
     console.log('Received data in inject.js:', event, data)
@@ -20,7 +22,7 @@ window.addEventListener(
           })
           window.dispatchEvent(event)
 
-          return data['user-agent'] || Reflect.get(target, prop)
+          return data?.['user-agent'] || Reflect.get(target, prop)
         }
         // 3. 其他属性保持不变
         return Reflect.get(target, prop)
@@ -34,6 +36,7 @@ window.addEventListener(
       enumerable: true,
       configurable: true
     })
+    console.warn('inject finish', new Date().getTime())
   })
 )
 export {}

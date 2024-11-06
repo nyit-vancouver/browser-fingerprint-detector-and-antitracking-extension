@@ -1,6 +1,7 @@
 import { storage } from '@/utils/storage'
 import { getRule } from '@/utils/getRule'
 import { deleteRule } from '@/utils/deleteRule'
+import addScript from './addScript'
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log('tab onUpdated', tabId, changeInfo, tab)
@@ -12,11 +13,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (!changeInfo.status || changeInfo.status !== 'loading') {
     return
   }
-  console.log('executeScript')
+  // console.log('executeScript')
+  console.warn('executeScript', new Date().getTime())
   // 执行 content.js
   chrome.scripting.executeScript({
     target: { tabId },
-    files: ['static/js/content.js'],
+    func: addScript,
+    args: [tabId],
     injectImmediately: true
   })
 })
