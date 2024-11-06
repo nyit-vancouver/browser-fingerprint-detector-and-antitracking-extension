@@ -41,8 +41,8 @@ function PopupList() {
       console.error('tab id is undefined')
       return
     }
-    if (checked)
-      tabStorage.set(currentTabId, {
+    if (checked) {
+      const data = {
         'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit',
         'accept-language': 'en-US,en;q=0.1',
         'x-forwarded-for': '111.8.203.1',
@@ -50,8 +50,9 @@ function PopupList() {
         dnt: '1',
         etag: false,
         'if-none-match': false
-      })
-    else
+      }
+      tabStorage.set(currentTabId, data)
+    } else
       tabStorage.delete(currentTabId, [
         'user-agent',
         'x-forwarded-for',

@@ -12,3 +12,11 @@ export function sendMessage(
     data
   })
 }
+
+export function sendMessageToContent(tabId: number, data: Record<string, any>) {
+  console.log('sendMessageToContent', tabId, data)
+  chrome.tabs.sendMessage(tabId, {
+    tabId,
+    data
+  })
+}

@@ -9,8 +9,6 @@ import {
 // call background.js来处理header的设置/删除，其他数据直接存储在localStorage
 
 export class TabStorage {
-  constructor() {}
-
   async set(
     currentTabId: number,
     data: Record<(typeof ALL_MODIFIED_FINGERPRINTS)[number], any>

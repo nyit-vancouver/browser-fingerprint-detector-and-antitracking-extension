@@ -1,20 +1,16 @@
-import { log } from './log'
-// import { getCurrentTabId } from "./getCurrentTabId"
-import { tabStorage } from './TabStorage'
+// import { log } from './log'
+// // import { getCurrentTabId } from "./getCurrentTabId"
+// import { tabStorage } from './TabStorage'
 
-export async function handler(paramName: string, defaultValue: any) {
-  const currentTabId = (await chrome.tabs.getCurrent())?.id
-  if (!currentTabId) {
-    console.error('tab id is undefined')
-    return
-  }
-  // logging
-  log.write(paramName)
-  // get value
-  const storedValue = await tabStorage.get(currentTabId, paramName)
-  console.log('init header', storedValue)
-  return storedValue || defaultValue
-}
+// export async function handler(paramName: string, defaultValue: any) {
+//   console.log('hinavigator.userAgent is accessed', await chrome.storage.local.get())
+//   // logging
+//   log.write(paramName)
+//   // get value
+//   const storedValue = await tabStorage.get(currentTabId, paramName)
+//   console.log('init header', storedValue)
+//   return storedValue || defaultValue
+// }
 function initAPIs() {
   // const originalUserAgent = navigator.userAgent;
   // TODO: 如果有SessionStorage，读取SessionStorage中的数据

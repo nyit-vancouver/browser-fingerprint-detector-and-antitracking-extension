@@ -1,32 +1,38 @@
-// import { handler } from "@/utils/initAPIs";
-//
+import { throttle } from 'throttle-debounce'
+import { log } from '@/utils/log'
+import { storage } from '@/utils/storage'
+
 console.log('[content] loaded ')
 
-;(window as any)._antiTrackingInit = false
+;(async () => {
+  const data = await storage.get(0)
 
-// (async function () {
+  console.log('storedData', data)
 
-// 1. 创建一个代理 navigator 对象的 Proxy
-const navigatorProxy = new Proxy(window.navigator, {
-  get(target, prop) {
-    if (prop === 'userAgent') {
-      console.log('navigator.userAgent is accessed')
-      // 2. 当访问 `userAgent` 属性时返回自定义值
-      // TODO: !!页面脚本访问navigator.userAgent时是什么值？
-      return '123'
-    }
-    // 3. 其他属性保持不变
-    return Reflect.get(target, prop)
+  const script = document.createElement('script')
+  script.src = chrome.runtime.getURL('static/js/inject.js')
+  document.documentElement.appendChild(script)
+
+  script.onload = () => {
+    // 移除 script 标签
+    script.remove()
+
+    // 创建一个自定义事件，包含传递的数据
+    const event = new CustomEvent('injectData', { detail: { data } })
+
+    // 派发自定义事件，使 inject.js 可以接收到数据
+    window.dispatchEvent(event)
   }
-})
+})()
 
-// 4. 将 window.navigator 替换为代理对象
-Object.defineProperty(window, 'navigator', {
-  value: navigatorProxy,
-  writable: false,
-  enumerable: true,
-  configurable: true
-})
+window.addEventListener(
+  'writeLog',
+  throttle(100, (event: Event) => {
+    console.log('Received data in writeLog:', event)
+    const customEvent = event as CustomEvent
+    const { paramName } = customEvent.detail
+    log.write(paramName)
+  })
+)
 
-console.log(window.navigator.userAgent)
 export {}

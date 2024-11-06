@@ -1,36 +1,24 @@
-import { initAPIs } from '@/utils/initAPIs'
 import { storage } from '@/utils/storage'
 import { getRule } from '@/utils/getRule'
 import { deleteRule } from '@/utils/deleteRule'
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log('tab onUpdated', tabId, changeInfo, tab)
+  // 不在chrome://页面执行
   if (tab.url?.includes('chrome://')) {
     return
   }
-  // 例如：只在打开特定网址（比如新标签页或特定站点）时注入脚本
-  if (changeInfo.status !== 'loading') {
+  // 只在页面加载时执行
+  if (!changeInfo.status || changeInfo.status !== 'loading') {
     return
   }
+  console.log('executeScript')
+  // 执行 content.js
   chrome.scripting.executeScript({
     target: { tabId },
-    files: ['static/js/content.js']
+    files: ['static/js/content.js'],
+    injectImmediately: true
   })
-})
-// rewrite APIs
-chrome.runtime.onInstalled.addListener(async () => {
-  console.log('onInstalled')
-  // TODO: check init:
-  // const rules = await chrome.declarativeNetRequest.getSessionRules()
-  // console.log('setHeader deleteAll', rules)
-  // const ids = rules.map((rule) =>
-  //   rule.id
-  // )
-  // await chrome.declarativeNetRequest.updateSessionRules({
-  //   removeRuleIds: ids, // remove existing rules
-  // });
-  // console.log('Rules delete successfully')
-  initAPIs()
 })
 
 // 监听来自 content.js 的消息
