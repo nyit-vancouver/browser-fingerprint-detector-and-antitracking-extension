@@ -1,24 +1,47 @@
-// import { log } from './log'
-// // import { getCurrentTabId } from "./getCurrentTabId"
-// import { tabStorage } from './TabStorage'
+interface Configs {
+  obj: any
+  objStr: string
+  paramName: string
+  propName: string
+}
 
-// export async function handler(paramName: string, defaultValue: any) {
-//   console.log('hinavigator.userAgent is accessed', await chrome.storage.local.get())
-//   // logging
-//   log.write(paramName)
-//   // get value
-//   const storedValue = await tabStorage.get(currentTabId, paramName)
-//   console.log('init header', storedValue)
-//   return storedValue || defaultValue
-// }
-function initAPIs() {
-  // const originalUserAgent = navigator.userAgent;
-  // TODO: 如果有SessionStorage，读取SessionStorage中的数据
-  // TODO: 如果没有，就取原来的数据
-  // TODO: log
-  // API 1
-  // API 2
-  // API 3
+function sendLog(paramName: string) {
+  const event = new CustomEvent('writeLog', {
+    detail: {
+      paramName
+    }
+  })
+  window.dispatchEvent(event)
+}
+
+function initAPI(data: Record<string, any>, configs: Configs) {
+  const { obj, objStr, paramName, propName } = configs
+  const navigatorProxy = new Proxy(obj, {
+    get(target, prop) {
+      if (prop === propName) {
+        console.log(`${paramName} is accessed`)
+        sendLog(paramName)
+        return data?.[paramName] || Reflect.get(target, prop)
+      }
+      return Reflect.get(target, prop)
+    }
+  })
+
+  Object.defineProperty(window, objStr, {
+    value: navigatorProxy,
+    writable: false,
+    enumerable: true,
+    configurable: true
+  })
+}
+
+function initAPIs(data: Record<string, any>) {
+  initAPI(data, {
+    obj: window.navigator,
+    objStr: 'navigator',
+    paramName: 'user-agent',
+    propName: 'userAgent'
+  })
   // spoof font
   // spoof user agent
   // Object.defineProperty(window.navigator, 'userAgent', {

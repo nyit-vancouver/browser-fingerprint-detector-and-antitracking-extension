@@ -1,7 +1,7 @@
 import { storage } from '@/utils/storage'
 import { getRule } from '@/utils/getRule'
 import { deleteRule } from '@/utils/deleteRule'
-import addScript from './addScript'
+import sendStorageToContent from '@/utils/sendStorageToContent'
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log('tab onUpdated', tabId, changeInfo, tab)
@@ -13,18 +13,17 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (!changeInfo.status || changeInfo.status !== 'loading') {
     return
   }
-  // console.log('executeScript')
   console.warn('executeScript', new Date().getTime())
-  // 执行 content.js
+  // 执行 sendStorageToContent.js
   chrome.scripting.executeScript({
     target: { tabId },
-    func: addScript,
+    func: sendStorageToContent,
     args: [tabId],
     injectImmediately: true
   })
 })
 
-// 监听来自 content.js 的消息
+// 监听来自 tabStorage 的消息
 chrome.runtime.onMessage.addListener(async (message, sender) => {
   console.log('background message', message, sender)
   const { type, data, tabId } = message
@@ -92,15 +91,10 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
     console.log('Rules delete successfully')
   }
 })
-// 监听规则匹配
-// chrome.declarativeNetRequest.onRuleMatchedDebug.addListener(function (o) {
-//   console.log('rule matched:', o)
-// })
 // tab 关闭时清除规则
 chrome.tabs.onRemoved.addListener((tabId) => {
   console.log('tab removed', tabId)
   // clear local storage
-  // chrome.tabs.sendMessage(tabId, { msgType: "deleteStorage" });
   storage.deleteAll(tabId)
   // clear rules
   chrome.declarativeNetRequest.getSessionRules(function (res) {
@@ -116,7 +110,6 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   })
 })
 
-// ??为什么加了这个监听，所有的请求都能被拦截了
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function () {
     // console.log('onBeforeSendHeaders', details)

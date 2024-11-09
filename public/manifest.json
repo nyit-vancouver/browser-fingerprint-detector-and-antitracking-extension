@@ -23,7 +23,8 @@
       "js": [
         "./static/js/content.js"
       ],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "world": "MAIN"
     }
   ],
   "web_accessible_resources": [
