@@ -49,7 +49,9 @@ function PopupList() {
         referer: false,
         dnt: '1',
         etag: false,
-        'if-none-match': false
+        'if-none-match': false,
+        height: 2855,
+        width: 5120
       }
       tabStorage.set(currentTabId, data)
     } else
@@ -60,7 +62,9 @@ function PopupList() {
         'referer',
         'dnt',
         'etag',
-        'if-none-match'
+        'if-none-match',
+        'height',
+        'width'
       ])
   }
 

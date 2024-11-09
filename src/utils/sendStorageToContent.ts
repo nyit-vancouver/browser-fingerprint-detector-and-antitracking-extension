@@ -1,6 +1,6 @@
 export default async function sendStorageToContent(tabId: number) {
   async function writeLog(paramName: string) {
-    console.log('write log', paramName)
+    console.log('writeLog', paramName)
     const domain = new URL(window.location.href).hostname
     const logs =
       (await chrome.storage.local.get('__antiTracking_log'))[
@@ -23,6 +23,9 @@ export default async function sendStorageToContent(tabId: number) {
   const res = (await chrome.storage.local.get()) || {}
   console.log('Storage get res', res)
   const data = res[`__antiTracking_config_${tabId}`]
+  if (!data || JSON.stringify(data) === '{}') {
+    return
+  }
   const event = new CustomEvent('tabStorage', {
     detail: {
       data
@@ -33,8 +36,8 @@ export default async function sendStorageToContent(tabId: number) {
 
   // 监听 `writeLog` 事件, 并写入日志
   window.addEventListener('writeLog', (event: Event) => {
-    console.log('Received data in writeLog:', event)
     const customEvent = event as CustomEvent
+    console.log('Received data in writeLog:', customEvent.detail)
     const { paramName } = customEvent.detail
     writeLog(paramName)
   })

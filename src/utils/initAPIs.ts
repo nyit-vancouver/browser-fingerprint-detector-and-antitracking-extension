@@ -6,6 +6,7 @@ interface Configs {
 }
 
 function sendLog(paramName: string) {
+  console.log('sendLog', paramName)
   const event = new CustomEvent('writeLog', {
     detail: {
       paramName
@@ -36,6 +37,7 @@ function initAPI(data: Record<string, any>, configs: Configs) {
 }
 
 function initAPIs(data: Record<string, any>) {
+  // spoof user agent
   initAPI(data, {
     obj: window.navigator,
     objStr: 'navigator',
@@ -43,11 +45,25 @@ function initAPIs(data: Record<string, any>) {
     propName: 'userAgent'
   })
   // spoof font
-  // spoof user agent
-  // Object.defineProperty(window.navigator, 'userAgent', {
-  //   get: () => 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit'
-  // }
+  // initAPI(data, {
+  //   obj: window.screen,
+  //   objStr: 'navigator',
+  //   paramName: 'fonts',
+  //   propName: 'fonts'
+  // })
   // spoof screen size
+  initAPI(data, {
+    obj: window.screen,
+    objStr: 'screen',
+    paramName: 'height',
+    propName: 'height'
+  })
+  initAPI(data, {
+    obj: window.screen,
+    objStr: 'screen',
+    paramName: 'width',
+    propName: 'width'
+  })
   // timezone
   // block media devices
   // spoof audio context
