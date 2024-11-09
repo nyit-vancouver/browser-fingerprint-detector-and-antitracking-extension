@@ -1,18 +1,10 @@
+import { logQueue } from './sendLogs'
+
 interface Configs {
   obj: any
   objStr: string
   paramName: string
   propName: string
-}
-
-function sendLog(paramName: string) {
-  console.log('sendLog', paramName)
-  const event = new CustomEvent('writeLog', {
-    detail: {
-      paramName
-    }
-  })
-  window.dispatchEvent(event)
 }
 
 function initAPI(data: Record<string, any>, configs: Configs) {
@@ -21,7 +13,7 @@ function initAPI(data: Record<string, any>, configs: Configs) {
     get(target, prop) {
       if (prop === propName) {
         console.log(`${paramName} is accessed`)
-        sendLog(paramName)
+        logQueue.sendLog(paramName)
         return data?.[paramName] || Reflect.get(target, prop)
       }
       return Reflect.get(target, prop)
