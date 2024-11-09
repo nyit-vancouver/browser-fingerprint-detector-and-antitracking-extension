@@ -29,7 +29,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["static/js/content.js", "static/js/inject.js"],
+      "resources": ["static/js/content.js"],
       "matches": ["<all_urls>"]
     }
   ],

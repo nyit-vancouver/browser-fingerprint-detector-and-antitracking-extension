@@ -15,8 +15,8 @@ const overrideEntry = (config) => {
     main: './src/popup', // the extension UI
     background: isDev ? './src/background/dev' : './src/background',
     content: './src/content',
-    options: './src/options',
-    inject: './src/content/inject'
+    options: './src/options'
+    // inject: './src/content/inject'
   }
   return config
 }
@@ -41,7 +41,7 @@ const overridePlugins = (config) => {
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       filename: 'index.html',
-      chunks: ['main', 'background', 'content', 'inject']
+      chunks: ['main', 'background', 'content']
     }),
     new HtmlWebpackPlugin({
       template: 'public/options.html',
