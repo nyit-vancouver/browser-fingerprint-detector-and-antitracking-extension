@@ -1,6 +1,5 @@
 export class Storage {
   async set(currentTabId: number, data: Record<string, any>) {
-    // TODO：key设置类型
     console.log('Storage set', data)
     const res =
       (await chrome.storage.local.get(
@@ -10,7 +9,8 @@ export class Storage {
     await chrome.storage.local.set({
       [`__antiTracking_config_${currentTabId}`]: {
         ...(res[`__antiTracking_config_${currentTabId}`] || {}),
-        ...data
+        ...data,
+        _timestamp: Date.now()
       }
     })
   }
@@ -35,6 +35,15 @@ export class Storage {
       delete res[`__antiTracking_config_${currentTabId}`]?.[key]
     })
     console.log('Storage delete res', res)
+    // 如果删除后只剩下 _timestamp，就删除整个对象
+    if (
+      Object.keys(res[`__antiTracking_config_${currentTabId}`] || {}).length ===
+        1 &&
+      res[`__antiTracking_config_${currentTabId}`]._timestamp
+    ) {
+      await chrome.storage.local.remove(`__antiTracking_config_${currentTabId}`)
+      return
+    }
     await chrome.storage.local.set({
       [`__antiTracking_config_${currentTabId}`]: {
         ...res[`__antiTracking_config_${currentTabId}`]
@@ -44,7 +53,7 @@ export class Storage {
 
   async deleteAll(currentTabId: number) {
     console.log('Storage delete all', currentTabId)
-    await chrome.storage.local.remove(`__antiTracking_config`)
+    await chrome.storage.local.remove(`__antiTracking_config_${currentTabId}`)
   }
 }
 

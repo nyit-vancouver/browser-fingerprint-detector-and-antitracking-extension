@@ -14,7 +14,10 @@ export default async function sendStorageToContent(tabId: number) {
     await chrome.storage.local.set({
       __antiTracking_log: {
         ...logs,
-        [domain]: urlLogs
+        [domain]: {
+          ...urlLogs,
+          _timestamp: Date.now()
+        }
       }
     })
   }

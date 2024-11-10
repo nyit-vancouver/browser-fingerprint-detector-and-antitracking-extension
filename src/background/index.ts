@@ -1,8 +1,13 @@
+import { debounce } from 'throttle-debounce'
 import { storage } from '@/utils/storage'
 import { getRule } from '@/utils/getRule'
 import { deleteRule } from '@/utils/deleteRule'
 import sendStorageToContent from '@/utils/sendStorageToContent'
 
+const MAX_STORAGE_DAYS = 1000 * 60 * 60 * 24 * 15
+const MAX_STORAGE_CAPACITY = 0.9
+
+// 监听 tab 更新事件
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log('tab onUpdated', tabId, changeInfo, tab)
   // 不在chrome://页面执行
@@ -22,6 +27,46 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     injectImmediately: true
   })
 })
+
+// 监听存储空间使用情况
+chrome.storage.onChanged.addListener(
+  debounce(2000, async () => {
+    const bytesInUse = await chrome.storage.local.getBytesInUse()
+    console.log('Bytes in use:', bytesInUse)
+    if (bytesInUse >= chrome.storage.local.QUOTA_BYTES * MAX_STORAGE_CAPACITY) {
+      console.warn('Warning: storage space usage is over 90%')
+      const storage = (await chrome.storage.local.get()) || {}
+      const deleteKeys = []
+      for (let [key, value] of Object.entries(storage)) {
+        console.log('key, value', key, value)
+        // 删除过期数据
+        if (
+          value._timestamp &&
+          Date.now() - value._timestamp > MAX_STORAGE_DAYS
+        ) {
+          console.log('delete', key)
+          deleteKeys.push(key)
+        }
+        if (key === '__antiTracking_log') {
+          for (let [k, v] of Object.entries(value as Record<string, any>)) {
+            if (v._timestamp && Date.now() - v._timestamp > MAX_STORAGE_DAYS) {
+              console.log('delete', k)
+              const res = { ...storage.__antiTracking_log }
+              delete res[k]
+              await chrome.storage.local.set({
+                ...storage,
+                __antiTracking_log: res
+              })
+            }
+          }
+        }
+      }
+      if (deleteKeys.length > 0) {
+        await chrome.storage.local.remove(deleteKeys)
+      }
+    }
+  })
+)
 
 // 监听来自 tabStorage 的消息
 chrome.runtime.onMessage.addListener(async (message, sender) => {
@@ -110,6 +155,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   })
 })
 
+// 监听请求头
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function () {
     // console.log('onBeforeSendHeaders', details)
