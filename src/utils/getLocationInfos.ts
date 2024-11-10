@@ -18,9 +18,9 @@ export async function getLocationInfos() {
         timeZone: data.timezone
       }),
       // TODO: add a switch to hide the IP address
-      ip: '***', // data.ip || '',
-      webRTCIP: '***',
-      webRTCStunIP: '***',
+      ip: data.ip || '',
+      webRTCIP,
+      webRTCStunIP,
       isp: data.org || '',
       geocode:
         data.country_code && data.postal

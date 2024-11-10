@@ -125,16 +125,17 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
     chrome.declarativeNetRequest.getSessionRules(function (rules) {
       console.log('check getSessionRules', rules)
     })
-  } else if (type === 'deleteAll') {
-    // delete all session rules
-    const rules = await chrome.declarativeNetRequest.getSessionRules()
-    console.log('setHeader deleteAll', rules)
-    const ids = rules.map((rule) => rule.id)
-    await chrome.declarativeNetRequest.updateSessionRules({
-      removeRuleIds: ids // remove existing rules
-    })
-    console.log('Rules delete successfully')
   }
+  // else if (type === 'deleteAll') {
+  // // delete all session rules
+  // const rules = await chrome.declarativeNetRequest.getSessionRules()
+  // console.log('setHeader deleteAll', rules)
+  // const ids = rules.map((rule) => rule.id)
+  // await chrome.declarativeNetRequest.updateSessionRules({
+  //   removeRuleIds: ids // remove existing rules
+  // })
+  // console.log('Rules delete successfully')
+  // }
 })
 // tab 关闭时清除规则
 chrome.tabs.onRemoved.addListener((tabId) => {

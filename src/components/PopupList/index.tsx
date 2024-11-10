@@ -51,7 +51,12 @@ function PopupList() {
         etag: false,
         'if-none-match': false,
         height: 2855,
-        width: 5120
+        width: 5120,
+        language: 'en-US',
+        colorDepth: 48,
+        hardwareConcurrency: 18,
+        deviceMemory: 1,
+        timezone: 'Asia/Shanghai'
       }
       tabStorage.set(currentTabId, data)
     } else
@@ -64,7 +69,12 @@ function PopupList() {
         'etag',
         'if-none-match',
         'height',
-        'width'
+        'width',
+        'language',
+        'colorDepth',
+        'hardwareConcurrency',
+        'deviceMemory',
+        'timezone'
       ])
   }
 
