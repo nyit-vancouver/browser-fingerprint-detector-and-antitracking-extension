@@ -15,6 +15,7 @@ import Layout from '../Layout'
 import _isDev from '@/utils/getEnv'
 import { languages } from '@/constants/languages'
 import { timezones } from '@/constants/timezones'
+import { UA } from '@/constants/ua'
 
 import './index.scss'
 
@@ -42,8 +43,30 @@ const BrowserVersions: any = {
   sf: { desktop: '18', ios1: '15.6', ios2: '16.5', ios3: '18' }
 }
 
-// 添加 profiles 常量
-const profiles = {
+// 添加类型定义
+interface Profile {
+  id: string
+  name: string
+  nav?: {
+    version: string
+    oscpu: string
+    platform: string
+  }
+  screenOffset?: number
+  browsers: string[]
+  uaPlatform?: string
+}
+
+interface Profiles {
+  windows: Profile[]
+  macOS: Profile[]
+  linux: Profile[]
+  iOS: Profile[]
+  android: Profile[]
+}
+
+// 修改 profiles 的类型声明
+const profiles: Profiles = {
   windows: [
     {
       id: 'win1',
@@ -399,9 +422,24 @@ function PopupList() {
   // 处理浏览器配置选择
   const handleBrowserSelect = (platform: string, configId: string) => {
     setSelectedBrowser(configId)
+
+    // 获取 userAgent
+    const [osId, browserId] = configId.split('_')
+    const platformProfiles = profiles[
+      platform as keyof typeof profiles
+    ] as Profile[]
+    const os = platformProfiles.find((p: Profile) => p.id === osId)
+
+    let userAgent = ''
+    if (os && browserId) {
+      userAgent = UA.getUA(browserId, os)
+    }
+
+    // 存储选中的平台、浏览器和 userAgent
     tabStorage.set(0, {
       selectedPlatform: platform,
-      selectedBrowser: configId
+      selectedBrowser: configId,
+      userAgent: userAgent
     })
   }
 
@@ -755,13 +793,28 @@ function PopupList() {
         })
 
         // 初始化平台和浏览器选择
-        const [platform, browser] = await Promise.all([
+        const [platform, browser, userAgent] = await Promise.all([
           tabStorage.get(0, 'selectedPlatform'),
-          tabStorage.get(0, 'selectedBrowser')
+          tabStorage.get(0, 'selectedBrowser'),
+          tabStorage.get(0, 'userAgent')
         ])
 
         setSelectedPlatform(platform || 'windows')
         setSelectedBrowser(browser || '')
+
+        // 如果没有存储的 userAgent，但有选中的浏览器，则重新生成
+        if (!userAgent && browser) {
+          const [osId, browserId] = browser.split('_')
+          const platformProfiles = profiles[
+            platform as keyof typeof profiles
+          ] as Profile[]
+          const os = platformProfiles.find((p: Profile) => p.id === osId)
+
+          if (os && browserId) {
+            const newUserAgent = UA.getUA(browserId, os)
+            tabStorage.set(0, { userAgent: newUserAgent })
+          }
+        }
       } catch (e) {
         console.error('Error initializing states:', e)
       }
