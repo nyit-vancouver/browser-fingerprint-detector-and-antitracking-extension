@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^4.5.0",
-    "@heroicons/react": "^2.1.5",
+    "@heroicons/react": "^2.x",
     "assert": "^2.1.0",
     "buffer": "^6.0.3",
     "cidr-js": "^2.3.1",
@@ -22,7 +22,8 @@
     "ua-parser-js": "^1.0.39",
     "web-vitals": "^2.1.4",
     "webextension-polyfill": "^0.12.0",
-    "webextension-polyfill-ts": "^0.26.0"
+    "webextension-polyfill-ts": "^0.26.0",
+    "antd": "^4.x"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
@@ -39,7 +40,6 @@
     "@types/throttle-debounce": "^5.0.2",
     "@types/ua-parser-js": "^0.7.39",
     "@types/webextension-polyfill": "^0.12.1",
-    "antd": "^5.21.1",
     "customize-cra": "^1.0.0",
     "eslint": "^9.10.0",
     "eslint-config-react-app": "^7.0.1",
