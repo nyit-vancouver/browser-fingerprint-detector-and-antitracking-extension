@@ -1,7 +1,7 @@
-import React from 'react'
 import {
   InformationCircleIcon // 新增
 } from '@heroicons/react/24/outline'
+import React from 'react'
 
 function InfoSection({
   title,

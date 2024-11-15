@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { List, Switch, Tooltip } from 'antd'
-import { ShieldCheckIcon } from '@heroicons/react/24/solid'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { ShieldCheckIcon } from '@heroicons/react/24/solid'
+import { List, Switch, Tooltip } from 'antd'
+import React, { useEffect, useState } from 'react'
+
 import { tabStorage } from '@/utils/TabStorage'
 import { getCurrentTabId } from '@/utils/getCurrentTabId'
 

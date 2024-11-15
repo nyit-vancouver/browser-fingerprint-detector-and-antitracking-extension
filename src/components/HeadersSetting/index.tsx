@@ -1,5 +1,6 @@
+import { Checkbox, Input, Select } from 'antd'
 import React, { useState } from 'react'
-import { Checkbox, Select, Input } from 'antd'
+
 import { languages } from '@/constants/languages'
 
 export default function HeadersSetting() {

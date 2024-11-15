@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Menu, Layout as _Layout, ConfigProvider } from 'antd'
 import { ShieldCheckIcon } from '@heroicons/react/24/solid'
-
-import Info from '@/pages/Info'
-import Config from '@/pages/Config'
+import { ConfigProvider, Menu, Layout as _Layout } from 'antd'
 import { Header } from 'antd/es/layout/layout'
+import React, { useState } from 'react'
+
+import Config from '@/pages/Config'
+import Info from '@/pages/Info'
 
 const { Sider, Content } = _Layout
 

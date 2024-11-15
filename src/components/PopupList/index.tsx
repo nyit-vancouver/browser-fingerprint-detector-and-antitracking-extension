@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react'
-import { Tabs } from 'antd'
 import {
-  ShieldCheckIcon,
+  AdjustmentsHorizontalIcon,
   Cog6ToothIcon,
+  ComputerDesktopIcon,
   DocumentTextIcon,
   PresentationChartLineIcon,
-  ComputerDesktopIcon,
-  AdjustmentsHorizontalIcon
+  ShieldCheckIcon
 } from '@heroicons/react/24/solid'
-import Layout from '../Layout'
+import { Tabs } from 'antd'
+import React, { useEffect, useState } from 'react'
+
 import _isDev from '@/utils/getEnv'
 
-import './index.scss'
-import Home from '../Home'
-import PlatformSetting from '../PlatformSetting'
 import HeadersSetting from '../HeadersSetting'
+import Home from '../Home'
+import Layout from '../Layout'
 import OtherSetting from '../OtherSetting'
+import PlatformSetting from '../PlatformSetting'
+import './index.scss'
 
 const { TabPane } = Tabs
 

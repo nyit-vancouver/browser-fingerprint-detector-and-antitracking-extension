@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
-import { timezones } from '@/constants/timezones'
 import { Checkbox, Select } from 'antd'
+import React, { useState } from 'react'
+
+import { timezones } from '@/constants/timezones'
 import { tabStorage } from '@/utils/TabStorage'
+
 import { PrivacyConfig } from './type'
 
 export default function OtherSetting() {

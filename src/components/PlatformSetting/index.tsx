@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
+
 import { PLATFORMS } from '@/constants/platforms'
-import { getName } from '@/utils/getName'
-import { tabStorage } from '@/utils/TabStorage'
 import { UA } from '@/constants/ua'
+import { tabStorage } from '@/utils/TabStorage'
+import { getName } from '@/utils/getName'
 
 export type Platform = 'macos' | 'ios' | 'windows' | 'linux' | 'android'
 
