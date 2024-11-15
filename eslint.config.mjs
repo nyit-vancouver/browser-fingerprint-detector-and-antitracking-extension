@@ -11,8 +11,11 @@ export default [
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     rules: {
       '@typescript-eslint/no-explicit-any': 0,
-      'prefer-const': 'off',  // 禁用强制使用 const 的规则
-      'no-var': 'off' , // 允许使用 var
+      'max-lines': [
+        'error',
+        { max: 300, skipBlankLines: true, skipComments: true }
+      ],
+      'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
       'no-param-reassign': [
         'error',
         {
@@ -20,10 +23,10 @@ export default [
           ignorePropertyModificationsFor: [
             'state', // for vuex state
             'acc', // for reduce accumulators
-            'e', // for e.returnvalue
-          ],
-        },
-      ],
+            'e' // for e.returnvalue
+          ]
+        }
+      ]
     }
   },
   {
