@@ -1,31 +1,33 @@
-import {
-  UNMASKED_RENDERERS,
-  UNMASKED_VENDORS,
-  VENDORS
-} from '@/constants/webgl'
+import { logQueue } from '@/utils/sendLogs'
 
-export function rewriteWebgl() {
+interface SpoofWebgl {
+  renderer: string
+  vendor: string
+  unmaskedVendor: string
+  unmaskedRenderer: string
+  pixel: number
+}
+
+export function rewriteWebgl(spoofWebgl: SpoofWebgl) {
   const originalGetParameter = WebGLRenderingContext.prototype.getParameter
 
   WebGLRenderingContext.prototype.getParameter = function (parameter) {
     let value = originalGetParameter.call(this, parameter)
+
+    logQueue.sendLog('webgl_getParameter')
+
+    if (!spoofWebgl) return value
+
     const extension = this.getExtension('WEBGL_debug_renderer_info')
 
     if (parameter === this.RENDERER) {
-      value =
-        UNMASKED_RENDERERS[
-          Math.floor(Math.random() * UNMASKED_RENDERERS.length)
-        ]
+      value = spoofWebgl.renderer
     } else if (parameter === this.VENDOR) {
-      value = VENDORS[Math.floor(Math.random() * VENDORS.length)]
+      value = spoofWebgl.vendor
     } else if (extension && parameter === extension.UNMASKED_VENDOR_WEBGL) {
-      value =
-        UNMASKED_VENDORS[Math.floor(Math.random() * UNMASKED_VENDORS.length)]
+      value = spoofWebgl.unmaskedVendor
     } else if (extension && parameter === extension.UNMASKED_RENDERER_WEBGL) {
-      value =
-        UNMASKED_RENDERERS[
-          Math.floor(Math.random() * UNMASKED_RENDERERS.length)
-        ]
+      value = spoofWebgl.unmaskedRenderer
     } else if (
       parameter === this.MAX_TEXTURE_SIZE ||
       parameter === this.MAX_RENDERBUFFER_SIZE
@@ -47,7 +49,11 @@ export function rewriteWebgl() {
     pixels
   ) {
     originalReadPixels.call(this, x, y, width, height, format, type, pixels)
-    if (!pixels) return
+
+    logQueue.sendLog('webgl_readPixels')
+
+    if (!pixels || !spoofWebgl) return
+
     // 添加噪声，随机改变像素值
     const pixelArray = new Uint8Array(
       pixels.buffer,
@@ -55,7 +61,7 @@ export function rewriteWebgl() {
       pixels.byteLength
     )
     for (let i = 0; i < pixelArray.length; i++) {
-      pixelArray[i] += Math.floor(Math.random() * 5) // 添加小幅噪声
+      pixelArray[i] += spoofWebgl.pixel // 添加小幅噪声
     }
   }
 }

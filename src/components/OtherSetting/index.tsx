@@ -6,6 +6,11 @@ import { CORES } from '@/constants/cores'
 import { DEVICE_MEMORIES } from '@/constants/deviceMemories'
 import { SCREEN_SIZES } from '@/constants/screenSizes'
 import { TIMEZONES } from '@/constants/timezones'
+import {
+  UNMASKED_RENDERERS,
+  UNMASKED_VENDORS,
+  VENDORS
+} from '@/constants/webgl'
 import { tabStorage } from '@/utils/TabStorage'
 
 import type { Setting, Settings } from './type'
@@ -38,13 +43,35 @@ export default function OtherSetting() {
     // 只存储需要的数据
     const storageData: Record<string, any> = {}
     if (newSettings.spoofCanvas) {
-      storageData.spoofCanvas = newSettings.spoofCanvas
+      storageData.spoofCanvas = [
+        Math.floor(Math.random() * 10),
+        Math.floor(Math.random() * 10),
+        Math.floor(Math.random() * 10)
+      ] // RGB
     }
     if (newSettings.spoofWebgl) {
-      storageData.spoofWebgl = newSettings.spoofWebgl
+      storageData.spoofWebgl = {
+        renderer:
+          UNMASKED_RENDERERS[
+            Math.floor(Math.random() * UNMASKED_RENDERERS.length)
+          ],
+        vendor: VENDORS[Math.floor(Math.random() * VENDORS.length)],
+        unmaskedVendor:
+          UNMASKED_VENDORS[Math.floor(Math.random() * UNMASKED_VENDORS.length)],
+        unmaskedRenderer:
+          UNMASKED_RENDERERS[
+            Math.floor(Math.random() * UNMASKED_RENDERERS.length)
+          ],
+        pixel: Math.floor(Math.random() * 5)
+      }
     }
     if (newSettings.spoofAudioContext) {
-      storageData.spoofAudioContext = newSettings.spoofAudioContext
+      storageData.spoofAudioContext = {
+        getChannelDataNoise: Math.random() * 0.0001 - 0.00005,
+        getFloatFrequencyDataNoise: Math.random() * 0.1 - 0.05,
+        getByteFrequencyDataNoise: Math.floor((Math.random() - 0.5) * 10),
+        oscillatorStartNoise: Math.random() * 0.5 - 0.25
+      }
     }
     // if (newSettings.spoofFontFingerprint) {
     //   storageData.spoofFontFingerprint = newSettings.spoofFontFingerprint

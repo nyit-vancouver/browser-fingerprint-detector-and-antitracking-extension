@@ -1,24 +1,25 @@
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { ShieldCheckIcon } from '@heroicons/react/24/solid'
 import { List, Switch, Tooltip } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { tabStorage } from '@/utils/TabStorage'
-
-// import { getCurrentTabId } from '@/utils/getCurrentTabId'
 
 export default function Home() {
   const [switchValue, setSwitchValue] = useState(false)
 
-  const handleSwitch = async (checked: boolean) => {
+  const handleSwitch = useCallback(async (checked: boolean) => {
     console.log(`switch to ${checked}`)
     setSwitchValue(checked)
-    // const currentTabId = await getCurrentTabId()
-    // if (!currentTabId) {
-    //   console.error('tab id is undefined')
-    //   return
-    // }
+
     if (checked) {
+      // TODO: randomize
+      // canvas/webgl/audiocontext 必设置
+      // user-agent
+      // hardwareConcurrency/deviceMemory
+      // window.screen.width, window.screen.height 和 window.devicePixelRatio
+      // new Date().getTimezoneOffset() 获取的时区偏移量
+      //navigator.language 和 navigator.languages
       const data = {
         'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit',
         'accept-language': 'en-US,en;q=0.1',
@@ -53,19 +54,13 @@ export default function Home() {
         'deviceMemory',
         'timezone'
       ])
-  }
+  }, [])
 
-  const init = async () => {
-    // const currentTabId = await getCurrentTabId()
-    // if (!currentTabId) {
-    //   console.error('tab id is undefined')
-    //   return
-    // }
-    // TODO: 如果有SessionStorage，读取SessionStorage中的数据
-    const header = await tabStorage.get('user-agent')
+  const init = useCallback(async () => {
+    const header = (await tabStorage.get()) || {}
     console.log('init header', header)
-    setSwitchValue(!!header)
-  }
+    setSwitchValue(JSON.stringify(header) !== '{}')
+  }, [])
 
   useEffect(() => {
     init()

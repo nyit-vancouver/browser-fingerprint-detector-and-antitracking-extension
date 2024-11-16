@@ -1,12 +1,15 @@
 import {
+  blockWebrtc,
   rewriteAttribute,
-  rewriteTimezone,
-  rewriteCanvas,
-  rewriteWebgl,
   rewriteAudio,
-  blockWebrtc
+  rewriteCanvas,
+  rewriteTimezone,
+  rewriteWebgl
 } from '@/utils/rewriteAPI'
 
+// initAPIs will only be called when the data is not empty
+// logs will be recorded when the data is not empty
+// whether rewrite or not depends on if there is stored data
 function initAPIs(data: Record<string, any>) {
   // spoof user agent
   rewriteAttribute(data, {
@@ -51,11 +54,11 @@ function initAPIs(data: Record<string, any>) {
     propName: 'deviceMemory'
   })
   // spoof canvas
-  rewriteCanvas()
+  rewriteCanvas(data.spoofCanvas)
   // spoof webgl
-  rewriteWebgl()
+  rewriteWebgl(data.spoofWebgl)
   // spoof audio
-  rewriteAudio()
+  rewriteAudio(data.spoofAudioContext)
 
   // SOFTWARE
   // timezone
@@ -71,7 +74,7 @@ function initAPIs(data: Record<string, any>) {
 
   // NETWORK
   // block webrtc
-  blockWebrtc()
+  blockWebrtc(data.disableWebRTC)
 }
 
 export { initAPIs }

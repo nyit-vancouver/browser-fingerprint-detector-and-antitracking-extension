@@ -35,7 +35,7 @@ export class TabStorage {
 
   async get(
     // currentTabId: number,
-    key: string | string[]
+    key?: string | string[]
   ) {
     console.log('get', key)
     const currentTabId = await getCurrentTabId()
