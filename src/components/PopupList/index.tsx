@@ -12,10 +12,10 @@ import React, { useEffect, useState } from 'react'
 import _isDev from '@/utils/getEnv'
 
 import HeadersSetting from '../HeadersSetting'
-// import Home from '../Home'
+import Home from '../Home'
 import Layout from '../Layout'
 // import OtherSetting from '../OtherSetting'
-// import PlatformSetting from '../PlatformSetting'
+import PlatformSetting from '../PlatformSetting'
 import './index.scss'
 
 const { TabPane } = Tabs
@@ -245,7 +245,7 @@ function PopupList() {
           }
           key="1"
         >
-          {/* <div className="tab-content">{Home()}</div> */}
+          <div className="tab-content">{Home()}</div>
         </TabPane>
         <TabPane
           tab={
@@ -279,7 +279,7 @@ function PopupList() {
           }
           key="5"
         >
-          {/* <div className="tab-content">{PlatformSetting()}</div> */}
+          <div className="tab-content">{PlatformSetting()}</div>
         </TabPane>
         <TabPane
           tab={
