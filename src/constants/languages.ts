@@ -5,7 +5,14 @@ export interface Language {
   nav: string[]
 }
 
-export const languages: Language[] = [
+export const DEFAULT_LANGUAGE: Language = {
+  name: 'English (US)',
+  value: 'en-US,en;q=0.5',
+  code: 'en-US',
+  nav: ['en-US', 'en']
+}
+
+export const LANGUAGES: Language[] = [
   {
     name: 'Acholi',
     value: 'ach,en-GB;q=0.8,en-US;q=0.5,en;q=0.3',

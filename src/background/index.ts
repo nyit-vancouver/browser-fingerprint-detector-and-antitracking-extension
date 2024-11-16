@@ -1,8 +1,9 @@
 import { debounce } from 'throttle-debounce'
-import { storage } from '@/utils/storage'
-import { getRule } from '@/utils/getRule'
+
 import { deleteRule } from '@/utils/deleteRule'
+import { getRule } from '@/utils/getRule'
 import sendStorageToContent from '@/utils/sendStorageToContent'
+import { storage } from '@/utils/storage'
 
 const MAX_STORAGE_DAYS = 1000 * 60 * 60 * 24 * 15
 const MAX_STORAGE_CAPACITY = 0.9
@@ -36,19 +37,19 @@ chrome.storage.onChanged.addListener(
     if (bytesInUse >= chrome.storage.local.QUOTA_BYTES * MAX_STORAGE_CAPACITY) {
       console.warn('Warning: storage space usage is over 90%')
       const storage = (await chrome.storage.local.get()) || {}
-      const deleteKeys = []
-      for (let [key, value] of Object.entries(storage)) {
+      // const deleteKeys = []
+      for (const [key, value] of Object.entries(storage)) {
         console.log('key, value', key, value)
         // 删除过期数据
-        if (
-          value._timestamp &&
-          Date.now() - value._timestamp > MAX_STORAGE_DAYS
-        ) {
-          console.log('delete', key)
-          deleteKeys.push(key)
-        }
+        // if (
+        //   value._timestamp &&
+        //   Date.now() - value._timestamp > MAX_STORAGE_DAYS
+        // ) {
+        //   console.log('delete', key)
+        //   deleteKeys.push(key)
+        // }
         if (key === '__antiTracking_log') {
-          for (let [k, v] of Object.entries(value as Record<string, any>)) {
+          for (const [k, v] of Object.entries(value as Record<string, any>)) {
             if (v._timestamp && Date.now() - v._timestamp > MAX_STORAGE_DAYS) {
               console.log('delete', k)
               const res = { ...storage.__antiTracking_log }
@@ -61,9 +62,9 @@ chrome.storage.onChanged.addListener(
           }
         }
       }
-      if (deleteKeys.length > 0) {
-        await chrome.storage.local.remove(deleteKeys)
-      }
+      // if (deleteKeys.length > 0) {
+      //   await chrome.storage.local.remove(deleteKeys)
+      // }
     }
   })
 )
@@ -84,7 +85,7 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
     console.log('setHeader getSessionRules', rules)
     const preRule = rules.find((rule) => rule.condition.tabIds?.includes(tabId))
     const preRuleId = preRule?.id
-    const rule = getRule(data, [tabId], preRule)
+    const rule = getRule(data, [tabId]) //, preRule)
     await chrome.declarativeNetRequest.updateSessionRules({
       // rule是包含了之前规则的新规则
       addRules: [rule],
@@ -145,7 +146,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   // clear rules
   chrome.declarativeNetRequest.getSessionRules(function (res) {
     console.log('getSessionRules', res)
-    let deleteId = res.find((e) => e.condition.tabIds?.[0] === tabId)?.id
+    const deleteId = res.find((e) => e.condition.tabIds?.[0] === tabId)?.id
     if (deleteId === undefined) {
       console.error('deleteId is undefined')
       return

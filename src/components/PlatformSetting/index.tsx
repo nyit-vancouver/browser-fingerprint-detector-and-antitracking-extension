@@ -57,7 +57,7 @@ export default function PlatformSetting() {
     }
 
     // 存储选中的平台、浏览器和 userAgent
-    tabStorage.set(0, {
+    tabStorage.set({
       // selectedPlatform: platform,
       selectedBrowser: configId,
       userAgent: userAgent
@@ -77,7 +77,7 @@ export default function PlatformSetting() {
                 // 切换平台时清除已选择的浏览器
                 setSelectedBrowser('')
                 // 更新存储
-                tabStorage.set(0, {
+                tabStorage.set({
                   selectedPlatform: platform,
                   selectedBrowser: ''
                 })

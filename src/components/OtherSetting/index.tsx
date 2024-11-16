@@ -22,7 +22,7 @@ export default function OtherSetting() {
   // 更新隐私设置
   const updatePrivacy = (newPrivacy: PrivacyConfig) => {
     setPrivacy(newPrivacy)
-    tabStorage.set(0, {
+    tabStorage.set({
       spoofMediaDevices: newPrivacy.spoofMediaDevices,
       blockCSSExfil: newPrivacy.blockCSSExfil,
       limitHistory: newPrivacy.limitHistory,

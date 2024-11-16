@@ -1,11 +1,11 @@
 import {
-  etag,
-  userAgent,
   acceptLanguage,
-  referer,
   dnt,
-  xForwardedFor,
-  ifNoneMatch
+  etag,
+  ifNoneMatch,
+  referer,
+  userAgent,
+  xForwardedFor
 } from '@/config/responseHeaders'
 
 const MAP: Record<string, chrome.declarativeNetRequest.ModifyHeaderInfo> = {
@@ -19,10 +19,10 @@ const MAP: Record<string, chrome.declarativeNetRequest.ModifyHeaderInfo> = {
 }
 
 const getRequestHeaders = (
-  data: Record<string, any>,
-  preRequestHeaders?: chrome.declarativeNetRequest.ModifyHeaderInfo[]
+  data: Record<string, any>
+  // preRequestHeaders?: chrome.declarativeNetRequest.ModifyHeaderInfo[]
 ) => {
-  console.log('getRequestHeaders', data, preRequestHeaders)
+  console.log('getRequestHeaders', data)
   const headers: chrome.declarativeNetRequest.ModifyHeaderInfo[] = []
 
   Object.entries(data).forEach(([key, value]) => {
@@ -40,27 +40,27 @@ const getRequestHeaders = (
   })
   console.log('new headers', headers)
 
-  if (preRequestHeaders) {
-    preRequestHeaders.forEach((item) => {
-      // 如果preRequestHeaders中的header在headers中不存在，则push到headers中
-      if (!headers.some((i) => i.header === item.header)) {
-        headers.push({ ...item })
-      }
-    })
-  }
+  // if (preRequestHeaders) {
+  //   preRequestHeaders.forEach((item) => {
+  //     // 如果preRequestHeaders中的header在headers中不存在，则push到headers中
+  //     if (!headers.some((i) => i.header === item.header)) {
+  //       headers.push({ ...item })
+  //     }
+  //   })
+  // }
   console.log('headers', headers)
   return headers
 }
 
 export const getRule = (
   data: Record<string, any>,
-  tabIds: number[],
-  preRule?: chrome.declarativeNetRequest.Rule
+  tabIds: number[]
+  // preRule?: chrome.declarativeNetRequest.Rule
 ) => {
   console.log('getRule', data, tabIds)
   const requestHeaders = getRequestHeaders(
-    data,
-    preRule?.action?.requestHeaders
+    data
+    // preRule?.action?.requestHeaders
   )
   return {
     id: Math.floor(Math.random() * Math.pow(10, 9)),

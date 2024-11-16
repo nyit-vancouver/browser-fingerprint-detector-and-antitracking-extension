@@ -4,7 +4,8 @@ import { List, Switch, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 
 import { tabStorage } from '@/utils/TabStorage'
-import { getCurrentTabId } from '@/utils/getCurrentTabId'
+
+// import { getCurrentTabId } from '@/utils/getCurrentTabId'
 
 export default function Home() {
   const [switchValue, setSwitchValue] = useState(false)
@@ -12,11 +13,11 @@ export default function Home() {
   const handleSwitch = async (checked: boolean) => {
     console.log(`switch to ${checked}`)
     setSwitchValue(checked)
-    const currentTabId = await getCurrentTabId()
-    if (!currentTabId) {
-      console.error('tab id is undefined')
-      return
-    }
+    // const currentTabId = await getCurrentTabId()
+    // if (!currentTabId) {
+    //   console.error('tab id is undefined')
+    //   return
+    // }
     if (checked) {
       const data = {
         'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit',
@@ -34,9 +35,9 @@ export default function Home() {
         deviceMemory: 1,
         timezone: 'Asia/Shanghai'
       }
-      tabStorage.set(currentTabId, data)
+      tabStorage.set(data)
     } else
-      tabStorage.delete(currentTabId, [
+      tabStorage.delete([
         'user-agent',
         'x-forwarded-for',
         'accept-language',
@@ -55,13 +56,13 @@ export default function Home() {
   }
 
   const init = async () => {
-    const currentTabId = await getCurrentTabId()
-    if (!currentTabId) {
-      console.error('tab id is undefined')
-      return
-    }
+    // const currentTabId = await getCurrentTabId()
+    // if (!currentTabId) {
+    //   console.error('tab id is undefined')
+    //   return
+    // }
     // TODO: 如果有SessionStorage，读取SessionStorage中的数据
-    const header = await tabStorage.get(currentTabId, 'user-agent')
+    const header = await tabStorage.get('user-agent')
     console.log('init header', header)
     setSwitchValue(!!header)
   }
