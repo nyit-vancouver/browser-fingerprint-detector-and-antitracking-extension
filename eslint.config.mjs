@@ -27,15 +27,13 @@ export default [
           ]
         }
       ]
-    },
-    overrides: [
-      {
-        files: ['constants/language.ts'],
-        rules: {
-          'max-lines': 'off'
-        }
-      }
-    ]
+    }
+  },
+  {
+    files: ['constants/language.ts'],
+    rules: {
+      'max-lines': 'off'
+    }
   },
   {
     languageOptions: { globals: globals.browser }
