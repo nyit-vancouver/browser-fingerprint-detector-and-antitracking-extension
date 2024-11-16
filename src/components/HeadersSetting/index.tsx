@@ -24,8 +24,18 @@ export default function HeadersSetting() {
       value: DEFAULT_IP
     }
   })
-  const storeData = useCallback((res: Headers) => {
-    console.log('debouncedStoreData', res)
+  const updateStorage = useCallback(async (res: Headers) => {
+    console.log('updateStorage', res)
+    // 删除相关的设置
+    const deletedKeys =
+      Object.entries(res)
+        .filter(([, value]) =>
+          typeof value === 'boolean' ? !value : !value.enabled
+        )
+        .map(([key]) => key) || []
+    if (deletedKeys.length > 0) {
+      await tabStorage.delete(deletedKeys)
+    }
     // 只存储需要的数据
     const storageData: Record<string, any> = {}
     if (res.disableReferer) {
@@ -46,10 +56,10 @@ export default function HeadersSetting() {
 
       storageData.language = getLanguage(res.spoofAcceptLang.value).code
     }
-    tabStorage.set(storageData, true)
+    tabStorage.set(storageData)
   }, [])
 
-  // const debouncedStoreData = useCallback(debounce(1000, storeData), [])
+  // const debouncedStoreData = useCallback(debounce(1000, updateStorage), [])
 
   const updateHeaders = useCallback(
     (newHeaders: NewHeader) => {
@@ -59,7 +69,7 @@ export default function HeadersSetting() {
       }
       setHeaders(res)
       console.log('updateHeaders', newHeaders, res)
-      storeData(res) // TODO：debounce
+      updateStorage(res) // TODO：debounce
     },
     [headers]
   )

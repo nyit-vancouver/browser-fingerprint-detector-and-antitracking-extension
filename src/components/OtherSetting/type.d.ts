@@ -1,13 +1,41 @@
-// 添加隐私配置接口
-export interface PrivacyConfig {
-  spoofMediaDevices: boolean
-  blockCSSExfil: boolean
-  limitHistory: boolean
-  protectWinName: boolean
+export interface Settings {
+  spoofCanvas: boolean
+  spoofWebgl: boolean
   spoofAudioContext: boolean
-  spoofClientRects: boolean
-  spoofFontFingerprint: boolean
+  // spoofFontFingerprint: boolean
   disableWebRTC: boolean
   screenSize: string
   timeZone: string
+  colorDepth: number | undefined
+  hardwareConcurrency: number | undefined
+  deviceMemory: number | undefined
 }
+
+export type Setting =
+  | {
+      spoofCanvas: boolean
+    }
+  | {
+      spoofWebgl: boolean
+    }
+  | {
+      spoofAudioContext: boolean
+    }
+  | {
+      disableWebRTC: boolean
+    }
+  | {
+      screenSize: string
+    }
+  | {
+      timeZone: string
+    }
+  | {
+      colorDepth: number | undefined
+    }
+  | {
+      hardwareConcurrency: number | undefined
+    }
+  | {
+      deviceMemory: number | undefined
+    }

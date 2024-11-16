@@ -1,9 +1,10 @@
+/* eslint-disable */
 export interface Timezone {
   zone: string
   offset: string
 }
 
-export const timezones: Timezone[] = [
+export const TIMEZONES: Timezone[] = [
   { zone: 'Etc/GMT+12', offset: '-12:00' },
   { zone: 'Etc/GMT+11', offset: '-11:00' },
   { zone: 'Pacific/Midway', offset: '-11:00' },

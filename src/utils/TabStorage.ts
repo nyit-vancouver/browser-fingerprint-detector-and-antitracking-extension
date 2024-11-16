@@ -10,8 +10,8 @@ import { storage } from './storage'
 export class TabStorage {
   async set(
     // currentTabId: number,
-    data: Record<string, any>,
-    overwrite = false
+    data: Record<string, any>
+    // overwrite = false
   ) {
     console.log('set', data)
     const currentTabId = await getCurrentTabId()
@@ -30,7 +30,7 @@ export class TabStorage {
       // call background.js
       sendMessage('setHeader', currentTabId, res)
     }
-    await storage.set(currentTabId, data, overwrite)
+    await storage.set(currentTabId, data)
   }
 
   async get(
@@ -63,6 +63,7 @@ export class TabStorage {
         res.push(key)
       }
     })
+    // TODO: 不一定call background.js
     sendMessage('deleteHeader', currentTabId, res)
     await storage.delete(currentTabId, keys)
   }
@@ -70,6 +71,7 @@ export class TabStorage {
   async deleteAll(currentTabId: number) {
     console.log('delete all')
     // call background.js
+    // TODO: 不一定call background.js
     sendMessage('deleteAll', currentTabId)
     await storage.deleteAll(currentTabId)
   }

@@ -1,16 +1,16 @@
 export class Storage {
   async set(
     currentTabId: number,
-    data: Record<string, any>,
-    overwrite = false
+    data: Record<string, any>
+    // overwrite = false
   ) {
     console.log('Storage set', data)
-    if (overwrite) {
-      await chrome.storage.local.set({
-        [`__antiTracking_config_${currentTabId}`]: data
-      })
-      return
-    }
+    // if (overwrite) {
+    //   await chrome.storage.local.set({
+    //     [`__antiTracking_config_${currentTabId}`]: data
+    //   })
+    //   return
+    // }
     const res =
       (await chrome.storage.local.get(
         `__antiTracking_config_${currentTabId}`
