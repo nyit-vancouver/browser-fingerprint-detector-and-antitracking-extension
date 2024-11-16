@@ -1,7 +1,7 @@
-import globals from 'globals'
 import pluginJs from '@eslint/js'
-import tseslint from 'typescript-eslint'
 import pluginReact from 'eslint-plugin-react'
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
 export default [
   pluginJs.configs.recommended,
@@ -27,7 +27,15 @@ export default [
           ]
         }
       ]
-    }
+    },
+    overrides: [
+      {
+        files: ['constants/language.ts'],
+        rules: {
+          'max-lines': 'off'
+        }
+      }
+    ]
   },
   {
     languageOptions: { globals: globals.browser }
