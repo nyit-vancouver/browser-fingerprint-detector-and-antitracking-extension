@@ -11,7 +11,7 @@ export const DEFAULT_LANGUAGE: Language = {
   code: 'en-US',
   nav: ['en-US', 'en']
 }
-
+/* eslint-disable */
 export const LANGUAGES: Language[] = [
   {
     name: 'Acholi',
