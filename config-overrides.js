@@ -46,7 +46,7 @@ const overridePlugins = (config) => {
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       filename: 'index.html',
-      chunks: ['main', 'background', 'content']
+      chunks: ['main', 'background']
     }),
     new HtmlWebpackPlugin({
       template: 'public/options.html',
