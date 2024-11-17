@@ -5,7 +5,8 @@ import { getRule } from '@/utils/getRule'
 import sendStorageToContent from '@/utils/sendStorageToContent'
 import { storage } from '@/utils/storage'
 
-const MAX_STORAGE_DAYS = 1000 * 60 * 60 * 24 * 15
+import { AntiTrackingLog } from './type'
+
 const MAX_STORAGE_CAPACITY = 0.9
 
 // 监听 tab 更新事件
@@ -36,32 +37,40 @@ chrome.storage.onChanged.addListener(
     console.log('Bytes in use:', bytesInUse)
     if (bytesInUse >= chrome.storage.local.QUOTA_BYTES * MAX_STORAGE_CAPACITY) {
       console.warn('Warning: storage space usage is over 90%')
-      const storage = (await chrome.storage.local.get()) || {}
+      const trackingLogs: AntiTrackingLog =
+        (await chrome.storage.local.get())?.__antiTracking_log || {}
       // const deleteKeys = []
-      for (const [key, value] of Object.entries(storage)) {
-        console.log('key, value', key, value)
-        // 删除过期数据
-        // if (
-        //   value._timestamp &&
-        //   Date.now() - value._timestamp > MAX_STORAGE_DAYS
-        // ) {
-        //   console.log('delete', key)
-        //   deleteKeys.push(key)
-        // }
-        if (key === '__antiTracking_log') {
-          for (const [k, v] of Object.entries(value as Record<string, any>)) {
-            if (v._timestamp && Date.now() - v._timestamp > MAX_STORAGE_DAYS) {
-              console.log('delete', k)
-              const res = { ...storage.__antiTracking_log }
-              delete res[k]
-              await chrome.storage.local.set({
-                ...storage,
-                __antiTracking_log: res
-              })
-            }
-          }
+      // for (const [key, value] of Object.entries(storage)) {
+      //   console.log('key, value', key, value)
+      // 删除过期数据
+      // if (
+      //   value._timestamp &&
+      //   Date.now() - value._timestamp > MAX_STORAGE_DAYS
+      // ) {
+      //   console.log('delete', key)
+      //   deleteKeys.push(key)
+      // }
+      // if (key === '__antiTracking_log') {
+      const sortedTimestamps = Object.values(trackingLogs)
+        .map((item) => item._timestamp)
+        .sort((a, b) => a - b)
+      const mid = Math.floor(sortedTimestamps.length / 2)
+      const midTimestamp = sortedTimestamps[mid]
+
+      const res = { ...trackingLogs }
+
+      Object.entries(trackingLogs).forEach(([k, v]) => {
+        // 根据_timestamp删除前50%的旧数据
+        if (v._timestamp < midTimestamp) {
+          console.log('delete', k)
+          delete res[k]
         }
-      }
+      })
+      await chrome.storage.local.set({
+        ...storage,
+        __antiTracking_log: res
+      })
+      // }
       // if (deleteKeys.length > 0) {
       //   await chrome.storage.local.remove(deleteKeys)
       // }
@@ -157,6 +166,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   })
 })
 
+// DO NOT DELETE THIS LISTENER
 // 监听请求头
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function () {
