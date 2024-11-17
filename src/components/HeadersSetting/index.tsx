@@ -54,7 +54,10 @@ export default function HeadersSetting() {
     if (res.spoofAcceptLang.enabled) {
       storageData['accept-language'] = res.spoofAcceptLang.value
 
-      storageData.language = getLanguage(res.spoofAcceptLang.value).code
+      const language = getLanguage(res.spoofAcceptLang.value)
+
+      storageData.language = language.code
+      storageData.languages = language.nav
     }
     tabStorage.set(storageData)
   }, [])

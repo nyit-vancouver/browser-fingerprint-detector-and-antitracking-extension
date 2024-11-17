@@ -1,37 +1,20 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { ARCHITECTURES } from '@/constants/architecture'
-import { MODELS } from '@/constants/models'
-import { PLATFORMS, PLATFORM_MAP, USER_AGENTS } from '@/constants/userAgents'
+import { PLATFORMS, USER_AGENTS } from '@/constants/userAgents'
 import type { Platform, UserAgent } from '@/constants/userAgents'
 import { tabStorage } from '@/utils/TabStorage'
+import { getUserAgentDetails } from '@/utils/getUserAgentDetails'
 
 export default function PlatformSetting() {
   const [selectedPlatform, setSelectedPlatform] = useState<Platform>('windows')
   const [selectedBrowser, setSelectedBrowser] = useState<string>('')
 
-  const handleBrowserSelect = useCallback(
-    ({ userAgent, id, type, name }: UserAgent) => {
-      setSelectedBrowser(id)
-      // TODO: 没办法取消？
-      const mobile = /ios|android/i.test(type)
-      tabStorage.set({
-        'user-agent': userAgent,
-        userAgentData: {
-          platform: PLATFORM_MAP[type],
-          mobile,
-          architecture:
-            ARCHITECTURES[Math.floor(Math.random() * ARCHITECTURES.length)],
-          model: MODELS[Math.floor(Math.random() * MODELS.length)],
-          platformVersion: `${name.match(/(\d+)\s*-\s*(\d+)/)?.[0] || 10}.0`,
-          uaFullVersion:
-            userAgent.match(/\/(\d+(\.\d+)*)(?=\s*['"]?$)/g)?.[0].slice(1) ||
-            '131.0'
-        }
-      })
-    },
-    []
-  )
+  const handleBrowserSelect = useCallback((info: UserAgent) => {
+    setSelectedBrowser(info.id)
+    // TODO: 没办法取消？
+    const data = getUserAgentDetails(info)
+    tabStorage.set(data)
+  }, [])
 
   const platformList = useMemo(
     () => USER_AGENTS.filter((ua) => ua.type === selectedPlatform),

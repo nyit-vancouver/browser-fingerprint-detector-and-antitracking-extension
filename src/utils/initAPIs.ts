@@ -83,7 +83,12 @@ function initAPIs(data: Record<string, any>) {
     paramName: 'language',
     propName: 'language'
   })
-  // spoof font
+  rewriteAttribute(data, {
+    obj: window.navigator,
+    objStr: 'navigator',
+    paramName: 'languages',
+    propName: 'languages'
+  })
 
   // NETWORK
   // block webrtc

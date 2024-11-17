@@ -4,6 +4,7 @@ import { List, Switch, Tooltip } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { tabStorage } from '@/utils/TabStorage'
+import { getRandomizedConfigs } from '@/utils/getRandomizedConfigs'
 
 export default function Home() {
   const [switchValue, setSwitchValue] = useState(false)
@@ -13,24 +14,7 @@ export default function Home() {
     setSwitchValue(checked)
 
     if (checked) {
-      // TODO: randomize
-      const data = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit',
-        'accept-language': 'en-US,en;q=0.1',
-        'x-forwarded-for': '111.8.203.1',
-        referer: false,
-        dnt: '1',
-        etag: false,
-        'if-none-match': false,
-        height: 2855,
-        width: 5120,
-        language: 'en-US',
-        colorDepth: 48,
-        hardwareConcurrency: 18,
-        deviceMemory: 1,
-        timezone: 'Asia/Shanghai'
-      }
-      tabStorage.set(data)
+      getRandomizedConfigs()
     } else tabStorage.deleteAll()
   }, [])
 
