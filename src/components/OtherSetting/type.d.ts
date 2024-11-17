@@ -4,8 +4,8 @@ export interface Settings {
   spoofAudioContext: boolean
   // spoofFontFingerprint: boolean
   disableWebRTC: boolean
-  screenSize: string
-  timeZone: string
+  screenSize: string | undefined
+  timeZone: string | undefined
   colorDepth: number | undefined
   hardwareConcurrency: number | undefined
   deviceMemory: number | undefined

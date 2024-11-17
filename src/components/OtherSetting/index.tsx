@@ -21,8 +21,8 @@ export default function OtherSetting() {
     spoofWebgl: false,
     spoofAudioContext: false,
     disableWebRTC: false,
-    screenSize: '',
-    timeZone: '',
+    screenSize: undefined,
+    timeZone: undefined,
     colorDepth: undefined,
     hardwareConcurrency: undefined,
     deviceMemory: undefined
@@ -125,6 +125,7 @@ export default function OtherSetting() {
         <div>Screen Size</div>
         <Select
           allowClear
+          placeholder="Please select"
           className="w-48"
           value={settings.screenSize}
           onChange={(value) => updateSetting({ screenSize: value })}
@@ -140,6 +141,7 @@ export default function OtherSetting() {
         <div>Timezone</div>
         <Select
           allowClear
+          placeholder="Please select"
           className="w-48"
           value={settings.timeZone}
           onChange={(value) => updateSetting({ timeZone: value })}
@@ -155,6 +157,7 @@ export default function OtherSetting() {
         <div>Color Depth</div>
         <Select
           allowClear
+          placeholder="Please select"
           className="w-48"
           value={settings.colorDepth}
           onChange={(value) => updateSetting({ colorDepth: value })}
@@ -170,6 +173,7 @@ export default function OtherSetting() {
         <div>CPU Cores</div>
         <Select
           allowClear
+          placeholder="Please select"
           className="w-48"
           value={settings.hardwareConcurrency}
           onChange={(value) => updateSetting({ hardwareConcurrency: value })}
@@ -185,6 +189,7 @@ export default function OtherSetting() {
         <div>Device Memory</div>
         <Select
           allowClear
+          placeholder="Please select"
           className="w-48"
           value={settings.deviceMemory}
           onChange={(value) => updateSetting({ deviceMemory: value })}

@@ -19,7 +19,7 @@ import './index.scss'
 const { TabPane } = Tabs
 
 function PopupList() {
-  const [showDetail, setShowDetail] = useState(_isDev())
+  const [showDetail] = useState(_isDev())
   const [activeTab, setActiveTab] = useState('1')
 
   // 在组件加载时读取保存的配置
@@ -29,19 +29,21 @@ function PopupList() {
 
   // 处理原有功能的点击事件
   const handleClick = (page: string) => {
-    const isDev = _isDev()
-    if (!isDev) {
-      chrome.storage.sync.set({ page }, function () {
-        console.log('set page.')
-      })
-      if (chrome.runtime.openOptionsPage) {
-        chrome.runtime.openOptionsPage()
-      } else {
-        window.open(chrome.runtime.getURL('options.html'))
-      }
-      return
-    }
-    setShowDetail(true)
+    window.open(`http://localhost:3000#${page}`) //chrome.runtime.getURL('options.html'))
+
+    // const isDev = _isDev()
+    // if (!isDev) {
+    //   chrome.storage.sync.set({ page }, function () {
+    //     console.log('set page.')
+    //   })
+    //   if (chrome.runtime.openOptionsPage) {
+    //     chrome.runtime.openOptionsPage()
+    //   } else {
+    //     window.open('http://localhost:3000') //chrome.runtime.getURL('options.html'))
+    //   }
+    //   return
+    // }
+    // setShowDetail(true)
   }
 
   // Switch开关处理逻辑保持不变
@@ -116,7 +118,7 @@ function PopupList() {
         </TabPane>
         <TabPane
           tab={
-            <Tooltip title="UserAgent" placement="right">
+            <Tooltip title="UserAgent Settings" placement="right">
               <div className="tab-icon">
                 <ComputerDesktopIcon className="icon" />
               </div>
@@ -124,11 +126,13 @@ function PopupList() {
           }
           key="5"
         >
-          <div className="tab-content">{PlatformSetting()}</div>
+          <div className="tab-content">
+            {activeTab === '5' && <PlatformSetting />}
+          </div>
         </TabPane>
         <TabPane
           tab={
-            <Tooltip title="Headers Setting" placement="right">
+            <Tooltip title="Headers Settings" placement="right">
               <div className="tab-icon">
                 <AdjustmentsHorizontalIcon className="icon" />
               </div>
@@ -136,11 +140,13 @@ function PopupList() {
           }
           key="6"
         >
-          <div className="tab-content">{HeadersSetting()}</div>
+          <div className="tab-content">
+            {activeTab === '6' && <HeadersSetting />}
+          </div>
         </TabPane>
         <TabPane
           tab={
-            <Tooltip title="Other Setting" placement="right">
+            <Tooltip title="Other Settings" placement="right">
               <div className="tab-icon">
                 <Cog6ToothIcon className="icon" />
               </div>
@@ -148,7 +154,9 @@ function PopupList() {
           }
           key="7"
         >
-          <div className="tab-content">{OtherSetting()}</div>
+          <div className="tab-content">
+            {activeTab === '7' && <OtherSetting />}
+          </div>
         </TabPane>
       </Tabs>
     </div>

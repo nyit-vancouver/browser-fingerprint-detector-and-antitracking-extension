@@ -1,7 +1,7 @@
 import { ShieldCheckIcon } from '@heroicons/react/24/solid'
 import { ConfigProvider, Layout as LayoutComp, Menu } from 'antd'
 import { Header } from 'antd/es/layout/layout'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import Dashboard from '@/pages/Dashboard'
 import Info from '@/pages/Info'
@@ -20,7 +20,12 @@ const siderStyle: React.CSSProperties = {
 }
 
 const Layout = () => {
-  const [header, setHeader] = useState('info')
+  const [header, setHeader] = useState('')
+
+  const handleClick = useCallback(({ key }: any) => {
+    window.location.hash = key
+    setHeader(key)
+  }, [])
 
   const menuItems = useMemo(
     () => [
@@ -37,6 +42,12 @@ const Layout = () => {
     ],
     []
   )
+
+  useEffect(() => {
+    // get url hash
+    const hash = window.location.hash.slice(1)
+    setHeader(hash || 'info')
+  }, [])
 
   return (
     <ConfigProvider
@@ -60,9 +71,10 @@ const Layout = () => {
           </Header>
           <Content>
             <Menu
-              defaultSelectedKeys={['info']}
+              selectedKeys={[header]}
               mode="inline"
               items={menuItems}
+              onClick={handleClick}
             />
           </Content>
         </Sider>
