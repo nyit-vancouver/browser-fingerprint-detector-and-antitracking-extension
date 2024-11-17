@@ -8,6 +8,23 @@ export interface UserAgent {
   userAgent: string
 }
 
+export interface UserAgentData {
+  mobile: boolean
+  platform: string
+  architecture: string
+  model: string
+  platformVersion: string
+  uaFullVersion: string
+}
+
+export const PLATFORM_MAP: Record<Platform, string> = {
+  macos: 'macOS',
+  ios: 'iOS',
+  windows: 'Windows',
+  linux: 'Linux',
+  android: 'Android'
+}
+
 export const PLATFORMS: Platform[] = [
   'windows',
   'macos',

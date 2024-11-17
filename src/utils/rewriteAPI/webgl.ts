@@ -8,7 +8,7 @@ interface SpoofWebgl {
   pixel: number
 }
 
-export function rewriteWebgl(spoofWebgl: SpoofWebgl) {
+export function rewriteWebgl(spoofWebgl?: SpoofWebgl) {
   const originalGetParameter = WebGLRenderingContext.prototype.getParameter
 
   WebGLRenderingContext.prototype.getParameter = function (parameter) {

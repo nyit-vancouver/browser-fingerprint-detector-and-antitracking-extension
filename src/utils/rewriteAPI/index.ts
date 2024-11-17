@@ -1,8 +1,9 @@
 import { rewriteAttribute } from './attribute'
-import { rewriteTimezone } from './timezone'
-import { rewriteCanvas } from './canvas'
-import { rewriteWebgl } from './webgl'
 import { rewriteAudio } from './audio'
+import { rewriteCanvas } from './canvas'
+import { rewriteTimezone } from './timezone'
+import { rewriteUserAgentData } from './userAgentData'
+import { rewriteWebgl } from './webgl'
 import { blockWebrtc } from './webrtc'
 
 export {
@@ -11,5 +12,6 @@ export {
   rewriteCanvas,
   rewriteWebgl,
   rewriteAudio,
-  blockWebrtc
+  blockWebrtc,
+  rewriteUserAgentData
 }

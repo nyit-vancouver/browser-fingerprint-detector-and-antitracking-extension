@@ -1,6 +1,6 @@
 import { logQueue } from '@/utils/sendLogs'
 
-export function rewriteCanvas(spoofCanvas: number[]) {
+export function rewriteCanvas(spoofCanvas?: number[]) {
   const originalToDataURL = HTMLCanvasElement.prototype.toDataURL
 
   HTMLCanvasElement.prototype.toDataURL = function (...args) {

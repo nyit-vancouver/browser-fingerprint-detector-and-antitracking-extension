@@ -4,6 +4,7 @@ import {
   rewriteAudio,
   rewriteCanvas,
   rewriteTimezone,
+  rewriteUserAgentData,
   rewriteWebgl
 } from '@/utils/rewriteAPI'
 
@@ -18,6 +19,18 @@ function initAPIs(data: Record<string, any>) {
     paramName: 'user-agent',
     propName: 'userAgent'
   })
+  rewriteAttribute(
+    {
+      platform: data.userAgentData.platform
+    },
+    {
+      obj: window.navigator,
+      objStr: 'navigator',
+      paramName: 'platform',
+      propName: 'platform'
+    }
+  )
+  rewriteUserAgentData(data.userAgentData)
   // HARDWARE
   // spoof screen size
   rewriteAttribute(data, {

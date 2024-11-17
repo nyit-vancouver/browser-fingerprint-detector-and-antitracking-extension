@@ -68,8 +68,13 @@ export class TabStorage {
     await storage.delete(currentTabId, keys)
   }
 
-  async deleteAll(currentTabId: number) {
+  async deleteAll() {
     console.log('delete all')
+    const currentTabId = await getCurrentTabId()
+    if (!currentTabId) {
+      console.error('tab id is undefined')
+      return
+    }
     // call background.js
     // TODO: 不一定call background.js
     sendMessage('deleteAll', currentTabId)

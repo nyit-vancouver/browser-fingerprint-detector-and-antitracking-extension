@@ -7,13 +7,13 @@ function getDeviceType(): string {
 
   // 如果 userAgentData 不可用，回退到传统方法
   const ua = navigator.userAgent
-  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+  if (ua.match(/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i)?.length) {
     return 'Tablet'
   }
   if (
-    /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
-      ua
-    )
+    ua.match(
+      /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/i
+    )?.length
   ) {
     return 'Mobile'
   }

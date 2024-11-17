@@ -7,7 +7,7 @@ interface SpoofAudioContext {
   oscillatorStartNoise: number
 }
 
-export function rewriteAudio(spoofAudioContext: SpoofAudioContext) {
+export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
   const originalGetChannelData = AudioBuffer.prototype.getChannelData
 
   AudioBuffer.prototype.getChannelData = function (channel) {

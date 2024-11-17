@@ -14,12 +14,6 @@ export default function Home() {
 
     if (checked) {
       // TODO: randomize
-      // canvas/webgl/audiocontext 必设置
-      // user-agent
-      // hardwareConcurrency/deviceMemory
-      // window.screen.width, window.screen.height 和 window.devicePixelRatio
-      // new Date().getTimezoneOffset() 获取的时区偏移量
-      //navigator.language 和 navigator.languages
       const data = {
         'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit',
         'accept-language': 'en-US,en;q=0.1',
@@ -37,23 +31,7 @@ export default function Home() {
         timezone: 'Asia/Shanghai'
       }
       tabStorage.set(data)
-    } else
-      tabStorage.delete([
-        'user-agent',
-        'x-forwarded-for',
-        'accept-language',
-        'referer',
-        'dnt',
-        'etag',
-        'if-none-match',
-        'height',
-        'width',
-        'language',
-        'colorDepth',
-        'hardwareConcurrency',
-        'deviceMemory',
-        'timezone'
-      ])
+    } else tabStorage.deleteAll()
   }, [])
 
   const init = useCallback(async () => {

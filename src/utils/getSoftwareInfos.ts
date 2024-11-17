@@ -15,7 +15,7 @@ export async function getSoftwareInfos() {
     referrer: document.referrer || 'Direct visit',
     flash: detectFlash(),
     activeX: detectActiveX(),
-    java: detectJava(),
+    // java: detectJava(), //有问题
     javascript: detectJavascript(), // 新增的JavaScript检测
     portScan: 'Not available' // 新增的Port Scan信息
   }
@@ -58,21 +58,21 @@ function detectActiveX(): string {
   }
 }
 
-function detectJava(): string {
-  let javaEnabled = navigator.javaEnabled()
+// function detectJava(): string {
+//   let javaEnabled = window.navigator.javaEnabled()
 
-  // 额外检查 Java 插件
-  if (!javaEnabled && navigator.plugins) {
-    for (let i = 0; i < navigator.plugins.length; i++) {
-      if (navigator.plugins[i].name.toLowerCase().indexOf('java') > -1) {
-        javaEnabled = true
-        break
-      }
-    }
-  }
+//   // 额外检查 Java 插件
+//   if (!javaEnabled && navigator.plugins) {
+//     for (let i = 0; i < navigator.plugins.length; i++) {
+//       if (navigator.plugins[i].name.toLowerCase().indexOf('java') > -1) {
+//         javaEnabled = true
+//         break
+//       }
+//     }
+//   }
 
-  return javaEnabled ? 'Enabled' : 'Disabled'
-}
+//   return javaEnabled ? 'Enabled' : 'Disabled'
+// }
 
 function detectJavascript(): string {
   return 'Enabled' // 如果这段代码能够执行，说明JavaScript是启用的
