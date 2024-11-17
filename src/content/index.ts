@@ -2,7 +2,7 @@ import { initAPIs } from '@/utils/initAPIs'
 
 console.warn('[content] loaded ', new Date().getTime())
 
-window.addEventListener('tabStorage', async (event) => {
+function handleTabStorage(event: any) {
   console.log('Received data in writeLog:', event)
   const customEvent = event as CustomEvent
   const { data } = customEvent.detail
@@ -10,6 +10,8 @@ window.addEventListener('tabStorage', async (event) => {
   if (data) {
     initAPIs(data)
   }
-})
+}
+
+window.addEventListener('tabStorage', handleTabStorage)
 
 export {}

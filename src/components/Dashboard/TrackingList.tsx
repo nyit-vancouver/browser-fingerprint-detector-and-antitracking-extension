@@ -1,10 +1,10 @@
-import { Button, DatePicker, Select, Table } from 'antd'
+import { Button, Select, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import React, { useState } from 'react'
 
 import type { TrackingLog } from '@/constants/trackingData'
 
-const { RangePicker } = DatePicker
+// const { RangePicker } = DatePicker
 
 interface TrackingListProps {
   data: TrackingLog[]
@@ -18,8 +18,8 @@ const TrackingList: React.FC<TrackingListProps> = ({
   data,
   selectedDomain,
   onDomainChange,
-  dateRange,
-  onDateRangeChange
+  dateRange
+  // onDateRangeChange
 }) => {
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({})
   const domains = Array.from(new Set(data.map((item) => item.domain)))
@@ -40,7 +40,7 @@ const TrackingList: React.FC<TrackingListProps> = ({
     },
     {
       title: 'Time',
-      dataIndex: '_timestamp',
+      dataIndex: 'timestamp',
       key: 'timestamp',
       width: '20%',
       render: (timestamp: number) => new Date(timestamp).toLocaleString()
@@ -51,7 +51,7 @@ const TrackingList: React.FC<TrackingListProps> = ({
       key: 'logs',
       render: (logs: TrackingLog['logs'], record: TrackingLog) => {
         const entries = Object.entries(logs)
-        const isExpanded = expandedRows[record._timestamp]
+        const isExpanded = expandedRows[record.timestamp]
         const displayEntries = isExpanded ? entries : entries.slice(0, 3)
 
         return (
@@ -64,7 +64,7 @@ const TrackingList: React.FC<TrackingListProps> = ({
             {entries.length > 3 && (
               <Button
                 type="link"
-                onClick={() => toggleExpand(record._timestamp.toString())}
+                onClick={() => toggleExpand(record.timestamp.toString())}
                 className="p-0"
               >
                 {isExpanded
@@ -82,7 +82,7 @@ const TrackingList: React.FC<TrackingListProps> = ({
     const domainMatch = !selectedDomain || item.domain === selectedDomain
     const dateMatch =
       !dateRange ||
-      (item._timestamp >= dateRange[0] && item._timestamp <= dateRange[1])
+      (item.timestamp >= dateRange[0] && item.timestamp <= dateRange[1])
     return domainMatch && dateMatch
   })
 
@@ -104,7 +104,7 @@ const TrackingList: React.FC<TrackingListProps> = ({
             </Select.Option>
           ))}
         </Select>
-        <RangePicker
+        {/* <RangePicker
           onChange={(dates) => {
             if (dates) {
               onDateRangeChange([dates[0]!.valueOf(), dates[1]!.valueOf()])
@@ -112,12 +112,12 @@ const TrackingList: React.FC<TrackingListProps> = ({
               onDateRangeChange(null)
             }
           }}
-        />
+        /> */}
       </div>
       <Table
         columns={columns}
         dataSource={filteredData}
-        rowKey="_timestamp"
+        rowKey="timestamp"
         pagination={{ pageSize: 10 }}
       />
     </div>

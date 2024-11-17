@@ -1,15 +1,48 @@
 import { Layout } from 'antd'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import TrackingChart from '@/components/Dashboard/TrackingChart'
 import TrackingList from '@/components/Dashboard/TrackingList'
-import { trackingData } from '@/constants/trackingData'
+import type { TrackingLog } from '@/constants/trackingData'
 
 const { Content } = Layout
 
 const Dashboard: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null)
   const [dateRange, setDateRange] = useState<[number, number] | null>(null)
+  const [trackingData, setTrackingData] = useState<TrackingLog[]>([])
+
+  const handleLogs = useCallback(async (event: any) => {
+    const customEvent = event as CustomEvent
+    const { data } = customEvent.detail
+    console.log('Message from dashboardLogs:', data)
+
+    const logs: TrackingLog[] = Object.entries(
+      data as Record<string, Record<string, number>>
+    ).map(([domain, values]) => {
+      const obj = {
+        ...values
+      }
+      delete obj._timestamp
+      return {
+        domain,
+        logs: obj,
+        timestamp: values._timestamp
+      }
+    })
+    setTrackingData(logs)
+  }, [])
+
+  useEffect(() => {
+    const event = new CustomEvent('getLogs')
+    window.dispatchEvent(event)
+
+    window.addEventListener('dashboardLogs', handleLogs)
+
+    return () => {
+      window.removeEventListener('dashboardLogs', handleLogs)
+    }
+  }, [handleLogs])
 
   return (
     <Layout>

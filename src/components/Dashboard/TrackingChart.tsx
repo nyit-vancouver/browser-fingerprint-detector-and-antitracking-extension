@@ -24,7 +24,7 @@ const TrackingChart: React.FC<TrackingChartProps> = ({
 
   const latestRecord = data
     .filter((item) => item.domain === selectedDomain)
-    .sort((a, b) => b._timestamp - a._timestamp)[0]
+    .sort((a, b) => b.timestamp - a.timestamp)[0]
 
   if (!latestRecord) {
     return <Empty description="No data available" className="my-8" />

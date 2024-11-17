@@ -22,6 +22,19 @@ export default async function sendStorageToContent(tabId: number) {
     })
   }
 
+  async function handleGetLogs() {
+    const logs =
+      (await chrome.storage.local.get('__antiTracking_log'))[
+        '__antiTracking_log'
+      ] || {}
+    const event = new CustomEvent('dashboardLogs', {
+      detail: {
+        data: logs
+      }
+    })
+    window.dispatchEvent(event)
+  }
+
   // 获取当前存储的数据
   const res = (await chrome.storage.local.get()) || {}
   console.log('Storage get res', res)
@@ -44,4 +57,6 @@ export default async function sendStorageToContent(tabId: number) {
     const { paramNames } = customEvent.detail
     writeLogs(paramNames)
   })
+
+  window.addEventListener('getLogs', handleGetLogs)
 }

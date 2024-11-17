@@ -15,7 +15,7 @@ export interface TrackingLog {
     font?: number
     webrtc?: number
   }
-  _timestamp: number
+  timestamp: number
 }
 
 export const trackingData: TrackingLog[] = [
@@ -36,7 +36,7 @@ export const trackingData: TrackingLog[] = [
       font: 5,
       webrtc: 5
     },
-    _timestamp: 1633660800000
+    timestamp: 1633660800000
   },
   {
     domain: 'www.baidu.com',
@@ -55,7 +55,7 @@ export const trackingData: TrackingLog[] = [
       font: 5,
       webrtc: 5
     },
-    _timestamp: 1633660900000
+    timestamp: 1633660900000
   },
   {
     domain: 'www.example.com',
@@ -68,6 +68,6 @@ export const trackingData: TrackingLog[] = [
       deviceMemory: 15,
       timezone: 2
     },
-    _timestamp: 16336608005909
+    timestamp: 16336608005909
   }
 ]

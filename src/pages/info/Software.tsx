@@ -30,9 +30,7 @@ function Software() {
   })
 
   const fetchData = useCallback(async () => {
-    console.warn('info')
     const info = await getSoftwareInfos()
-    console.warn('info', info)
     setInfo(info)
   }, [])
 
