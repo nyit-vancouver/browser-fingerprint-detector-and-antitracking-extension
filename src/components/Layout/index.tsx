@@ -3,7 +3,7 @@ import { ConfigProvider, Menu, Layout as _Layout } from 'antd'
 import { Header } from 'antd/es/layout/layout'
 import React, { useState } from 'react'
 
-import Config from '@/pages/Config'
+import Dashboard from '@/pages/Dashboard'
 import Info from '@/pages/Info'
 
 const { Sider, Content } = _Layout
@@ -27,11 +27,6 @@ const Layout = () => {
       key: 'info',
       label: 'Fingerprint Information',
       onClick: () => setHeader('info')
-    },
-    {
-      key: 'config',
-      label: 'Fingerprint Configuration',
-      onClick: () => setHeader('config')
     },
     {
       key: 'dashboard',
@@ -70,8 +65,7 @@ const Layout = () => {
         <_Layout>
           <Content>
             {header === 'info' && <Info />}
-            {header === 'config' && <Config />}
-            {/* {header === 'dashboard' && <Dashboard />} */}
+            {header === 'dashboard' && <Dashboard />}
           </Content>
         </_Layout>
       </_Layout>
