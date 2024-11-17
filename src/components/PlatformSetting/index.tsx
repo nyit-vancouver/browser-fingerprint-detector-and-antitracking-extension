@@ -21,12 +21,9 @@ export default function PlatformSetting() {
     [selectedPlatform]
   )
 
-  const handlePlatformClick = useCallback(
-    (platform: Platform) => {
-      setSelectedPlatform(platform)
-    },
-    [platformList]
-  )
+  const handlePlatformClick = useCallback((platform: Platform) => {
+    setSelectedPlatform(platform)
+  }, [])
 
   const init = useCallback(async () => {
     const ua = await tabStorage.get('user-agent')
@@ -40,7 +37,7 @@ export default function PlatformSetting() {
 
   useEffect(() => {
     init()
-  }, [])
+  }, [init])
 
   return (
     <div className="platform-content">

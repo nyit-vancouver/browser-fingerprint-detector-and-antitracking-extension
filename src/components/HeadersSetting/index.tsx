@@ -74,7 +74,7 @@ export default function HeadersSetting() {
       console.log('updateHeaders', newHeaders, res)
       updateStorage(res) // TODO：debounce
     },
-    [headers]
+    [headers, updateStorage]
   )
 
   const init = useCallback(async () => {
@@ -105,7 +105,7 @@ export default function HeadersSetting() {
 
   useEffect(() => {
     init()
-  }, [])
+  }, [init])
 
   return (
     <div className="headers-content p-4">

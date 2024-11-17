@@ -38,7 +38,7 @@ function Software() {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [fetchData])
 
   return (
     <InfoSection

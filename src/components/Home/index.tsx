@@ -26,7 +26,7 @@ export default function Home() {
 
   useEffect(() => {
     init()
-  }, [])
+  }, [init])
 
   return (
     <List>

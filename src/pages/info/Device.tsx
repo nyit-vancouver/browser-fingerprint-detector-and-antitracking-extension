@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { getDeviceInfos } from '@/utils/getDeviceInfos'
 import { ComputerDesktopIcon } from '@heroicons/react/24/outline'
+import React, { useCallback, useEffect, useState } from 'react'
+
 import InfoSection from '@/components/InfoSection'
+import { getDeviceInfos } from '@/utils/getDeviceInfos'
 
 function Device() {
   const [info, setInfo] = useState<Record<string, string>>({
@@ -10,14 +11,14 @@ function Device() {
     model: '-'
   })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const info = await getDeviceInfos()
     setInfo(info)
-  }
+  }, [])
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [fetchData])
 
   return (
     <InfoSection title="Device" data={{ ...info }} icon={ComputerDesktopIcon} />

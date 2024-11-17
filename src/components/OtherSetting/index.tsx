@@ -80,7 +80,7 @@ export default function OtherSetting() {
 
       updateStorage(newSettings)
     },
-    [settings]
+    [settings, updateStorage]
   )
 
   const init = useCallback(async () => {
@@ -115,7 +115,7 @@ export default function OtherSetting() {
 
   useEffect(() => {
     init()
-  }, [])
+  }, [init])
 
   return (
     <div className="settings-content p-4">

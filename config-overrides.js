@@ -7,6 +7,10 @@ const {
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
+// const BundleAnalyzerPlugin =
+//   require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+// const smp = new SpeedMeasurePlugin()
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -38,6 +42,7 @@ const overridePlugins = (config) => {
 
   // 添加新的 HtmlWebpackPlugin 实例
   config.plugins.push(
+    // new BundleAnalyzerPlugin(),
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       filename: 'index.html',
