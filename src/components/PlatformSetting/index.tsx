@@ -41,6 +41,7 @@ export default function PlatformSetting() {
 
   return (
     <div className="platform-content">
+      <h2 className="text-lg font-bold mb-4">UserAgent Settings</h2>
       <div className="platform-selection">
         <div className="platform-buttons">
           {PLATFORMS.map((platform) => (
@@ -59,16 +60,17 @@ export default function PlatformSetting() {
             return (
               <div
                 key={id}
-                className="browser-item"
-                onChange={() => handleBrowserSelect(item)}
+                className={`browser-item ${selectedBrowser === id ? 'selected' : ''}`}
+                onClick={() => handleBrowserSelect(item)}
               >
                 <input
                   type="radio"
+                  id={id}
                   name="browser"
-                  value={id}
                   checked={selectedBrowser === id}
+                  readOnly
                 />
-                <label>{name}</label>
+                <label htmlFor={id}>{name}</label>
               </div>
             )
           })}

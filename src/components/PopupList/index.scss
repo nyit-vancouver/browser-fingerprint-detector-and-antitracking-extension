@@ -1,6 +1,6 @@
 .popup-content {
   display: flex;
-  min-width: 600px;
+  min-width: 480px;
   min-height: 400px;
 
   .sidebar {
@@ -12,21 +12,21 @@
       width: 100%;
 
       .ant-tabs-nav {
-        width: 60px;
-        min-width: 60px;
+        width: 48px;
+        min-width: 48px;
         background-color: #f5f5f5;
         border-right: 1px solid #e8e8e8;
 
         .ant-tabs-tab {
-          padding: 12px !important;
+          padding: 8px !important;
           margin: 0 !important;
           justify-content: center;
           align-items: center;
-          height: 48px;
+          height: 40px;
 
           .icon {
-            width: 24px !important;
-            height: 24px !important;
+            width: 20px !important;
+            height: 20px !important;
             color: #666;
             display: block !important;
           }
@@ -66,17 +66,19 @@
 }
 
 .tab-content {
-  padding: 20px;
+  padding: 12px;
   width: 100%;
 }
 
 .platform-content {
   width: 100%;
-  padding: 20px;
+  padding: 12px;
+  max-width: 456px;
+  margin: 0 auto;
 
   .profile-title {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 20px;
+    margin-bottom: 12px;
     font-weight: 500;
   }
 
@@ -111,7 +113,7 @@
       background-color: #e8e8e8;
       padding: 1px;
       border-radius: 4px;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
 
       .platform-button {
         flex: 1;
@@ -137,7 +139,7 @@
         }
 
         &.active {
-          background-color: #8ba446;
+          background-color: #1890ff;
           color: white;
         }
       }
@@ -147,25 +149,43 @@
       background-color: #f5f5f5;
       border-radius: 4px;
       padding: 12px;
-      max-height: 300px;
+      max-height: 280px;
       overflow-y: auto;
+      margin-top: 8px;
+
+      .ant-select {
+        width: auto !important;
+
+        .ant-select-selector {
+          width: auto !important;
+        }
+      }
 
       .browser-item {
         padding: 8px;
         display: flex;
         align-items: center;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s;
 
         input[type='radio'] {
           margin-right: 8px;
+          cursor: pointer;
         }
 
         label {
           cursor: pointer;
+          flex: 1;
         }
 
         &:hover {
           background-color: #e8e8e8;
           border-radius: 4px;
+        }
+
+        &.selected {
+          background-color: #f0f0f0;
         }
       }
     }
@@ -176,7 +196,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 0 16px;
+  padding: 0 12px;
+  margin-bottom: 8px;
 
   .icon {
     width: 24px;
@@ -223,20 +244,68 @@
 }
 
 .settings-content {
-  padding: 20px;
+  padding: 12px;
+  max-width: 456px;
+  margin: 0 auto;
 
   .settings-option {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+
+    .ant-select,
+    .ant-input {
+      width: 100% !important;
+      margin-left: 32px !important;
+      margin-top: 4px;
+    }
 
     .ant-checkbox-wrapper {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
+      gap: 8px;
 
-      // 确保文字和复选框在同一行
       span {
         display: inline-block;
-        line-height: 1;
+        line-height: 1.5;
       }
     }
+  }
+}
+
+.instructions-text {
+  padding: 12px;
+  margin: 10px 0;
+  color: #666;
+  font-size: 13px;
+  line-height: 1.5;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.link-text {
+  margin: 8px 0;
+  padding: 0 2px;
+  color: #666;
+  font-size: 13px;
+
+  .clickable-link {
+    color: #1890ff;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.home-shield-icon {
+  color: #1890ff !important;
+}
+
+.ant-select {
+  width: 100% !important;
+
+  .ant-select-selector {
+    width: 100% !important;
   }
 }

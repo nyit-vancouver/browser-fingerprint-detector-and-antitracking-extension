@@ -2,11 +2,9 @@ import {
   AdjustmentsHorizontalIcon,
   Cog6ToothIcon,
   ComputerDesktopIcon,
-  DocumentTextIcon,
-  PresentationChartLineIcon,
   ShieldCheckIcon
 } from '@heroicons/react/24/solid'
-import { Tabs } from 'antd'
+import { Tabs, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 
 import _isDev from '@/utils/getEnv'
@@ -77,43 +75,52 @@ function PopupList() {
       >
         <TabPane
           tab={
-            <div className="tab-icon">
-              <ShieldCheckIcon className="icon" />
-            </div>
+            <Tooltip title="Home" placement="right">
+              <div className="tab-icon">
+                <ShieldCheckIcon className="icon" />
+              </div>
+            </Tooltip>
           }
           key="1"
         >
-          <div className="tab-content">{Home()}</div>
-        </TabPane>
-        <TabPane
-          tab={
-            <div className="tab-icon">
-              <DocumentTextIcon className="icon" />
-            </div>
-          }
-          key="2"
-        >
           <div className="tab-content">
-            <div className="content-area">Fingerprint Details</div>
+            {Home()}
+            <div className="instructions-text">
+              Instructions for use
+              <br />
+              You do not need to adjust the following settings by yourself, we
+              have provided a default optimal configuration for you to resist
+              digital fingerprint tracking. If you adjust some of the settings
+              yourself, make sure you know what the adjusted configuration does.
+              Otherwise it will cause prevent digital fingerprint tracking
+              failure.
+            </div>
+            <div className="link-text">
+              You can check your{' '}
+              <span
+                className="clickable-link"
+                onClick={() => handleClick('info')}
+              >
+                Fingerprint Details
+              </span>{' '}
+              and{' '}
+              <span
+                className="clickable-link"
+                onClick={() => handleClick('dashboard')}
+              >
+                Tracking Dashboard
+              </span>
+              .
+            </div>
           </div>
         </TabPane>
         <TabPane
           tab={
-            <div className="tab-icon">
-              <PresentationChartLineIcon className="icon" />
-            </div>
-          }
-          key="4"
-        >
-          <div className="tab-content">
-            <div className="content-area">Tracking Dashboard</div>
-          </div>
-        </TabPane>
-        <TabPane
-          tab={
-            <div className="tab-icon">
-              <ComputerDesktopIcon className="icon" />
-            </div>
+            <Tooltip title="UserAgent" placement="right">
+              <div className="tab-icon">
+                <ComputerDesktopIcon className="icon" />
+              </div>
+            </Tooltip>
           }
           key="5"
         >
@@ -121,9 +128,11 @@ function PopupList() {
         </TabPane>
         <TabPane
           tab={
-            <div className="tab-icon">
-              <AdjustmentsHorizontalIcon className="icon" />
-            </div>
+            <Tooltip title="Headers Setting" placement="right">
+              <div className="tab-icon">
+                <AdjustmentsHorizontalIcon className="icon" />
+              </div>
+            </Tooltip>
           }
           key="6"
         >
@@ -131,9 +140,11 @@ function PopupList() {
         </TabPane>
         <TabPane
           tab={
-            <div className="tab-icon">
-              <Cog6ToothIcon className="icon" />
-            </div>
+            <Tooltip title="Other Setting" placement="right">
+              <div className="tab-icon">
+                <Cog6ToothIcon className="icon" />
+              </div>
+            </Tooltip>
           }
           key="7"
         >

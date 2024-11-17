@@ -32,7 +32,7 @@ export default function Home() {
     <List>
       <List.Item>
         <div className="popup-list-item">
-          <ShieldCheckIcon className="icon !text-blue-600" />
+          <ShieldCheckIcon className="icon home-shield-icon" />
           <h1 className="font-bold flex items-center text-xl cursor-default">
             Anti-Tracking
           </h1>
