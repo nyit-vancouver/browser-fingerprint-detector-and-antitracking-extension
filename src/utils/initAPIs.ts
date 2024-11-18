@@ -12,6 +12,13 @@ import {
 // logs will be recorded when the data is not empty
 // whether rewrite or not depends on if there is stored data
 function initAPIs(data: Record<string, any>) {
+  // spoof DNT
+  rewriteAttribute(data, {
+    obj: window.navigator,
+    objStr: 'navigator',
+    paramName: 'dnt',
+    propName: 'doNotTrack'
+  })
   // spoof user agent
   rewriteAttribute(data, {
     obj: window.navigator,
