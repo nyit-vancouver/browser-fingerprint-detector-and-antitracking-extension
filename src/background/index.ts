@@ -54,14 +54,14 @@ chrome.storage.onChanged.addListener(
       const sortedTimestamps = Object.values(trackingLogs)
         .map((item) => item._timestamp)
         .sort((a, b) => a - b)
-      const mid = Math.floor(sortedTimestamps.length / 2)
-      const midTimestamp = sortedTimestamps[mid]
+      const thresholdIndex = Math.floor(sortedTimestamps.length / 5) // 删除前20%的数据
+      const thresholdTimestamp = sortedTimestamps[thresholdIndex]
 
       const res = { ...trackingLogs }
 
       Object.entries(trackingLogs).forEach(([k, v]) => {
-        // 根据_timestamp删除前50%的旧数据
-        if (v._timestamp < midTimestamp) {
+        // 根据_timestamp删除前20%的旧数据
+        if (v._timestamp < thresholdTimestamp) {
           console.log('delete', k)
           delete res[k]
         }
