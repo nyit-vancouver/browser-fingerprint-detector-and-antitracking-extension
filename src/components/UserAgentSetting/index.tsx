@@ -1,6 +1,7 @@
+import { Button } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { PLATFORMS, USER_AGENTS } from '@/constants/userAgents'
+import { PLATFORM_MAP, USER_AGENTS } from '@/constants/userAgents'
 import type { Platform, UserAgent } from '@/constants/userAgents'
 import { tabStorage } from '@/utils/TabStorage'
 import { getUserAgentDetails } from '@/utils/getUserAgentDetails'
@@ -11,7 +12,6 @@ export default function PlatformSetting() {
 
   const handleBrowserSelect = useCallback((info: UserAgent) => {
     setSelectedBrowser(info.id)
-    // TODO: 没办法取消？
     const data = getUserAgentDetails(info)
     tabStorage.set(data)
   }, [])
@@ -23,6 +23,11 @@ export default function PlatformSetting() {
 
   const handlePlatformClick = useCallback((platform: Platform) => {
     setSelectedPlatform(platform)
+  }, [])
+
+  const handleClear = useCallback(() => {
+    setSelectedBrowser('')
+    tabStorage.delete(['user-agent', 'userAgentData'])
   }, [])
 
   const init = useCallback(async () => {
@@ -44,15 +49,20 @@ export default function PlatformSetting() {
       <h1 className="tab-title">UserAgent Settings</h1>
       <div className="platform-selection">
         <div className="platform-buttons">
-          {PLATFORMS.map((platform) => (
+          {Object.entries(PLATFORM_MAP).map(([key, name]) => (
             <button
-              key={platform}
-              className={`platform-button ${selectedPlatform === platform ? 'active' : ''}`}
-              onClick={() => handlePlatformClick(platform)}
+              key={key}
+              className={`platform-button ${selectedPlatform === key ? 'active' : ''}`}
+              onClick={() => handlePlatformClick(key as Platform)}
             >
-              {platform}
+              {name}
             </button>
           ))}
+        </div>
+        <div className="flex flex-row-reverse w-full">
+          <Button type="link" size={'small'} onClick={handleClear}>
+            Clear
+          </Button>
         </div>
         <div className="browser-list">
           {platformList.map((item) => {
