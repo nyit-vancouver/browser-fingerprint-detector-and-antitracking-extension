@@ -108,8 +108,8 @@ export default function HeadersSetting() {
   }, [init])
 
   return (
-    <div className="headers-content p-4">
-      <h2 className="text-lg font-bold mb-4">Request Headers Settings</h2>
+    <div className="headers-content">
+      <h1 className="tab-title">Request Headers Settings</h1>
       <div className="space-y-4">
         <div className="flex items-center">
           <Checkbox

@@ -41,7 +41,7 @@ export default function PlatformSetting() {
 
   return (
     <div className="platform-content">
-      <h2 className="text-lg font-bold mb-4">UserAgent Settings</h2>
+      <h1 className="tab-title">UserAgent Settings</h1>
       <div className="platform-selection">
         <div className="platform-buttons">
           {PLATFORMS.map((platform) => (

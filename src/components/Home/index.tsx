@@ -30,12 +30,10 @@ export default function Home() {
 
   return (
     <List>
-      <List.Item>
-        <div className="popup-list-item">
+      <List.Item className="!pt-0">
+        <div className="flex">
           <ShieldCheckIcon className="icon home-shield-icon" />
-          <h1 className="font-bold flex items-center text-xl cursor-default">
-            Anti-Tracking
-          </h1>
+          <h1 className="tab-title ml-2 mb-0">Anti-Tracking</h1>
         </div>
       </List.Item>
       <List.Item>

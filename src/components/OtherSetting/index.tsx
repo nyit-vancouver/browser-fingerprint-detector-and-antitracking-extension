@@ -105,8 +105,8 @@ export default function OtherSetting() {
       screenSize:
         settings.width && settings.height
           ? `${settings.width}x${settings.height}`
-          : '',
-      timeZone: settings.timezone || '',
+          : undefined,
+      timeZone: settings.timezone,
       colorDepth: settings.colorDepth,
       hardwareConcurrency: settings.hardwareConcurrency,
       deviceMemory: settings.deviceMemory
@@ -118,135 +118,139 @@ export default function OtherSetting() {
   }, [init])
 
   return (
-    <div className="settings-content p-4">
-      <h2 className="text-lg font-bold mb-4">Other Settings</h2>
-
-      <div className="flex flex-col my-4">
-        <div>Screen Size</div>
-        <Select
-          allowClear
-          placeholder="Please select"
-          className="w-48"
-          value={settings.screenSize}
-          onChange={(value) => updateSetting({ screenSize: value })}
-        >
-          {SCREEN_SIZES.map((size) => (
-            <Select.Option key={size} value={size}>
-              {size}
-            </Select.Option>
-          ))}
-        </Select>
-      </div>
-      <div className="flex flex-col my-4">
-        <div>Timezone</div>
-        <Select
-          allowClear
-          placeholder="Please select"
-          className="w-48"
-          value={settings.timeZone}
-          onChange={(value) => updateSetting({ timeZone: value })}
-        >
-          {TIMEZONES.map((tz) => (
-            <Select.Option key={tz.zone} value={tz.zone}>
-              {`${tz.zone} (${tz.offset}) `}
-            </Select.Option>
-          ))}
-        </Select>
-      </div>
-      <div className="flex flex-col my-4">
-        <div>Color Depth</div>
-        <Select
-          allowClear
-          placeholder="Please select"
-          className="w-48"
-          value={settings.colorDepth}
-          onChange={(value) => updateSetting({ colorDepth: value })}
-        >
-          {COLOR_DEPTHS.map((cd) => (
-            <Select.Option key={cd} value={cd}>
-              {`${cd} bits`}
-            </Select.Option>
-          ))}
-        </Select>
-      </div>
-      <div className="flex flex-col my-4">
-        <div>CPU Cores</div>
-        <Select
-          allowClear
-          placeholder="Please select"
-          className="w-48"
-          value={settings.hardwareConcurrency}
-          onChange={(value) => updateSetting({ hardwareConcurrency: value })}
-        >
-          {CORES.map((core) => (
-            <Select.Option key={core} value={core}>
-              {core}
-            </Select.Option>
-          ))}
-        </Select>
-      </div>
-      <div className="flex flex-col my-4">
-        <div>Device Memory</div>
-        <Select
-          allowClear
-          placeholder="Please select"
-          className="w-48"
-          value={settings.deviceMemory}
-          onChange={(value) => updateSetting({ deviceMemory: value })}
-        >
-          {DEVICE_MEMORIES.map((dm) => (
-            <Select.Option key={dm} value={dm}>
-              {`${dm} GB`}
-            </Select.Option>
-          ))}
-        </Select>
-      </div>
-
-      <div className="space-y-4">
-        <div className="flex items-center">
-          <Checkbox
-            checked={settings.spoofCanvas}
-            onChange={(e) =>
-              updateSetting({
-                spoofCanvas: e.target.checked
-              })
-            }
-          >
-            Spoof Canvas fingerprint
-          </Checkbox>
+    <div className="settings-content">
+      <h1 className="tab-title mb-0">Other Settings</h1>
+      <div className="flex">
+        <div className="flex-1">
+          <div className="flex flex-col my-4">
+            <div>Screen Size</div>
+            <Select
+              allowClear
+              placeholder="Please select"
+              className="w-48"
+              value={settings.screenSize}
+              onChange={(value) => updateSetting({ screenSize: value })}
+            >
+              {SCREEN_SIZES.map((size) => (
+                <Select.Option key={size} value={size}>
+                  {size}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
+          <div className="flex flex-col my-4">
+            <div>Timezone</div>
+            <Select
+              allowClear
+              placeholder="Please select"
+              className="w-48"
+              value={settings.timeZone}
+              onChange={(value) => updateSetting({ timeZone: value })}
+            >
+              {TIMEZONES.map((tz) => (
+                <Select.Option key={tz.zone} value={tz.zone}>
+                  {`${tz.zone} (${tz.offset}) `}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
+          <div className="flex flex-col my-4">
+            <div>Device Memory</div>
+            <Select
+              allowClear
+              placeholder="Please select"
+              className="w-48"
+              value={settings.deviceMemory}
+              onChange={(value) => updateSetting({ deviceMemory: value })}
+            >
+              {DEVICE_MEMORIES.map((dm) => (
+                <Select.Option key={dm} value={dm}>
+                  {`${dm} GB`}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
         </div>
-        <div className="flex items-center">
-          <Checkbox
-            checked={settings.spoofWebgl}
-            onChange={(e) =>
-              updateSetting({
-                spoofWebgl: e.target.checked
-              })
-            }
-          >
-            Spoof WebGL fingerprint
-          </Checkbox>
+        <div className="flex-1 ml-3">
+          <div className="flex flex-col my-4">
+            <div>Color Depth</div>
+            <Select
+              allowClear
+              placeholder="Please select"
+              className="w-48"
+              value={settings.colorDepth}
+              onChange={(value) => updateSetting({ colorDepth: value })}
+            >
+              {COLOR_DEPTHS.map((cd) => (
+                <Select.Option key={cd} value={cd}>
+                  {`${cd} bits`}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
+          <div className="flex flex-col my-4">
+            <div>CPU Cores</div>
+            <Select
+              allowClear
+              placeholder="Please select"
+              className="w-48"
+              value={settings.hardwareConcurrency}
+              onChange={(value) =>
+                updateSetting({ hardwareConcurrency: value })
+              }
+            >
+              {CORES.map((core) => (
+                <Select.Option key={core} value={core}>
+                  {core}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
         </div>
-        <div className="flex items-center">
-          <Checkbox
-            checked={settings.spoofAudioContext}
-            onChange={(e) =>
-              updateSetting({
-                spoofAudioContext: e.target.checked
-              })
-            }
-          >
-            Spoof Audio fingerprint
-          </Checkbox>
-        </div>
-        <div className="flex items-center">
-          <Checkbox
-            checked={settings.disableWebRTC}
-            onChange={(e) => updateSetting({ disableWebRTC: e.target.checked })}
-          >
-            Disable WebRTC
-          </Checkbox>
-        </div>
+      </div>
+      <div className="flex items-center mb-2">
+        <Checkbox
+          checked={settings.spoofCanvas}
+          onChange={(e) =>
+            updateSetting({
+              spoofCanvas: e.target.checked
+            })
+          }
+        >
+          Spoof Canvas fingerprint
+        </Checkbox>
+      </div>
+      <div className="flex items-center mb-2">
+        <Checkbox
+          checked={settings.spoofWebgl}
+          onChange={(e) =>
+            updateSetting({
+              spoofWebgl: e.target.checked
+            })
+          }
+        >
+          Spoof WebGL fingerprint
+        </Checkbox>
+      </div>
+      <div className="flex items-center mb-2">
+        <Checkbox
+          checked={settings.spoofAudioContext}
+          onChange={(e) =>
+            updateSetting({
+              spoofAudioContext: e.target.checked
+            })
+          }
+        >
+          Spoof Audio fingerprint
+        </Checkbox>
+      </div>
+      <div className="flex items-center mb-2">
+        <Checkbox
+          checked={settings.disableWebRTC}
+          onChange={(e) => updateSetting({ disableWebRTC: e.target.checked })}
+        >
+          Disable WebRTC
+        </Checkbox>
       </div>
     </div>
   )

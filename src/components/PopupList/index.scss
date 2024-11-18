@@ -1,81 +1,46 @@
 .popup-content {
-  display: flex;
-  min-width: 480px;
-  min-height: 400px;
+  width: 454px;
+  height: 408px;
 
-  .sidebar {
-    display: flex;
-    width: 100%;
+  .ant-tabs {
+    @apply h-full;
+  }
+  .ant-tabs-tabpane {
+    @apply w-full;
+    padding-left: 0 !important;
+  }
+  .ant-tabs-tab {
+    padding: 16px !important;
+    margin: 0 !important;
 
-    .ant-tabs {
-      display: flex;
-      width: 100%;
-
-      .ant-tabs-nav {
-        width: 48px;
-        min-width: 48px;
-        background-color: #f5f5f5;
-        border-right: 1px solid #e8e8e8;
-
-        .ant-tabs-tab {
-          padding: 8px !important;
-          margin: 0 !important;
-          justify-content: center;
-          align-items: center;
-          height: 40px;
-
-          .icon {
-            width: 20px !important;
-            height: 20px !important;
-            color: #666;
-            display: block !important;
-          }
-
-          &:hover .icon {
-            color: #1890ff;
-          }
-        }
-
-        .ant-tabs-tab-active {
-          background-color: #e6f7ff;
-
-          .icon {
-            color: #1890ff;
-          }
-        }
-
-        .ant-tabs-ink-bar {
-          display: none;
-        }
-      }
-
-      .ant-tabs-content-holder {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .ant-tabs-content {
-        height: 100%;
-
-        .ant-tabs-tabpane {
-          height: 100%;
-        }
-      }
+    .icon {
+      color: #afadad;
     }
+
+    &:hover .icon {
+      color: #1890ff;
+    }
+  }
+
+  .ant-tabs-tab-active {
+    background-color: #e6f7ff;
+
+    .icon {
+      color: #1890ff;
+    }
+  }
+
+  .ant-tabs-ink-bar {
+    display: none;
   }
 }
 
 .tab-content {
-  padding: 12px;
-  width: 100%;
+  @apply w-full;
+  padding: 16px;
 }
 
 .platform-content {
-  width: 100%;
-  padding: 12px;
-  max-width: 456px;
-  margin: 0 auto;
-
   .profile-title {
     font-size: 20px;
     margin-bottom: 12px;
@@ -191,34 +156,12 @@
     }
   }
 }
-
-.popup-list-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 12px;
-  margin-bottom: 8px;
-
-  .icon {
-    width: 24px;
-    height: 24px;
-  }
+.tab-title {
+  @apply font-bold flex items-center text-xl cursor-default mb-3;
 }
-
-.popup-list-item--clickable {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-
-  .icon {
-    width: 20px;
-    height: 20px;
-  }
+.icon {
+  width: 28px;
+  height: 28px;
 }
 
 .tab-icon {
@@ -244,10 +187,6 @@
 }
 
 .settings-content {
-  padding: 12px;
-  max-width: 456px;
-  margin: 0 auto;
-
   .settings-option {
     margin-bottom: 12px;
 
@@ -272,8 +211,8 @@
 }
 
 .instructions-text {
-  padding: 12px;
-  margin: 10px 0;
+  padding: 16px;
+  margin-bottom: 16px;
   color: #666;
   font-size: 13px;
   line-height: 1.5;
