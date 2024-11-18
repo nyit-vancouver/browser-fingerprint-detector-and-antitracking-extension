@@ -3,8 +3,8 @@ import { logQueue } from '@/utils/sendLogs'
 interface Configs {
   obj: any
   objStr: string
-  paramName: string
-  propName: string
+  paramName: string // the attribute name to be accessed in stored data
+  propName: string // the attribute name to be rewritten
 }
 
 export function rewriteAttribute(
@@ -16,7 +16,6 @@ export function rewriteAttribute(
   const navigatorProxy = new Proxy(obj, {
     get(target, prop) {
       if (prop === propName) {
-        console.log(`${paramName} is accessed`)
         logQueue.sendLog(paramName)
         return handler
           ? handler(data, target, Reflect.get(target, prop))

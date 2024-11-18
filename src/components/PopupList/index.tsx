@@ -5,7 +5,7 @@ import {
   ShieldCheckIcon
 } from '@heroicons/react/24/solid'
 import { Tabs, Tooltip } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import _isDev from '@/utils/getEnv'
 
@@ -20,33 +20,10 @@ const { TabPane } = Tabs
 
 function PopupList() {
   const [showDetail] = useState(_isDev())
-  const [activeTab, setActiveTab] = useState('1')
-
-  // 在组件加载时读取保存的配置
-  useEffect(() => {
-    // loadSelectedConfig()
-  }, [])
-
-  // 处理原有功能的点击事件
-  const handleClick = (page: string) => {
-    window.open(`http://localhost:3000#${page}`) //chrome.runtime.getURL('options.html'))
-  }
-
-  // Switch开关处理逻辑保持不变
+  const [activeTab, setActiveTab] = useState('home')
 
   const handleTabChange = (activeKey: string) => {
     setActiveTab(activeKey)
-    // 根据 activeKey 处理页面跳转
-    switch (activeKey) {
-      case '2':
-        handleClick('info')
-        break
-      case '4':
-        handleClick('dashboard')
-        break
-      default:
-        break
-    }
   }
 
   if (showDetail) {
@@ -64,37 +41,10 @@ function PopupList() {
               </div>
             </Tooltip>
           }
-          key="1"
+          key="home"
         >
           <div className="tab-content">
             <Home />
-            <div className="instructions-text">
-              <span className="font-bold">Instructions for Use</span>
-              <br />
-              The following settings have been pre-configured with an optimal
-              default setup to help you mitigate digital fingerprint tracking
-              effectively. Manual adjustments are not necessary under typical
-              circumstances. However, if you choose to modify any settings,
-              please ensure you fully understand the implications of the changes
-              made.
-            </div>
-            <div className="link-text">
-              You can check your{' '}
-              <span
-                className="clickable-link"
-                onClick={() => handleClick('info')}
-              >
-                Fingerprint Details
-              </span>{' '}
-              and{' '}
-              <span
-                className="clickable-link"
-                onClick={() => handleClick('dashboard')}
-              >
-                Tracking Dashboard
-              </span>
-              .
-            </div>
           </div>
         </TabPane>
         <TabPane
@@ -105,10 +55,10 @@ function PopupList() {
               </div>
             </Tooltip>
           }
-          key="5"
+          key="userAgent"
         >
           <div className="tab-content">
-            {activeTab === '5' && <UserAgentSetting />}
+            {activeTab === 'userAgent' && <UserAgentSetting />}
           </div>
         </TabPane>
         <TabPane
@@ -119,10 +69,10 @@ function PopupList() {
               </div>
             </Tooltip>
           }
-          key="6"
+          key="headers"
         >
           <div className="tab-content">
-            {activeTab === '6' && <HeadersSetting />}
+            {activeTab === 'headers' && <HeadersSetting />}
           </div>
         </TabPane>
         <TabPane
@@ -133,10 +83,10 @@ function PopupList() {
               </div>
             </Tooltip>
           }
-          key="7"
+          key="other"
         >
           <div className="tab-content">
-            {activeTab === '7' && <OtherSetting />}
+            {activeTab === 'other' && <OtherSetting />}
           </div>
         </TabPane>
       </Tabs>
