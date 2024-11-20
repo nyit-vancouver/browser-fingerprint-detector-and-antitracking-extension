@@ -1,6 +1,6 @@
 class LogQueue {
   private logs: string[] = []
-  private maxLogs = 30
+  private maxLogs = 100
   private timer: number = 0
 
   sendLog(paramName: string) {

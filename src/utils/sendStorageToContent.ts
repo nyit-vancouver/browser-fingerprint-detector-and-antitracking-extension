@@ -1,4 +1,20 @@
 export default async function sendStorageToContent(tabId: number) {
+  async function initLog() {
+    const domain = new URL(window.location.href).hostname
+    const logs =
+      (await chrome.storage.local.get('__antiTracking_log'))[
+        '__antiTracking_log'
+      ] || {}
+    // 只记录当前访问的次数
+    await chrome.storage.local.set({
+      __antiTracking_log: {
+        ...logs,
+        [domain]: {
+          _timestamp: Date.now()
+        }
+      }
+    })
+  }
   async function writeLogs(paramNames: string[]) {
     console.log('writeLogs', paramNames)
     const domain = new URL(window.location.href).hostname
@@ -15,8 +31,7 @@ export default async function sendStorageToContent(tabId: number) {
       __antiTracking_log: {
         ...logs,
         [domain]: {
-          ...urlLogs,
-          _timestamp: Date.now()
+          ...urlLogs
         }
       }
     })
@@ -42,6 +57,8 @@ export default async function sendStorageToContent(tabId: number) {
   if (!data || JSON.stringify(data) === '{}') {
     return
   }
+  // 初始化日志
+  initLog()
   const event = new CustomEvent('tabStorage', {
     detail: {
       data
