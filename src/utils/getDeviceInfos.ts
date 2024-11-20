@@ -1,4 +1,4 @@
-import UAParser from 'ua-parser-js'
+import { UAParser } from 'ua-parser-js'
 
 function getDeviceType(): string {
   if (navigator.userAgentData) {
@@ -24,12 +24,22 @@ export async function getDeviceInfos() {
   let deviceVendor = 'unknown'
   let deviceModel = 'unknown'
 
-  const javascriptUA = navigator.userAgent
-  const parser = new UAParser(javascriptUA)
-  const deviceInfo = parser.getDevice()
+  try {
+    const javascriptUA = navigator.userAgent
 
-  deviceVendor = deviceInfo.vendor || 'unknown'
-  deviceModel = deviceInfo.model || 'unknown'
+    // 创建解析器实例并立即获取结果
+    const parser = new UAParser()
+    parser.setUA(javascriptUA)
+    const result = parser.getResult()
+
+    // 从结果中直接获取设备信息
+    if (result.device) {
+      deviceVendor = result.device.vendor || 'unknown'
+      deviceModel = result.device.model || 'unknown'
+    }
+  } catch (error) {
+    console.error('Error parsing user agent:', error)
+  }
 
   return {
     type: getDeviceType(),
