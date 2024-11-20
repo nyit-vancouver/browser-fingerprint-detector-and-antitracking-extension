@@ -1,3 +1,5 @@
+import { getRandomizedIP } from '@/utils/getRandomizedConfigs'
+
 export const ifNoneMatch = {
   header: 'If-None-Match',
   operation: chrome.declarativeNetRequest.HeaderOperation.REMOVE
@@ -22,7 +24,7 @@ export const dnt = {
 export const xForwardedFor = {
   header: 'X-Forwarded-For',
   operation: chrome.declarativeNetRequest.HeaderOperation.SET,
-  value: '111.8.203.174'
+  value: getRandomizedIP()
 }
 
 export const acceptLanguage = {

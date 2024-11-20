@@ -48,6 +48,13 @@ export function getRandomizedUserAgent() {
   return getUserAgentDetails(uaInfo)
 }
 
+export function getRandomizedIP() {
+  // 随机生成一个IP地址
+  return Array.from({ length: 4 }, () => Math.floor(Math.random() * 255)).join(
+    '.'
+  )
+}
+
 function getRandomizedScreenSize() {
   const [width, height] =
     SCREEN_SIZES[Math.floor(Math.random() * SCREEN_SIZES.length)].split('x')

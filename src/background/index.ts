@@ -39,18 +39,6 @@ chrome.storage.onChanged.addListener(
       console.warn('Warning: storage space usage is over 90%')
       const trackingLogs: AntiTrackingLog =
         (await chrome.storage.local.get())?.__antiTracking_log || {}
-      // const deleteKeys = []
-      // for (const [key, value] of Object.entries(storage)) {
-      //   console.log('key, value', key, value)
-      // 删除过期数据
-      // if (
-      //   value._timestamp &&
-      //   Date.now() - value._timestamp > MAX_STORAGE_DAYS
-      // ) {
-      //   console.log('delete', key)
-      //   deleteKeys.push(key)
-      // }
-      // if (key === '__antiTracking_log') {
       const sortedTimestamps = Object.values(trackingLogs)
         .map((item) => item._timestamp)
         .sort((a, b) => a - b)
@@ -70,10 +58,6 @@ chrome.storage.onChanged.addListener(
         ...storage,
         __antiTracking_log: res
       })
-      // }
-      // if (deleteKeys.length > 0) {
-      //   await chrome.storage.local.remove(deleteKeys)
-      // }
     }
   })
 )
@@ -136,16 +120,6 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
       console.log('check getSessionRules', rules)
     })
   }
-  // else if (type === 'deleteAll') {
-  // // delete all session rules
-  // const rules = await chrome.declarativeNetRequest.getSessionRules()
-  // console.log('setHeader deleteAll', rules)
-  // const ids = rules.map((rule) => rule.id)
-  // await chrome.declarativeNetRequest.updateSessionRules({
-  //   removeRuleIds: ids // remove existing rules
-  // })
-  // console.log('Rules delete successfully')
-  // }
 })
 // tab 关闭时清除规则
 chrome.tabs.onRemoved.addListener((tabId) => {
