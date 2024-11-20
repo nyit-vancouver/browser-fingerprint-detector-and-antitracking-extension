@@ -8,7 +8,7 @@ export function rewriteTimezone(data: Record<string, any>) {
       // 调用原始的 resolvedOptions 方法
       const options = originalResolvedOptions.call(this)
       // 修改返回的时区
-      options.timeZone = data.timezone || options.timeZone // 你想要的自定义时区
+      options.timeZone = data.timezone || options.timeZone
       return options
     },
     writable: true,

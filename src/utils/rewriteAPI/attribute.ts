@@ -7,28 +7,15 @@ interface Configs {
   propName: string // the attribute name to be rewritten
 }
 
-export function rewriteAttribute(
-  data: Record<string, any>,
-  configs: Configs,
-  handler?: (data: Record<string, any>, target: any, originalValue: any) => any
-) {
-  const { obj, objStr, paramName, propName } = configs
-  const navigatorProxy = new Proxy(obj, {
-    get(target, prop) {
-      if (prop === propName) {
-        logQueue.sendLog(paramName)
-        return handler
-          ? handler(data, target, Reflect.get(target, prop))
-          : data?.[paramName] || Reflect.get(target, prop)
-      }
-      return Reflect.get(target, prop)
-    }
-  })
+export function rewriteAttribute(data: Record<string, any>, configs: Configs) {
+  const { obj, paramName, propName } = configs
+  const originalValue = obj[propName]
 
-  Object.defineProperty(window, objStr, {
-    value: navigatorProxy,
-    writable: false,
-    enumerable: true,
+  Object.defineProperty(obj, propName, {
+    get() {
+      logQueue.sendLog(paramName)
+      return data?.[paramName] || originalValue
+    },
     configurable: true
   })
 }
