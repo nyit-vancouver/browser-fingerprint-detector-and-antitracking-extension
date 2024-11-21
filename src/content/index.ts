@@ -7,6 +7,7 @@ function handleTabStorage(event: any) {
   const customEvent = event as CustomEvent
   const { data } = customEvent.detail
   console.log('Message from background:', data)
+
   if (data) {
     initAPIs(data)
   }

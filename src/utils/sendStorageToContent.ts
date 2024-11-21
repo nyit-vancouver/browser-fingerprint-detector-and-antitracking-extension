@@ -1,4 +1,19 @@
 export default async function sendStorageToContent(tabId: number) {
+  async function getStorageData() {
+    // 获取当前存储的数据
+    try {
+      const res = (await chrome.storage.session.get()) || {}
+      console.log('Storage get res', res)
+      const data = res[`__antiTracking_config_${tabId}`]
+      console.log('Storage get data', data)
+      if (!data || JSON.stringify(data) === '{}') {
+        return
+      }
+      return data
+    } catch (e) {
+      console.error('error', e)
+    }
+  }
   async function initLog() {
     const domain = new URL(window.location.href).hostname
     const logs =
@@ -51,12 +66,7 @@ export default async function sendStorageToContent(tabId: number) {
   }
 
   // 获取当前存储的数据
-  const res = (await chrome.storage.local.get()) || {}
-  console.log('Storage get res', res)
-  const data = res[`__antiTracking_config_${tabId}`]
-  if (!data || JSON.stringify(data) === '{}') {
-    return
-  }
+  const data = await getStorageData()
   // 初始化日志
   initLog()
   const event = new CustomEvent('tabStorage', {

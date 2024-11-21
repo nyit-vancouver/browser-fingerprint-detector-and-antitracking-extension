@@ -10,7 +10,7 @@ import { AntiTrackingLog } from './type'
 const MAX_STORAGE_CAPACITY = 0.9
 
 // 监听 tab 更新事件
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   console.log('tab onUpdated', tabId, changeInfo, tab)
   // 不在chrome://页面执行
   if (tab.url?.includes('chrome://')) {
@@ -21,6 +21,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     return
   }
   console.warn('executeScript', new Date().getTime())
+  // 设置存储空间访问权限
+  await chrome.storage.session.setAccessLevel({
+    accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS'
+  })
   // 执行 sendStorageToContent.js
   chrome.scripting.executeScript({
     target: { tabId },
@@ -30,8 +34,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   })
 })
 
-// 监听存储空间使用情况
-chrome.storage.onChanged.addListener(
+// 监听本地存储空间使用情况
+chrome.storage.local.onChanged.addListener(
   debounce(2000, async () => {
     const bytesInUse = await chrome.storage.local.getBytesInUse()
     console.log('Bytes in use:', bytesInUse)

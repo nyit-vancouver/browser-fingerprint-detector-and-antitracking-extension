@@ -8,11 +8,7 @@ import { storage } from './storage'
 // call background.js来处理header的设置/删除，其他数据直接存储在localStorage
 
 export class TabStorage {
-  async set(
-    // currentTabId: number,
-    data: Record<string, any>
-    // overwrite = false
-  ) {
+  async set(data: Record<string, any>) {
     console.log('set', data)
     const currentTabId = await getCurrentTabId()
     if (!currentTabId) {
@@ -33,10 +29,7 @@ export class TabStorage {
     await storage.set(currentTabId, data)
   }
 
-  async get(
-    // currentTabId: number,
-    key?: string | string[]
-  ) {
+  async get(key?: string | string[]) {
     console.log('get', key)
     const currentTabId = await getCurrentTabId()
     if (!currentTabId) {
@@ -46,10 +39,7 @@ export class TabStorage {
     return await storage.get(currentTabId, key)
   }
 
-  async delete(
-    // currentTabId: number,
-    keys: string[]
-  ) {
+  async delete(keys: string[]) {
     console.log('delete', keys)
     const currentTabId = await getCurrentTabId()
     if (!currentTabId) {
@@ -80,6 +70,5 @@ export class TabStorage {
     sendMessage('deleteAll', currentTabId)
     await storage.deleteAll(currentTabId)
   }
-  // TODO: random数据
 }
 export const tabStorage = new TabStorage()

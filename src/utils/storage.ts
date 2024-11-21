@@ -1,22 +1,11 @@
 export class Storage {
-  async set(
-    currentTabId: number,
-    data: Record<string, any>
-    // overwrite = false
-  ) {
+  async set(currentTabId: number, data: Record<string, any>) {
     console.log('Storage set', data)
-    // if (overwrite) {
-    //   await chrome.storage.local.set({
-    //     [`__antiTracking_config_${currentTabId}`]: data
-    //   })
-    //   return
-    // }
     const res =
-      (await chrome.storage.local.get(
+      (await chrome.storage.session.get(
         `__antiTracking_config_${currentTabId}`
       )) || {}
-    console.log('Storage set get1', res)
-    await chrome.storage.local.set({
+    await chrome.storage.session.set({
       [`__antiTracking_config_${currentTabId}`]: {
         ...(res[`__antiTracking_config_${currentTabId}`] || {}),
         ...data
@@ -26,7 +15,7 @@ export class Storage {
 
   async get(currentTabId: number, key?: string | string[]) {
     console.log('Storage get', key, currentTabId)
-    const res = (await chrome.storage.local.get()) || {}
+    const res = (await chrome.storage.session.get()) || {}
     const multiRes: Record<string, any> = {}
     if (Array.isArray(key)) {
       key.forEach((k) => {
@@ -43,7 +32,7 @@ export class Storage {
   async delete(currentTabId: number, keys: string[]) {
     console.log('Storage delete', keys, currentTabId)
     const res = {
-      ...((await chrome.storage.local.get(
+      ...((await chrome.storage.session.get(
         `__antiTracking_config_${currentTabId}`
       )) || {})
     }
@@ -53,10 +42,12 @@ export class Storage {
     console.log('Storage delete res', res)
     // 如果删除后为空，则删除整个对象
     if (JSON.stringify(res[`__antiTracking_config_${currentTabId}`]) === '{}') {
-      await chrome.storage.local.remove(`__antiTracking_config_${currentTabId}`)
+      await chrome.storage.session.remove(
+        `__antiTracking_config_${currentTabId}`
+      )
       return
     }
-    await chrome.storage.local.set({
+    await chrome.storage.session.set({
       [`__antiTracking_config_${currentTabId}`]: {
         ...res[`__antiTracking_config_${currentTabId}`]
       }
@@ -65,7 +56,7 @@ export class Storage {
 
   async deleteAll(currentTabId: number) {
     console.log('Storage delete all', currentTabId)
-    await chrome.storage.local.remove(`__antiTracking_config_${currentTabId}`)
+    await chrome.storage.session.remove(`__antiTracking_config_${currentTabId}`)
   }
 }
 
