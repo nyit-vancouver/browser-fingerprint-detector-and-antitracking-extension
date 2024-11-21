@@ -1,5 +1,4 @@
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
-import { ShieldCheckIcon } from '@heroicons/react/24/solid'
 import { List, Switch, Tooltip } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 
@@ -37,10 +36,7 @@ export default function Home() {
     <>
       <List>
         <List.Item className="!pt-0">
-          <div className="flex">
-            <ShieldCheckIcon className="icon home-shield-icon" />
-            <h1 className="tab-title ml-2 mb-0">Anti-Tracking</h1>
-          </div>
+          <h1 className="tab-title ml-2 mb-0">Anti-Tracking</h1>
         </List.Item>
         <List.Item>
           <div className="flex justify-between items-center cursor-default px-5 w-full">
