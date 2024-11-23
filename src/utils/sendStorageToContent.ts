@@ -68,21 +68,26 @@ export default async function sendStorageToContent(tabId: number) {
   // 获取当前存储的数据
   const data = await getStorageData()
   // 初始化日志
-  initLog()
-  const event = new CustomEvent('tabStorage', {
-    detail: {
-      data
-    }
-  })
-  // 派发自定义事件，使 content.js 可以接收到存储数据
-  window.dispatchEvent(event)
-
+  if (data) {
+    initLog()
+    const event = new CustomEvent('tabStorage', {
+      detail: {
+        data
+      }
+    })
+    // 派发自定义事件，使 content.js 可以接收到存储数据
+    window.dispatchEvent(event)
+  }
   // 监听 `writeLogs` 事件, 并写入日志
-  window.addEventListener('writeLogs', (event: Event) => {
+  window.addEventListener('writeLogs', async (event: Event) => {
     const customEvent = event as CustomEvent
     console.log('Received data in writeLog:', customEvent.detail)
     const { paramNames } = customEvent.detail
-    writeLogs(paramNames)
+    await writeLogs(paramNames)
+    // TODO
+    // if (window.location.href.includes('localhost:3000/#dashboard')) {
+    //   handleGetLogs()
+    // }
   })
 
   window.addEventListener('getLogs', handleGetLogs)
