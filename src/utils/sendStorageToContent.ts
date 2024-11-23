@@ -1,4 +1,11 @@
 export default async function sendStorageToContent(tabId: number) {
+  // 黑名单
+  const BLACK_LIST = ['localhost:3000/#dashboard']
+  function getLogKeyName() {
+    // TODO: 别用hash
+    const { host, pathname, hash } = new URL(window.location.href)
+    return `${host}${pathname}${hash}`
+  }
   async function getStorageData() {
     // 获取当前存储的数据
     try {
@@ -15,7 +22,11 @@ export default async function sendStorageToContent(tabId: number) {
     }
   }
   async function initLog() {
-    const domain = new URL(window.location.href).hostname
+    // TODO: change variable name
+    const domain = getLogKeyName()
+    if (BLACK_LIST.includes(domain)) {
+      return
+    }
     const logs =
       (await chrome.storage.local.get('__antiTracking_log'))[
         '__antiTracking_log'
@@ -32,7 +43,10 @@ export default async function sendStorageToContent(tabId: number) {
   }
   async function writeLogs(paramNames: string[]) {
     console.log('writeLogs', paramNames)
-    const domain = new URL(window.location.href).hostname
+    const domain = getLogKeyName()
+    if (BLACK_LIST.includes(domain)) {
+      return
+    }
     const logs =
       (await chrome.storage.local.get('__antiTracking_log'))[
         '__antiTracking_log'
@@ -84,10 +98,6 @@ export default async function sendStorageToContent(tabId: number) {
     console.log('Received data in writeLog:', customEvent.detail)
     const { paramNames } = customEvent.detail
     await writeLogs(paramNames)
-    // TODO
-    // if (window.location.href.includes('localhost:3000/#dashboard')) {
-    //   handleGetLogs()
-    // }
   })
 
   window.addEventListener('getLogs', handleGetLogs)

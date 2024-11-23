@@ -33,7 +33,7 @@ const TrackingList: React.FC<TrackingListProps> = ({
 
   const columns: ColumnsType<TrackingLog> = [
     {
-      title: 'Domain',
+      title: 'URL',
       dataIndex: 'domain',
       key: 'domain',
       width: '20%'
@@ -91,7 +91,7 @@ const TrackingList: React.FC<TrackingListProps> = ({
       <div className="flex gap-4">
         <Select
           showSearch
-          placeholder="Select a domain"
+          placeholder="Select a url"
           optionFilterProp="children"
           onChange={onDomainChange}
           value={selectedDomain}

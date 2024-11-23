@@ -41,7 +41,7 @@ const TrackingChart: React.FC<TrackingChartProps> = ({
   if (!selectedDomain) {
     return (
       <Empty
-        description="Please select a domain to view tracking data"
+        description="Please select a url to view tracking data"
         className="my-8"
       />
     )
