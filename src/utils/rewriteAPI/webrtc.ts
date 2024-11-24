@@ -1,29 +1,96 @@
 import { logQueue } from '@/utils/sendLogs'
 
 export function blockWebrtc(isBlockWebrtc: boolean) {
-  const OriginalRTCPeerConnection = window.RTCPeerConnection
+  if (!isBlockWebrtc) return
 
-  if (OriginalRTCPeerConnection) {
-    const newRTCPeerConnection = function (...args: any[]) {
-      logQueue.sendLog('webrtc')
-      const pc = new OriginalRTCPeerConnection(...args)
-      if (isBlockWebrtc) {
-        // 拦截候选地址，过滤掉所有的网络候选
-        pc.addEventListener('icecandidate', (event) => {
-          if (event.candidate) {
-            // 阻止所有候选地址的发送，阻止 IP 泄露
-            return
-          }
-        })
-      }
-      return pc
+  // Save the original interface
+  const origRTCPeerConnection = window.RTCPeerConnection
+  const origMediaDevices = navigator.mediaDevices
+
+  const emptyFunction = () => {}
+
+  // Create a simulated RTCPeerConnection
+  const mockRTCPeerConnection = function (...args: any[]) {
+    logQueue.sendLog('webrtc')
+
+    if (!isBlockWebrtc) {
+      return new origRTCPeerConnection(...args)
     }
 
-    // 替换原有的 RTCPeerConnection
-    Object.defineProperty(window, 'RTCPeerConnection', {
-      value: newRTCPeerConnection,
+    // Returns a mock object
+    return {
+      createDataChannel: emptyFunction,
+      createOffer: emptyFunction,
+      createAnswer: emptyFunction,
+      setLocalDescription: emptyFunction,
+      setRemoteDescription: emptyFunction,
+      addIceCandidate: emptyFunction,
+      removeTrack: emptyFunction,
+      addTrack: emptyFunction,
+      close: emptyFunction,
+      addEventListener: emptyFunction,
+      removeEventListener: emptyFunction,
+      dispatchEvent: emptyFunction,
+      getConfiguration: () => ({}),
+      getSenders: () => [],
+      getReceivers: () => [],
+      getTransceivers: () => [],
+      iceConnectionState: 'disconnected',
+      iceGatheringState: 'complete',
+      connectionState: 'disconnected',
+      signalingState: 'closed',
+      localDescription: null,
+      remoteDescription: null
+    }
+  }
+
+  // Replace RTCPeerConnection
+  Object.defineProperty(window, 'RTCPeerConnection', {
+    value: mockRTCPeerConnection,
+    writable: false,
+    configurable: true
+  })
+
+  // Replace webkitRTCPeerConnection (for old versions of Chrome)
+  Object.defineProperty(window, 'webkitRTCPeerConnection', {
+    value: mockRTCPeerConnection,
+    writable: false,
+    configurable: true
+  })
+
+  // Prevent getUserMedia
+  if (origMediaDevices) {
+    const mockMediaDevices = {
+      ...origMediaDevices,
+      getUserMedia: async () => {
+        throw new Error('Permission denied')
+      },
+      getDisplayMedia: async () => {
+        throw new Error('Permission denied')
+      },
+      enumerateDevices: async () => []
+    }
+
+    Object.defineProperty(navigator, 'mediaDevices', {
+      value: mockMediaDevices,
       writable: false,
-      enumerable: true,
+      configurable: true
+    })
+  }
+
+  // Prevent legacy getUserMedia
+  const legacyGetUserMedia =
+    (navigator as any).getUserMedia ||
+    (navigator as any).webkitGetUserMedia ||
+    (navigator as any).mozGetUserMedia ||
+    (navigator as any).msGetUserMedia
+
+  if (legacyGetUserMedia) {
+    Object.defineProperty(navigator, 'getUserMedia', {
+      value: () => {
+        throw new Error('Permission denied')
+      },
+      writable: false,
       configurable: true
     })
   }
