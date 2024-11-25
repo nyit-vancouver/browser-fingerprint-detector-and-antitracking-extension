@@ -53,7 +53,7 @@ chrome.storage.local.onChanged.addListener(
 
       Object.entries(trackingLogs).forEach(([k, v]) => {
         // 根据_timestamp删除前20%的旧数据
-        if (v._timestamp < thresholdTimestamp) {
+        if (v._timestamp <= thresholdTimestamp) {
           console.log('delete', k)
           delete res[k]
         }
