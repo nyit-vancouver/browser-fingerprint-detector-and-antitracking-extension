@@ -40,7 +40,7 @@ export function blockWebrtc(isBlockWebrtc: boolean) {
       connectionState: 'disconnected',
       signalingState: 'closed',
       localDescription: null,
-      remoteDescription: null
+      remoteDescription: null,
     }
   }
 
@@ -48,14 +48,14 @@ export function blockWebrtc(isBlockWebrtc: boolean) {
   Object.defineProperty(window, 'RTCPeerConnection', {
     value: mockRTCPeerConnection,
     writable: false,
-    configurable: true
+    configurable: true,
   })
 
   // Replace webkitRTCPeerConnection (for old versions of Chrome)
   Object.defineProperty(window, 'webkitRTCPeerConnection', {
     value: mockRTCPeerConnection,
     writable: false,
-    configurable: true
+    configurable: true,
   })
 
   // Prevent getUserMedia
@@ -68,13 +68,13 @@ export function blockWebrtc(isBlockWebrtc: boolean) {
       getDisplayMedia: async () => {
         throw new Error('Permission denied')
       },
-      enumerateDevices: async () => []
+      enumerateDevices: async () => [],
     }
 
     Object.defineProperty(navigator, 'mediaDevices', {
       value: mockMediaDevices,
       writable: false,
-      configurable: true
+      configurable: true,
     })
   }
 
@@ -91,7 +91,7 @@ export function blockWebrtc(isBlockWebrtc: boolean) {
         throw new Error('Permission denied')
       },
       writable: false,
-      configurable: true
+      configurable: true,
     })
   }
 }

@@ -5,7 +5,7 @@ import {
   rewriteCanvas,
   rewriteTimezone,
   rewriteUserAgentData,
-  rewriteWebgl
+  rewriteWebgl,
 } from '@/utils/rewriteAPI'
 
 // initAPIs will only be called when the data is not empty
@@ -17,25 +17,25 @@ function initAPIs(data: Record<string, any>) {
     obj: window.navigator,
     objStr: 'navigator',
     paramName: 'dnt',
-    propName: 'doNotTrack'
+    propName: 'doNotTrack',
   })
   // spoof user agent
   rewriteAttribute(data, {
     obj: window.navigator,
     objStr: 'navigator',
     paramName: 'user-agent',
-    propName: 'userAgent'
+    propName: 'userAgent',
   })
   rewriteAttribute(
     {
-      platform: data.userAgentData.platform
+      platform: data.userAgentData?.platform,
     },
     {
       obj: window.navigator,
       objStr: 'navigator',
       paramName: 'platform',
-      propName: 'platform'
-    }
+      propName: 'platform',
+    },
   )
   rewriteUserAgentData(data.userAgentData)
   // HARDWARE
@@ -44,34 +44,34 @@ function initAPIs(data: Record<string, any>) {
     obj: window.screen,
     objStr: 'screen',
     paramName: 'height',
-    propName: 'height'
+    propName: 'height',
   })
   rewriteAttribute(data, {
     obj: window.screen,
     objStr: 'screen',
     paramName: 'width',
-    propName: 'width'
+    propName: 'width',
   })
   // spoof colorDepth
   rewriteAttribute(data, {
     obj: window.screen,
     objStr: 'screen',
     paramName: 'colorDepth',
-    propName: 'colorDepth'
+    propName: 'colorDepth',
   })
   // spoof hardwareConcurrency
   rewriteAttribute(data, {
     obj: window.navigator,
     objStr: 'navigator',
     paramName: 'hardwareConcurrency',
-    propName: 'hardwareConcurrency'
+    propName: 'hardwareConcurrency',
   })
   // spoof deviceMemory
   rewriteAttribute(data, {
     obj: window.navigator,
     objStr: 'navigator',
     paramName: 'deviceMemory',
-    propName: 'deviceMemory'
+    propName: 'deviceMemory',
   })
   // spoof canvas
   rewriteCanvas(data.spoofCanvas)
@@ -88,13 +88,13 @@ function initAPIs(data: Record<string, any>) {
     obj: window.navigator,
     objStr: 'navigator',
     paramName: 'language',
-    propName: 'language'
+    propName: 'language',
   })
   rewriteAttribute(data, {
     obj: window.navigator,
     objStr: 'navigator',
     paramName: 'languages',
-    propName: 'languages'
+    propName: 'languages',
   })
 
   // NETWORK
