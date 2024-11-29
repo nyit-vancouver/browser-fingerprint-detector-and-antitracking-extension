@@ -46,7 +46,7 @@ export function rewriteWebgl(spoofWebgl?: SpoofWebgl) {
     height,
     format,
     type,
-    pixels
+    pixels,
   ) {
     originalReadPixels.call(this, x, y, width, height, format, type, pixels)
 
@@ -54,14 +54,13 @@ export function rewriteWebgl(spoofWebgl?: SpoofWebgl) {
 
     if (!pixels || !spoofWebgl) return
 
-    // 添加噪声，随机改变像素值
     const pixelArray = new Uint8Array(
       pixels.buffer,
       pixels.byteOffset,
-      pixels.byteLength
+      pixels.byteLength,
     )
     for (let i = 0; i < pixelArray.length; i++) {
-      pixelArray[i] += spoofWebgl.pixel // 添加小幅噪声
+      pixelArray[i] += spoofWebgl.pixel
     }
   }
 }

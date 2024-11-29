@@ -11,17 +11,17 @@ export function rewriteUserAgentData(userAgentData?: UserAgentData) {
       return {
         getHighEntropyValues() {
           return Promise.resolve({
-            architecture: userAgentData?.architecture, // 伪造设备架构
-            model: userAgentData?.model, // 伪造设备型号
-            platform: userAgentData?.platform, // 伪造平台
-            platformVersion: userAgentData?.platformVersion, // 伪造平台版本
-            uaFullVersion: userAgentData?.uaFullVersion // 浏览器完整版本号
+            architecture: userAgentData?.architecture,
+            model: userAgentData?.model,
+            platform: userAgentData?.platform,
+            platformVersion: userAgentData?.platformVersion,
+            uaFullVersion: userAgentData?.uaFullVersion,
           })
         },
         mobile: userAgentData?.mobile || originalValue?.mobile,
-        platform: userAgentData?.platform || originalValue?.platform
+        platform: userAgentData?.platform || originalValue?.platform,
       }
     },
-    configurable: true
+    configurable: true,
   })
 }
