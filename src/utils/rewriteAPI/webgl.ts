@@ -1,4 +1,4 @@
-import { logQueue } from '@/utils/sendLogs'
+import { logCollector } from '@/utils/sendLogs'
 
 interface SpoofWebgl {
   renderer: string
@@ -14,7 +14,7 @@ export function rewriteWebgl(spoofWebgl?: SpoofWebgl) {
   WebGLRenderingContext.prototype.getParameter = function (parameter) {
     let value = originalGetParameter.call(this, parameter)
 
-    logQueue.sendLog('webgl_getParameter')
+    logCollector.sendLog('webgl_getParameter')
 
     if (!spoofWebgl) return value
 
@@ -50,7 +50,7 @@ export function rewriteWebgl(spoofWebgl?: SpoofWebgl) {
   ) {
     originalReadPixels.call(this, x, y, width, height, format, type, pixels)
 
-    logQueue.sendLog('webgl_readPixels')
+    logCollector.sendLog('webgl_readPixels')
 
     if (!pixels || !spoofWebgl) return
 

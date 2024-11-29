@@ -1,12 +1,12 @@
 import type { UserAgentData } from '@/constants/userAgents'
 
-import { logQueue } from '../sendLogs'
+import { logCollector } from '../sendLogs'
 
 export function rewriteUserAgentData(userAgentData?: UserAgentData) {
   const originalValue = navigator.userAgentData
   Object.defineProperty(navigator, 'userAgentData', {
     get() {
-      logQueue.sendLog('user-agent_userAgentData')
+      logCollector.sendLog('user-agent_userAgentData')
       if (!userAgentData) return originalValue
       return {
         getHighEntropyValues() {

@@ -1,4 +1,4 @@
-import { logQueue } from '@/utils/sendLogs'
+import { logCollector } from '@/utils/sendLogs'
 
 interface SpoofAudioContext {
   getChannelDataNoise: number
@@ -13,7 +13,7 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
   AudioBuffer.prototype.getChannelData = function (channel) {
     const data = originalGetChannelData.call(this, channel)
 
-    logQueue.sendLog('audio_getChannelData')
+    logCollector.sendLog('audio_getChannelData')
 
     if (!spoofAudioContext) return data
 
@@ -29,7 +29,7 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
     AnalyserNode.prototype.getFloatFrequencyData
 
   AnalyserNode.prototype.getFloatFrequencyData = function (array) {
-    logQueue.sendLog('audio_getFloatFrequencyData')
+    logCollector.sendLog('audio_getFloatFrequencyData')
     if (!spoofAudioContext) return
     const copiedArray = new Float32Array(array.length)
     originalGetFloatFrequencyData.call(this, copiedArray)
@@ -45,7 +45,7 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
     AnalyserNode.prototype.getByteFrequencyData
 
   AnalyserNode.prototype.getByteFrequencyData = function (array) {
-    logQueue.sendLog('audio_getByteFrequencyData')
+    logCollector.sendLog('audio_getByteFrequencyData')
     if (!spoofAudioContext) return
 
     const copiedArray = new Uint8Array(array.length)
@@ -63,7 +63,7 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
 
   OscillatorNode.prototype.start = function (when) {
     // 生成一个微小的随机偏移量，扰乱频率
-    logQueue.sendLog('audio_start')
+    logCollector.sendLog('audio_start')
     if (!spoofAudioContext) return
     this.frequency.value += spoofAudioContext.oscillatorStartNoise // 加入偏移
     originalStart.call(this, when)

@@ -1,11 +1,11 @@
-import { logQueue } from '@/utils/sendLogs'
+import { logCollector } from '@/utils/sendLogs'
 
 export function blockWebrtc(isBlockWebrtc: boolean) {
   const OriginalRTCPeerConnection = window.RTCPeerConnection
 
   if (OriginalRTCPeerConnection) {
     const newRTCPeerConnection = function (...args: any[]) {
-      logQueue.sendLog('webrtc')
+      logCollector.sendLog('webrtc')
       const pc = new OriginalRTCPeerConnection(...args)
       if (isBlockWebrtc) {
         // 拦截候选地址，过滤掉所有的网络候选

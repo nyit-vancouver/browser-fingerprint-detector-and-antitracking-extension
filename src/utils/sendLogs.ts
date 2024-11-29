@@ -1,4 +1,4 @@
-class LogQueue {
+class LogCollector {
   private logs: string[] = []
   private maxLogs = 100
   private timer: number = 0
@@ -31,4 +31,4 @@ class LogQueue {
   }
 }
 
-export const logQueue = new LogQueue()
+export const logCollector = new LogCollector()

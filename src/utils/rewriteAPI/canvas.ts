@@ -1,4 +1,4 @@
-import { logQueue } from '@/utils/sendLogs'
+import { logCollector } from '@/utils/sendLogs'
 
 export function rewriteCanvas(spoofCanvas?: number[]) {
   const originalToDataURL = HTMLCanvasElement.prototype.toDataURL
@@ -7,7 +7,7 @@ export function rewriteCanvas(spoofCanvas?: number[]) {
     // 在每次调用时为canvas内容添加随机噪声
     const context = this.getContext('2d')
     const { width, height } = this
-    logQueue.sendLog('canvas_toDataURL')
+    logCollector.sendLog('canvas_toDataURL')
 
     if (!context) {
       return originalToDataURL.apply(this, args)
@@ -33,7 +33,7 @@ export function rewriteCanvas(spoofCanvas?: number[]) {
 
   CanvasRenderingContext2D.prototype.getImageData = function (x, y, w, h) {
     const imageData = originalGetImageData.call(this, x, y, w, h)
-    logQueue.sendLog('canvas_getImageData')
+    logCollector.sendLog('canvas_getImageData')
     if (spoofCanvas) {
       // 为图像数据加入随机噪声
       const [r, g, b] = spoofCanvas
