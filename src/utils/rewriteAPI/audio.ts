@@ -1,9 +1,9 @@
 import { logCollector } from '@/utils/sendLogs'
 
 interface SpoofAudioContext {
-  getChannelDataNoise: number
-  getFloatFrequencyDataNoise: number
-  getByteFrequencyDataNoise: number
+  channelDataNoise: number
+  floatFrequencyDataNoise: number
+  byteFrequencyDataNoise: number
   oscillatorStartNoise: number
 }
 
@@ -19,7 +19,7 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
 
     // add noise to the channel data
     for (let i = 0; i < data.length; i++) {
-      data[i] += spoofAudioContext.getChannelDataNoise
+      data[i] += spoofAudioContext.channelDataNoise
     }
 
     return data
@@ -35,7 +35,7 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
     originalGetFloatFrequencyData.call(this, copiedArray)
     // add noise to the frequency data
     for (let i = 0; i < copiedArray.length; i++) {
-      copiedArray[i] += spoofAudioContext.getFloatFrequencyDataNoise
+      copiedArray[i] += spoofAudioContext.floatFrequencyDataNoise
     }
 
     array.set(copiedArray)
@@ -52,7 +52,7 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
     originalGetByteFrequencyData.call(this, copiedArray)
     for (let i = 0; i < copiedArray.length; i++) {
       // add noise to the frequency data
-      const noise = spoofAudioContext.getByteFrequencyDataNoise
+      const noise = spoofAudioContext.byteFrequencyDataNoise
       copiedArray[i] = Math.min(255, Math.max(0, copiedArray[i] + noise)) // ensure the value is within the range [0, 255]
     }
     array.set(copiedArray)

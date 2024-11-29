@@ -21,9 +21,9 @@ export function getRandomizedCanvasOffsets() {
 
 export function getRandomizedAudioConfigs() {
   return {
-    getChannelDataNoise: Math.random() * 0.0001 - 0.00005,
-    getFloatFrequencyDataNoise: Math.random() * 0.1 - 0.05,
-    getByteFrequencyDataNoise: Math.floor((Math.random() - 0.5) * 10),
+    channelDataNoise: Math.random() * 0.0001 - 0.00005,
+    floatFrequencyDataNoise: Math.random() * 0.1 - 0.05,
+    byteFrequencyDataNoise: Math.floor((Math.random() - 0.5) * 10),
     oscillatorStartNoise: Math.random() * 0.5 - 0.25,
   }
 }
