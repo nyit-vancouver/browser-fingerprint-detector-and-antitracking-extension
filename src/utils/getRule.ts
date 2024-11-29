@@ -6,7 +6,7 @@ import {
   referer,
   userAgent,
   xForwardedFor,
-} from '@/config/responseHeaders'
+} from '@/constants/requestHeaderRules'
 
 const MAP: Record<string, chrome.declarativeNetRequest.ModifyHeaderInfo> = {
   etag: etag,

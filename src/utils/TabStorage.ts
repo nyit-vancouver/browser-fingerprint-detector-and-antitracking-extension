@@ -1,4 +1,4 @@
-import { MODIFIED_REQ_HEADERS } from '@/config/constants'
+import { REQEST_HEADERS } from '@/constants/requestHeaders'
 import { getCurrentTabId } from '@/utils/getCurrentTabId'
 
 import { sendMessage } from './sendMessage'
@@ -15,9 +15,9 @@ export class TabStorage {
       console.error('tab id is undefined')
       return
     }
-    const res: Record<(typeof MODIFIED_REQ_HEADERS)[number], any> = {}
+    const res: Record<(typeof REQEST_HEADERS)[number], any> = {}
     Object.entries(data).forEach(([key, value]) => {
-      if (MODIFIED_REQ_HEADERS.includes(key)) {
+      if (REQEST_HEADERS.includes(key)) {
         // call background.js
         res[key] = value
       }
@@ -46,9 +46,9 @@ export class TabStorage {
       console.error('tab id is undefined')
       return
     }
-    const res: (typeof MODIFIED_REQ_HEADERS)[number][] = []
+    const res: (typeof REQEST_HEADERS)[number][] = []
     keys.forEach((key) => {
-      if (MODIFIED_REQ_HEADERS.includes(key)) {
+      if (REQEST_HEADERS.includes(key)) {
         // call background.js
         res.push(key)
       }
