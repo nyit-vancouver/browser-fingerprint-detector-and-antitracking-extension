@@ -13,9 +13,10 @@ export default [
       '@typescript-eslint/no-explicit-any': 0,
       'max-lines': [
         'error',
-        { max: 300, skipBlankLines: true, skipComments: true }
+        { max: 300, skipBlankLines: true, skipComments: true },
       ],
       'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
+      'comma-dangle': ['error', 'always-multiline'],
       'no-param-reassign': [
         'error',
         {
@@ -23,20 +24,20 @@ export default [
           ignorePropertyModificationsFor: [
             'state', // for vuex state
             'acc', // for reduce accumulators
-            'e' // for e.returnvalue
-          ]
-        }
-      ]
-    }
+            'e', // for e.returnvalue
+          ],
+        },
+      ],
+    },
   },
   {
-    languageOptions: { globals: globals.browser }
+    languageOptions: { globals: globals.browser },
   },
   {
     settings: {
       react: {
-        version: 'detect'
-      }
-    }
-  }
+        version: 'detect',
+      },
+    },
+  },
 ]
