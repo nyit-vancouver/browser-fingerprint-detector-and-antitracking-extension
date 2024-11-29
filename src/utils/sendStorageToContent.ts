@@ -1,10 +1,14 @@
 export default async function sendStorageToContent(tabId: number) {
+  const envIP = process.env.REACT_APP_IP || 'localhost'
+  const envPort = process.env.REACT_APP_PORT || '3000'
+  const BLACK_LIST = [
+    `localhost:${envPort}/dashboard`,
+    `${envIP}:${envPort}/dashboard`,
+  ]
   // black list: tracking dashboard
-  const BLACK_LIST = ['localhost:3000/#dashboard']
   function getLogKeyName() {
-    // TODO: no hash
-    const { host, pathname, hash } = new URL(window.location.href)
-    return `${host}${pathname}${hash}`
+    const { host, pathname } = new URL(window.location.href)
+    return `${host}${pathname}`
   }
   async function getStorageData() {
     // get current storage data

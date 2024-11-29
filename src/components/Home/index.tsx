@@ -3,6 +3,7 @@ import { List, Switch, Tooltip } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { tabStorage } from '@/utils/TabStorage'
+import { getEnvIP, getEnvPort } from '@/utils/getEnvInfo'
 import { getRandomizedConfigs } from '@/utils/getRandomizedConfigs'
 
 export default function Home() {
@@ -24,7 +25,7 @@ export default function Home() {
   }, [])
 
   const handleClick = useCallback((page: string) => {
-    window.open(`http://localhost:3000#${page}`) //chrome.runtime.getURL('options.html'))
+    window.open(`http://${getEnvIP()}:${getEnvPort()}/${page}`)
   }, [])
 
   useEffect(() => {

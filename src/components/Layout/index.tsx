@@ -1,10 +1,8 @@
 import { ShieldCheckIcon } from '@heroicons/react/24/solid'
 import { ConfigProvider, Layout as LayoutComp, Menu } from 'antd'
 import { Header } from 'antd/es/layout/layout'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-
-import Dashboard from '@/pages/Dashboard'
-import Info from '@/pages/Info'
+import React, { useEffect, useMemo, useState } from 'react'
+import { NavLink, useLocation } from 'react-router'
 
 const { Sider, Content } = LayoutComp
 
@@ -16,47 +14,52 @@ const siderStyle: React.CSSProperties = {
   top: 0,
   bottom: 0,
   scrollbarWidth: 'thin',
-  scrollbarColor: 'unset'
+  scrollbarColor: 'unset',
 }
 
-const Layout = () => {
+interface LayoutProps {
+  children: React.ReactNode
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [header, setHeader] = useState('')
 
-  const handleClick = useCallback(({ key }: any) => {
-    window.location.hash = key
-    setHeader(key)
-  }, [])
+  const location = useLocation()
 
   const menuItems = useMemo(
     () => [
       {
         key: 'info',
-        label: 'Fingerprint Information',
-        onClick: () => setHeader('info')
+        label: (
+          <NavLink to="/info" end>
+            Fingerprint Information
+          </NavLink>
+        ),
       },
       {
         key: 'dashboard',
-        label: 'Tracking Dashboard',
-        onClick: () => setHeader('dashboard')
-      }
+        label: (
+          <NavLink to="/dashboard" end>
+            Tracking Dashboard
+          </NavLink>
+        ),
+      },
     ],
-    []
+    [],
   )
 
   useEffect(() => {
-    // get url hash
-    const hash = window.location.hash.slice(1)
-    setHeader(hash || 'info')
-  }, [])
+    setHeader(location.pathname.slice(1))
+  }, [location])
 
   return (
     <ConfigProvider
       theme={{
         components: {
           Layout: {
-            headerBg: '#fff'
-          }
-        }
+            headerBg: '#fff',
+          },
+        },
       }}
     >
       <LayoutComp>
@@ -70,19 +73,11 @@ const Layout = () => {
             </div>
           </Header>
           <Content>
-            <Menu
-              selectedKeys={[header]}
-              mode="inline"
-              items={menuItems}
-              onClick={handleClick}
-            />
+            <Menu selectedKeys={[header]} mode="inline" items={menuItems} />
           </Content>
         </Sider>
         <LayoutComp>
-          <Content>
-            {header === 'info' && <Info />}
-            {header === 'dashboard' && <Dashboard />}
-          </Content>
+          <Content>{children}</Content>
         </LayoutComp>
       </LayoutComp>
     </ConfigProvider>

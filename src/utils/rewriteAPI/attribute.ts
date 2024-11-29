@@ -23,6 +23,6 @@ export function rewriteAttribute(data: Record<string, any>, configs: Configs) {
       logCollector.sendLog(paramName)
       return data?.[paramName] || originalValue
     },
-    configurable: true
+    configurable: true,
   })
 }

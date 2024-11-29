@@ -2,12 +2,15 @@ import {
   AdjustmentsHorizontalIcon,
   Cog6ToothIcon,
   ComputerDesktopIcon,
-  ShieldCheckIcon
+  ShieldCheckIcon,
 } from '@heroicons/react/24/solid'
 import { Tabs, Tooltip } from 'antd'
 import React, { useState } from 'react'
+import { Route, Routes } from 'react-router'
 
-import _isDev from '@/utils/getEnv'
+import Dashboard from '@/pages/Dashboard'
+import Info from '@/pages/Info'
+import { isDev } from '@/utils/getEnvInfo'
 
 import HeadersSetting from '../HeadersSetting'
 import Home from '../Home'
@@ -19,7 +22,7 @@ import './index.scss'
 const { TabPane } = Tabs
 
 function PopupList() {
-  const [showDetail] = useState(_isDev())
+  const [showDetail] = useState(isDev())
   const [activeTab, setActiveTab] = useState('home')
 
   const handleTabChange = (activeKey: string) => {
@@ -27,7 +30,14 @@ function PopupList() {
   }
 
   if (showDetail) {
-    return <Layout />
+    return (
+      <Layout>
+        <Routes>
+          <Route path="info" element={<Info />} />
+          <Route path="dashboard" element={<Dashboard />} />
+        </Routes>
+      </Layout>
+    )
   }
 
   return (
