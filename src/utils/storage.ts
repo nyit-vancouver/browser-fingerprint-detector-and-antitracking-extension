@@ -3,13 +3,13 @@ export class Storage {
     console.log('Storage set', data)
     const res =
       (await chrome.storage.session.get(
-        `__antiTracking_config_${currentTabId}`
+        `__antiTracking_config_${currentTabId}`,
       )) || {}
     await chrome.storage.session.set({
       [`__antiTracking_config_${currentTabId}`]: {
         ...(res[`__antiTracking_config_${currentTabId}`] || {}),
-        ...data
-      }
+        ...data,
+      },
     })
   }
 
@@ -33,24 +33,24 @@ export class Storage {
     console.log('Storage delete', keys, currentTabId)
     const res = {
       ...((await chrome.storage.session.get(
-        `__antiTracking_config_${currentTabId}`
-      )) || {})
+        `__antiTracking_config_${currentTabId}`,
+      )) || {}),
     }
     keys.forEach((key) => {
       delete res[`__antiTracking_config_${currentTabId}`]?.[key]
     })
     console.log('Storage delete res', res)
-    // 如果删除后为空，则删除整个对象
+    // If the object is empty after deletion, remove the entire object
     if (JSON.stringify(res[`__antiTracking_config_${currentTabId}`]) === '{}') {
       await chrome.storage.session.remove(
-        `__antiTracking_config_${currentTabId}`
+        `__antiTracking_config_${currentTabId}`,
       )
       return
     }
     await chrome.storage.session.set({
       [`__antiTracking_config_${currentTabId}`]: {
-        ...res[`__antiTracking_config_${currentTabId}`]
-      }
+        ...res[`__antiTracking_config_${currentTabId}`],
+      },
     })
   }
 

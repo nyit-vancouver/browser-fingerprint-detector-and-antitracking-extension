@@ -1,9 +1,9 @@
 export const VENDORS = [
-  'WebKit', // 通常用于 Apple 浏览器，如 Safari
+  'WebKit', // Safari
   'Mozilla', // Firefox
   'Google Inc.', // Chrome
   'Microsoft', // IE
-  'Opera' // Opera
+  'Opera', // Opera
 ]
 
 export const UNMASKED_VENDORS = [
@@ -51,7 +51,7 @@ export const UNMASKED_VENDORS = [
   'SBdTWBB1Dr',
   'Samsung Electronics Co., Ltd.',
   'eHzMdi0sbt',
-  'r0a05FKN'
+  'r0a05FKN',
 ]
 
 export const UNMASKED_RENDERERS = [
@@ -128,5 +128,5 @@ export const UNMASKED_RENDERERS = [
   'Radeon HD 3200 Graphics',
   'Radeon HD 3200 Graphics, or similar',
   'Radeon R9 200 Series, or similar',
-  'llvmpipe, or similar'
+  'llvmpipe, or similar',
 ]

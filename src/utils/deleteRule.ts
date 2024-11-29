@@ -1,6 +1,6 @@
 export function deleteRule(
   data: string[],
-  preRule?: chrome.declarativeNetRequest.Rule
+  preRule?: chrome.declarativeNetRequest.Rule,
 ) {
   console.log('deleteRule', data, preRule)
   if (!preRule) {
@@ -9,7 +9,7 @@ export function deleteRule(
   const preRequestHeaders = preRule.action?.requestHeaders
 
   const headers: chrome.declarativeNetRequest.ModifyHeaderInfo[] = []
-  // 如果preRequestHeaders不存在，则将其push到headers中
+  // if the header is not in the data, add it to the headers
   preRequestHeaders?.forEach((item) => {
     if (!data.includes(item.header.toLowerCase())) {
       headers.push({ ...item })
@@ -22,7 +22,7 @@ export function deleteRule(
     ...preRule,
     action: {
       ...preRule.action,
-      requestHeaders: headers
-    }
+      requestHeaders: headers,
+    },
   }
 }

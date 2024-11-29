@@ -17,26 +17,26 @@ export default function HeadersSetting() {
     disableReferer: false,
     spoofAcceptLang: {
       enabled: false,
-      value: DEFAULT_LANGUAGE.value
+      value: DEFAULT_LANGUAGE.value,
     },
     spoofIP: {
       enabled: false,
-      value: DEFAULT_IP
-    }
+      value: DEFAULT_IP,
+    },
   })
   const updateStorage = useCallback(async (res: Headers) => {
     console.log('updateStorage', res)
-    // 删除相关的设置
+    // delete keys that are not enabled
     const deletedKeys =
       Object.entries(res)
         .filter(([, value]) =>
-          typeof value === 'boolean' ? !value : !value.enabled
+          typeof value === 'boolean' ? !value : !value.enabled,
         )
         .map(([key]) => key) || []
     if (deletedKeys.length > 0) {
       await tabStorage.delete(deletedKeys)
     }
-    // 只存储需要的数据
+    // set keys that are enabled
     const storageData: Record<string, any> = {}
     if (res.disableReferer) {
       storageData.referer = res.disableReferer
@@ -62,19 +62,20 @@ export default function HeadersSetting() {
     tabStorage.set(storageData)
   }, [])
 
+  // TODO: debounce
   // const debouncedStoreData = useCallback(debounce(1000, updateStorage), [])
 
   const updateHeaders = useCallback(
     (newHeaders: NewHeader) => {
       const res = {
         ...headers,
-        ...newHeaders
+        ...newHeaders,
       }
       setHeaders(res)
       console.log('updateHeaders', newHeaders, res)
       updateStorage(res) // TODO：debounce
     },
-    [headers, updateStorage]
+    [headers, updateStorage],
   )
 
   const init = useCallback(async () => {
@@ -85,7 +86,7 @@ export default function HeadersSetting() {
       'if-none-match',
       'x-forwarded-for',
       'accept-language',
-      'language'
+      'language',
     ])
     console.log('init headers', headers)
     setHeaders({
@@ -94,12 +95,12 @@ export default function HeadersSetting() {
       disableReferer: !!headers.referer,
       spoofAcceptLang: {
         enabled: !!headers['accept-language'],
-        value: getLanguage(headers['accept-language']).value
+        value: getLanguage(headers['accept-language']).value,
       },
       spoofIP: {
         enabled: !!headers['x-forwarded-for'],
-        value: headers['x-forwarded-for'] || DEFAULT_IP
-      }
+        value: headers['x-forwarded-for'] || DEFAULT_IP,
+      },
     })
   }, [])
 
@@ -151,8 +152,8 @@ export default function HeadersSetting() {
                   enabled: e.target.checked,
                   value: e.target.checked
                     ? DEFAULT_LANGUAGE.value
-                    : headers.spoofAcceptLang.value
-                }
+                    : headers.spoofAcceptLang.value,
+                },
               })
             }
           >
@@ -166,7 +167,7 @@ export default function HeadersSetting() {
                 value={headers.spoofAcceptLang.value}
                 onChange={(value) =>
                   updateHeaders({
-                    spoofAcceptLang: { ...headers.spoofAcceptLang, value }
+                    spoofAcceptLang: { ...headers.spoofAcceptLang, value },
                   })
                 }
               >
@@ -187,8 +188,8 @@ export default function HeadersSetting() {
               updateHeaders({
                 spoofIP: {
                   enabled: e.target.checked,
-                  value: e.target.checked ? DEFAULT_IP : headers.spoofIP.value
-                }
+                  value: e.target.checked ? DEFAULT_IP : headers.spoofIP.value,
+                },
               })
             }
           >
@@ -202,7 +203,7 @@ export default function HeadersSetting() {
               value={headers.spoofIP.value}
               onChange={(e) =>
                 updateHeaders({
-                  spoofIP: { ...headers.spoofIP, value: e.target.value }
+                  spoofIP: { ...headers.spoofIP, value: e.target.value },
                 })
               }
             />

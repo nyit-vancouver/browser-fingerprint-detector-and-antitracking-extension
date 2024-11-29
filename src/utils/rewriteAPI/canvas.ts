@@ -4,7 +4,7 @@ export function rewriteCanvas(spoofCanvas?: number[]) {
   const originalToDataURL = HTMLCanvasElement.prototype.toDataURL
 
   HTMLCanvasElement.prototype.toDataURL = function (...args) {
-    // 在每次调用时为canvas内容添加随机噪声
+    // Add random noise to the canvas content on each call
     const context = this.getContext('2d')
     const { width, height } = this
     logCollector.sendLog('canvas_toDataURL')
@@ -13,7 +13,7 @@ export function rewriteCanvas(spoofCanvas?: number[]) {
       return originalToDataURL.apply(this, args)
     }
     if (spoofCanvas) {
-      // 生成轻微的随机噪声
+      // Generate slight random noise
       const imageData = context.getImageData(0, 0, width, height)
       const [r, g, b] = spoofCanvas
       for (let i = 0; i < imageData.data.length; i += 4) {
@@ -22,10 +22,10 @@ export function rewriteCanvas(spoofCanvas?: number[]) {
         imageData.data[i + 2] += b // B
       }
 
-      // 重新将噪声应用到canvas
+      // Apply noise to the canvas
       context.putImageData(imageData, 0, 0)
     }
-    // 调用原始方法并返回带有噪声的图片数据
+    // Call the original method and return the image data with noise
     return originalToDataURL.apply(this, args)
   }
 
@@ -35,7 +35,7 @@ export function rewriteCanvas(spoofCanvas?: number[]) {
     const imageData = originalGetImageData.call(this, x, y, w, h)
     logCollector.sendLog('canvas_getImageData')
     if (spoofCanvas) {
-      // 为图像数据加入随机噪声
+      // Add random noise to the image data
       const [r, g, b] = spoofCanvas
       for (let i = 0; i < imageData.data.length; i += 4) {
         imageData.data[i] += r // R

@@ -8,12 +8,12 @@ import { getRandomizedConfigs } from '@/utils/getRandomizedConfigs'
 export default function Home() {
   const [switchValue, setSwitchValue] = useState(false)
 
-  const handleSwitch = useCallback(async (checked: boolean) => {
-    console.log(`switch to ${checked}`)
+  const handleSwitch = useCallback((checked: boolean) => {
     setSwitchValue(checked)
 
     if (checked) {
-      getRandomizedConfigs()
+      const config = getRandomizedConfigs()
+      tabStorage.set(config)
     } else tabStorage.deleteAll()
   }, [])
 
@@ -23,7 +23,6 @@ export default function Home() {
     setSwitchValue(JSON.stringify(header) !== '{}')
   }, [])
 
-  // 处理原有功能的点击事件
   const handleClick = useCallback((page: string) => {
     window.open(`http://localhost:3000#${page}`) //chrome.runtime.getURL('options.html'))
   }, [])

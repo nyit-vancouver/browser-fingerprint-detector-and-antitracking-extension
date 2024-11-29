@@ -11,7 +11,7 @@ class LogCollector {
       this.logs = []
     }
     clearTimeout(this.timer)
-    // 计时，如果 1s 内没有新的 log，则发送
+    // Timer: if no new log within 1 second, send the logs
     this.timer = window.setTimeout(() => {
       if (this.logs.length > 0) {
         this.sendLogs()
@@ -24,8 +24,8 @@ class LogCollector {
     console.log('sendLogs', this.logs)
     const event = new CustomEvent('writeLogs', {
       detail: {
-        paramNames: this.logs
-      }
+        paramNames: this.logs,
+      },
     })
     window.dispatchEvent(event)
   }

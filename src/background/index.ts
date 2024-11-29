@@ -9,32 +9,32 @@ import { AntiTrackingLog } from './type'
 
 const MAX_STORAGE_CAPACITY = 0.9
 
-// 监听 tab 更新事件
+// Listen for tab update events
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   console.log('tab onUpdated', tabId, changeInfo, tab)
-  // 不在chrome://页面执行
+  // Do not execute on chrome:// pages due to lack of permissions
   if (tab.url?.includes('chrome://')) {
     return
   }
-  // 只在页面加载时执行
+  // Execute only when the page loads
   if (!changeInfo.status || changeInfo.status !== 'loading') {
     return
   }
   console.warn('executeScript', new Date().getTime())
-  // 设置存储空间访问权限
+  // Set storage access permissions for use in the sendStorageToContent function
   await chrome.storage.session.setAccessLevel({
-    accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS'
+    accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS',
   })
-  // 执行 sendStorageToContent.js
+  // execute sendStorageToContent.js
   chrome.scripting.executeScript({
     target: { tabId },
     func: sendStorageToContent,
     args: [tabId],
-    injectImmediately: true
+    injectImmediately: true,
   })
 })
 
-// 监听本地存储空间使用情况
+// Monitor local storage usage
 chrome.storage.local.onChanged.addListener(
   debounce(2000, async () => {
     const bytesInUse = await chrome.storage.local.getBytesInUse()
@@ -46,13 +46,13 @@ chrome.storage.local.onChanged.addListener(
       const sortedTimestamps = Object.values(trackingLogs)
         .map((item) => item._timestamp)
         .sort((a, b) => a - b)
-      const thresholdIndex = Math.floor(sortedTimestamps.length / 5) // 删除前20%的数据
+      const thresholdIndex = Math.floor(sortedTimestamps.length / 5)
       const thresholdTimestamp = sortedTimestamps[thresholdIndex]
 
       const res = { ...trackingLogs }
 
       Object.entries(trackingLogs).forEach(([k, v]) => {
-        // 根据_timestamp删除前20%的旧数据
+        // Delete the oldest 20% of data based on _timestamp
         if (v._timestamp <= thresholdTimestamp) {
           console.log('delete', k)
           delete res[k]
@@ -60,13 +60,13 @@ chrome.storage.local.onChanged.addListener(
       })
       await chrome.storage.local.set({
         ...storage,
-        __antiTracking_log: res
+        __antiTracking_log: res,
       })
     }
-  })
+  }),
 )
 
-// 监听来自 tabStorage 的消息
+// Listen for messages from tabStorage
 chrome.runtime.onMessage.addListener(async (message, sender) => {
   console.log('background message', message, sender)
   const { type, data, tabId } = message
@@ -82,12 +82,11 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
     console.log('setHeader getSessionRules', rules)
     const preRule = rules.find((rule) => rule.condition.tabIds?.includes(tabId))
     const preRuleId = preRule?.id
-    const rule = getRule(data, [tabId]) //, preRule)
+    const rule = getRule(data, [tabId])
+    // delete the previous rule and add a new rule
     await chrome.declarativeNetRequest.updateSessionRules({
-      // rule是包含了之前规则的新规则
       addRules: [rule],
-      // 如果preRuleId存在，则删除之前的规则
-      removeRuleIds: preRuleId ? [preRuleId] : undefined
+      removeRuleIds: preRuleId ? [preRuleId] : undefined,
     })
     console.log('Rule added successfully')
   } else if (type === 'deleteHeader') {
@@ -98,16 +97,14 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
       (rule) =>
         rule.condition.tabIds?.includes(tabId) &&
         rule.action?.requestHeaders?.some((item) =>
-          data.includes(item.header.toLowerCase())
-        )
+          data.includes(item.header.toLowerCase()),
+        ),
     )
     const preRuleId = preRule?.id
-    // 如果找不到对应的规则，则直接返回
     if (!preRuleId) {
       console.error('preRuleId is undefined')
       return
     }
-    // 删除了指定的header后的rules
     const rule = deleteRule(data, preRule)
     if (!rule) {
       console.error('rule is undefined')
@@ -115,17 +112,12 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
     }
     await chrome.declarativeNetRequest.updateSessionRules({
       addRules: rule.action.requestHeaders.length === 0 ? undefined : [rule],
-      removeRuleIds: [preRuleId]
+      removeRuleIds: [preRuleId],
     })
     console.log('Rule delete successfully')
-  } else if (type === 'check') {
-    // check session rules
-    chrome.declarativeNetRequest.getSessionRules(function (rules) {
-      console.log('check getSessionRules', rules)
-    })
   }
 })
-// tab 关闭时清除规则
+// Clear rules when the tab is closed
 chrome.tabs.onRemoved.addListener((tabId) => {
   console.log('tab removed', tabId)
   // clear local storage
@@ -139,19 +131,17 @@ chrome.tabs.onRemoved.addListener((tabId) => {
       return
     }
     chrome.declarativeNetRequest.updateSessionRules({
-      removeRuleIds: [deleteId]
+      removeRuleIds: [deleteId],
     })
   })
 })
 
 // DO NOT DELETE THIS LISTENER
-// 监听请求头
+// Listen to request headers
 chrome.webRequest.onBeforeSendHeaders.addListener(
-  function () {
-    // console.log('onBeforeSendHeaders', details)
-  },
+  function () {},
   { urls: ['<all_urls>'] },
-  ['requestHeaders']
+  ['requestHeaders'],
 )
 
 export {}

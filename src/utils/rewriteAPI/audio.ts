@@ -17,9 +17,9 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
 
     if (!spoofAudioContext) return data
 
-    // 在原始音频数据中引入轻微随机噪声
+    // add noise to the channel data
     for (let i = 0; i < data.length; i++) {
-      data[i] += spoofAudioContext.getChannelDataNoise // 添加微小噪声
+      data[i] += spoofAudioContext.getChannelDataNoise
     }
 
     return data
@@ -33,9 +33,9 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
     if (!spoofAudioContext) return
     const copiedArray = new Float32Array(array.length)
     originalGetFloatFrequencyData.call(this, copiedArray)
-    // 为频率数据添加噪声
+    // add noise to the frequency data
     for (let i = 0; i < copiedArray.length; i++) {
-      copiedArray[i] += spoofAudioContext.getFloatFrequencyDataNoise // 微小随机值
+      copiedArray[i] += spoofAudioContext.getFloatFrequencyDataNoise
     }
 
     array.set(copiedArray)
@@ -50,11 +50,10 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
 
     const copiedArray = new Uint8Array(array.length)
     originalGetByteFrequencyData.call(this, copiedArray)
-    // 为频率数据添加噪声
     for (let i = 0; i < copiedArray.length; i++) {
-      // 添加随机偏移量，范围控制在 -5 到 +5
+      // add noise to the frequency data
       const noise = spoofAudioContext.getByteFrequencyDataNoise
-      copiedArray[i] = Math.min(255, Math.max(0, copiedArray[i] + noise)) // 保证值在 0-255 范围内
+      copiedArray[i] = Math.min(255, Math.max(0, copiedArray[i] + noise)) // ensure the value is within the range [0, 255]
     }
     array.set(copiedArray)
   }
@@ -62,10 +61,10 @@ export function rewriteAudio(spoofAudioContext?: SpoofAudioContext) {
   const originalStart = OscillatorNode.prototype.start
 
   OscillatorNode.prototype.start = function (when) {
-    // 生成一个微小的随机偏移量，扰乱频率
+    // create a new oscillator
     logCollector.sendLog('audio_start')
     if (!spoofAudioContext) return
-    this.frequency.value += spoofAudioContext.oscillatorStartNoise // 加入偏移
+    this.frequency.value += spoofAudioContext.oscillatorStartNoise // add noise to the frequency
     originalStart.call(this, when)
   }
 }

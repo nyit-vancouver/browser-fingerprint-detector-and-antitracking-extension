@@ -5,7 +5,7 @@ import {
   ifNoneMatch,
   referer,
   userAgent,
-  xForwardedFor
+  xForwardedFor,
 } from '@/config/responseHeaders'
 
 const MAP: Record<string, chrome.declarativeNetRequest.ModifyHeaderInfo> = {
@@ -15,22 +15,19 @@ const MAP: Record<string, chrome.declarativeNetRequest.ModifyHeaderInfo> = {
   referer: referer,
   dnt: dnt,
   'x-forwarded-for': xForwardedFor,
-  'if-none-match': ifNoneMatch
+  'if-none-match': ifNoneMatch,
 }
 
-const getRequestHeaders = (
-  data: Record<string, any>
-  // preRequestHeaders?: chrome.declarativeNetRequest.ModifyHeaderInfo[]
-) => {
+const getRequestHeaders = (data: Record<string, any>) => {
   console.log('getRequestHeaders', data)
   const headers: chrome.declarativeNetRequest.ModifyHeaderInfo[] = []
 
   Object.entries(data).forEach(([key, value]) => {
-    // 从MAP中获取对应的header配置
+    // get rule by key
     const rule = {
-      ...MAP[key]
+      ...MAP[key],
     }
-    // 如果value存在，则将value赋值给header
+    // If value exists, assign value to header
     if (rule.operation === 'set' && value) {
       rule.value = value
     }
@@ -39,35 +36,18 @@ const getRequestHeaders = (
     headers.push(rule)
   })
   console.log('new headers', headers)
-
-  // if (preRequestHeaders) {
-  //   preRequestHeaders.forEach((item) => {
-  //     // 如果preRequestHeaders中的header在headers中不存在，则push到headers中
-  //     if (!headers.some((i) => i.header === item.header)) {
-  //       headers.push({ ...item })
-  //     }
-  //   })
-  // }
-  console.log('headers', headers)
   return headers
 }
 
-export const getRule = (
-  data: Record<string, any>,
-  tabIds: number[]
-  // preRule?: chrome.declarativeNetRequest.Rule
-) => {
+export const getRule = (data: Record<string, any>, tabIds: number[]) => {
   console.log('getRule', data, tabIds)
-  const requestHeaders = getRequestHeaders(
-    data
-    // preRule?.action?.requestHeaders
-  )
+  const requestHeaders = getRequestHeaders(data)
   return {
     id: Math.floor(Math.random() * Math.pow(10, 9)),
     priority: 1,
     action: {
-      type: chrome.declarativeNetRequest.RuleActionType.MODIFY_HEADERS, // 参考：https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/#type-RuleActionType
-      requestHeaders
+      type: chrome.declarativeNetRequest.RuleActionType.MODIFY_HEADERS, // reference：https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/#type-RuleActionType
+      requestHeaders,
     },
     condition: {
       tabIds,
@@ -87,8 +67,8 @@ export const getRule = (
         chrome.declarativeNetRequest.ResourceType.CSP_REPORT,
         chrome.declarativeNetRequest.ResourceType.OTHER,
         'webbundle',
-        'webtransport'
-      ] as chrome.declarativeNetRequest.ResourceType[]
-    }
+        'webtransport',
+      ] as chrome.declarativeNetRequest.ResourceType[],
+    },
   }
 }

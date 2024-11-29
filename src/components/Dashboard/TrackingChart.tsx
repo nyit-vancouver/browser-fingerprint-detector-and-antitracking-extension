@@ -7,7 +7,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from 'recharts'
 
 import type { TrackingLog } from '@/constants/trackingData'
@@ -17,14 +17,13 @@ interface TrackingChartProps {
   selectedDomain: string | null
 }
 
-// 格式化标签并处理换行
+// Format labels and handle line breaks
 const formatXAxisLabel = (value: string) => {
-  // 将驼峰命名转换为空格分隔的单词
+  // Convert camelCase to space-separated words
   const formatted = value.replace(/([A-Z])/g, ' $1').trim()
-  // 首字母大写
   const capitalized = formatted.charAt(0).toUpperCase() + formatted.slice(1)
 
-  // 如果文本长度超过12个字符，则在空格处换行
+  // If the text length exceeds 12 characters, break the line at spaces
   if (capitalized.length > 12 && capitalized.includes(' ')) {
     const words = capitalized.split(' ')
     const midPoint = Math.ceil(words.length / 2)
@@ -36,7 +35,7 @@ const formatXAxisLabel = (value: string) => {
 
 const TrackingChart: React.FC<TrackingChartProps> = ({
   data,
-  selectedDomain
+  selectedDomain,
 }) => {
   if (!selectedDomain) {
     return (
@@ -57,7 +56,7 @@ const TrackingChart: React.FC<TrackingChartProps> = ({
 
   const chartData = Object.entries(latestRecord.logs).map(([key, value]) => ({
     name: key,
-    value: value || 0
+    value: value || 0,
   }))
 
   return (
@@ -80,7 +79,7 @@ const TrackingChart: React.FC<TrackingChartProps> = ({
                       key={i}
                       x={0}
                       y={0}
-                      dy={16 + i * 12} // 增加行间距
+                      dy={16 + i * 12} // Increase line spacing
                       textAnchor="end"
                       fill="#666"
                       transform="rotate(-45)"
@@ -96,7 +95,7 @@ const TrackingChart: React.FC<TrackingChartProps> = ({
           <Tooltip
             formatter={(value: number, name: string) => [
               value,
-              formatXAxisLabel(name).join(' ')
+              formatXAxisLabel(name).join(' '),
             ]}
           />
           <Bar dataKey="value" fill="#1890ff" />

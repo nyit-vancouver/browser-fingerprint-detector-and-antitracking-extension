@@ -6,9 +6,8 @@ import { USER_AGENTS } from '@/constants/userAgents'
 import {
   UNMASKED_RENDERERS,
   UNMASKED_VENDORS,
-  VENDORS
+  VENDORS,
 } from '@/constants/webgl'
-import { tabStorage } from '@/utils/TabStorage'
 
 import { getUserAgentDetails } from './getUserAgentDetails'
 
@@ -16,7 +15,7 @@ export function getRandomizedCanvasOffsets() {
   return [
     Math.floor(Math.random() * 10),
     Math.floor(Math.random() * 10),
-    Math.floor(Math.random() * 10)
+    Math.floor(Math.random() * 10),
   ] // RGB
 }
 
@@ -25,7 +24,7 @@ export function getRandomizedAudioConfigs() {
     getChannelDataNoise: Math.random() * 0.0001 - 0.00005,
     getFloatFrequencyDataNoise: Math.random() * 0.1 - 0.05,
     getByteFrequencyDataNoise: Math.floor((Math.random() - 0.5) * 10),
-    oscillatorStartNoise: Math.random() * 0.5 - 0.25
+    oscillatorStartNoise: Math.random() * 0.5 - 0.25,
   }
 }
 
@@ -38,20 +37,20 @@ export function getRandomizedWebglConfigs() {
       UNMASKED_VENDORS[Math.floor(Math.random() * UNMASKED_VENDORS.length)],
     unmaskedRenderer:
       UNMASKED_RENDERERS[Math.floor(Math.random() * UNMASKED_RENDERERS.length)],
-    pixel: Math.floor(Math.random() * 5)
+    pixel: Math.floor(Math.random() * 5),
   }
 }
 
 export function getRandomizedUserAgent() {
-  // 随机在USER_AGENTS中选择一个
+  // Randomly select one from USER_AGENTS
   const uaInfo = USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)]
   return getUserAgentDetails(uaInfo)
 }
 
 export function getRandomizedIP() {
-  // 随机生成一个IP地址
+  // Randomly generate an IP address
   return Array.from({ length: 4 }, () => Math.floor(Math.random() * 255)).join(
-    '.'
+    '.',
   )
 }
 
@@ -67,14 +66,14 @@ function getRandomizedLanguage() {
   return {
     language: code,
     languages: nav,
-    'accept-language': value
+    'accept-language': value,
   }
 }
 
-export async function getRandomizedConfigs() {
+export function getRandomizedConfigs() {
   let storageData: Record<string, any> = {}
 
-  // canvas/webgl/audiocontext 必设置
+  // canvas/webgl/audiocontext
   storageData.spoofCanvas = getRandomizedCanvasOffsets()
   storageData.spoofWebgl = getRandomizedWebglConfigs()
   storageData.spoofAudioContext = getRandomizedAudioConfigs()
@@ -86,11 +85,11 @@ export async function getRandomizedConfigs() {
     DEVICE_MEMORIES[Math.floor(Math.random() * DEVICE_MEMORIES.length)]
   storageData.hardwareConcurrency =
     CORES[Math.floor(Math.random() * CORES.length)]
-  // window.screen.width, window.screen.height 和 window.devicePixelRatio
+  // window.screen.width, window.screen.height and window.devicePixelRatio
   // TODO: window.devicePixelRatio
   storageData = { ...storageData, ...getRandomizedScreenSize() }
-  // TODO: new Date().getTimezoneOffset() 获取的时区偏移量
+  // TODO: new Date().getTimezoneOffset()
   //navigator.language 和 navigator.languages
   storageData = { ...storageData, ...getRandomizedLanguage() }
-  await tabStorage.set(storageData)
+  return storageData
 }

@@ -10,7 +10,7 @@ import { tabStorage } from '@/utils/TabStorage'
 import {
   getRandomizedAudioConfigs,
   getRandomizedCanvasOffsets,
-  getRandomizedWebglConfigs
+  getRandomizedWebglConfigs,
 } from '@/utils/getRandomizedConfigs'
 
 import type { Setting, Settings } from './type'
@@ -25,12 +25,12 @@ export default function OtherSetting() {
     timeZone: undefined,
     colorDepth: undefined,
     hardwareConcurrency: undefined,
-    deviceMemory: undefined
+    deviceMemory: undefined,
   })
 
   const updateStorage = useCallback(async (newSettings: Settings) => {
     console.log('updateStorage', newSettings)
-    // 删除相关的设置
+    // delete keys that are not enabled
     const deletedKeys =
       Object.entries(newSettings)
         .filter(([, value]) => !value)
@@ -38,8 +38,7 @@ export default function OtherSetting() {
     if (deletedKeys.length > 0) {
       await tabStorage.delete(deletedKeys)
     }
-    // 新增设置
-    // 只存储需要的数据
+    // set keys that are enabled
     const storageData: Record<string, any> = {}
     if (newSettings.spoofCanvas) {
       storageData.spoofCanvas = getRandomizedCanvasOffsets()
@@ -80,7 +79,7 @@ export default function OtherSetting() {
 
       updateStorage(newSettings)
     },
-    [settings, updateStorage]
+    [settings, updateStorage],
   )
 
   const init = useCallback(async () => {
@@ -94,7 +93,7 @@ export default function OtherSetting() {
       'timezone',
       'colorDepth',
       'hardwareConcurrency',
-      'deviceMemory'
+      'deviceMemory',
     ])
     console.log('init settings', settings)
     setSettings({
@@ -109,7 +108,7 @@ export default function OtherSetting() {
       timeZone: settings.timezone,
       colorDepth: settings.colorDepth,
       hardwareConcurrency: settings.hardwareConcurrency,
-      deviceMemory: settings.deviceMemory
+      deviceMemory: settings.deviceMemory,
     })
   }, [])
 
@@ -213,7 +212,7 @@ export default function OtherSetting() {
           checked={settings.spoofCanvas}
           onChange={(e) =>
             updateSetting({
-              spoofCanvas: e.target.checked
+              spoofCanvas: e.target.checked,
             })
           }
         >
@@ -225,7 +224,7 @@ export default function OtherSetting() {
           checked={settings.spoofWebgl}
           onChange={(e) =>
             updateSetting({
-              spoofWebgl: e.target.checked
+              spoofWebgl: e.target.checked,
             })
           }
         >
@@ -237,7 +236,7 @@ export default function OtherSetting() {
           checked={settings.spoofAudioContext}
           onChange={(e) =>
             updateSetting({
-              spoofAudioContext: e.target.checked
+              spoofAudioContext: e.target.checked,
             })
           }
         >

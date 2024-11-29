@@ -1,13 +1,13 @@
 export default async function sendStorageToContent(tabId: number) {
-  // 黑名单
+  // black list: tracking dashboard
   const BLACK_LIST = ['localhost:3000/#dashboard']
   function getLogKeyName() {
-    // TODO: 别用hash
+    // TODO: no hash
     const { host, pathname, hash } = new URL(window.location.href)
     return `${host}${pathname}${hash}`
   }
   async function getStorageData() {
-    // 获取当前存储的数据
+    // get current storage data
     try {
       const res = (await chrome.storage.session.get()) || {}
       console.log('Storage get res', res)
@@ -31,14 +31,14 @@ export default async function sendStorageToContent(tabId: number) {
       (await chrome.storage.local.get('__antiTracking_log'))[
         '__antiTracking_log'
       ] || {}
-    // 只记录当前访问的次数
+    // Only record the current visit count
     await chrome.storage.local.set({
       __antiTracking_log: {
         ...logs,
         [domain]: {
-          _timestamp: Date.now()
-        }
-      }
+          _timestamp: Date.now(),
+        },
+      },
     })
   }
   async function writeLogs(paramNames: string[]) {
@@ -60,9 +60,9 @@ export default async function sendStorageToContent(tabId: number) {
       __antiTracking_log: {
         ...logs,
         [domain]: {
-          ...urlLogs
-        }
-      }
+          ...urlLogs,
+        },
+      },
     })
   }
 
@@ -73,26 +73,26 @@ export default async function sendStorageToContent(tabId: number) {
       ] || {}
     const event = new CustomEvent('dashboardLogs', {
       detail: {
-        data: logs
-      }
+        data: logs,
+      },
     })
     window.dispatchEvent(event)
   }
 
-  // 获取当前存储的数据
+  // Get the current stored data
   const data = await getStorageData()
-  // 初始化日志
+  // init log
   if (data) {
     initLog()
     const event = new CustomEvent('tabStorage', {
       detail: {
-        data
-      }
+        data,
+      },
     })
-    // 派发自定义事件，使 content.js 可以接收到存储数据
+    // send data to content
     window.dispatchEvent(event)
   }
-  // 监听 `writeLogs` 事件, 并写入日志
+  // listen for writeLogs event
   window.addEventListener('writeLogs', async (event: Event) => {
     const customEvent = event as CustomEvent
     console.log('Received data in writeLog:', customEvent.detail)

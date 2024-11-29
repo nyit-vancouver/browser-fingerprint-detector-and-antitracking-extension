@@ -4,8 +4,8 @@ import { getCurrentTabId } from '@/utils/getCurrentTabId'
 import { sendMessage } from './sendMessage'
 import { storage } from './storage'
 
-// TabStorage 用来处理header/其他fingerprint数据的存储
-// call background.js来处理header的设置/删除，其他数据直接存储在localStorage
+// TabStorage is used to handle the storage of header/other fingerprint data
+// Call background.js to handle header setting/deletion, other data is stored directly in localStorage
 
 export class TabStorage {
   async set(data: Record<string, any>) {
@@ -53,7 +53,7 @@ export class TabStorage {
         res.push(key)
       }
     })
-    // TODO: 不一定call background.js
+    // TODO: don't always call background.js
     sendMessage('deleteHeader', currentTabId, res)
     await storage.delete(currentTabId, keys)
   }
@@ -66,7 +66,7 @@ export class TabStorage {
       return
     }
     // call background.js
-    // TODO: 不一定call background.js
+    // TODO: don't always call background.js
     sendMessage('deleteAll', currentTabId)
     await storage.deleteAll(currentTabId)
   }

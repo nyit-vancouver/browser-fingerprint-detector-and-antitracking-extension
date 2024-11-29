@@ -5,14 +5,14 @@ function getDeviceType(): string {
     return navigator.userAgentData.mobile ? 'Mobile' : 'Desktop'
   }
 
-  // 如果 userAgentData 不可用，回退到传统方法
+  // if userAgentData is not available, fallback to user agent string
   const ua = navigator.userAgent
   if (ua.match(/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i)?.length) {
     return 'Tablet'
   }
   if (
     ua.match(
-      /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/i
+      /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/i,
     )?.length
   ) {
     return 'Mobile'
@@ -27,12 +27,10 @@ export async function getDeviceInfos() {
   try {
     const javascriptUA = navigator.userAgent
 
-    // 创建解析器实例并立即获取结果
     const parser = new UAParser()
     parser.setUA(javascriptUA)
     const result = parser.getResult()
 
-    // 从结果中直接获取设备信息
     if (result.device) {
       deviceVendor = result.device.vendor || 'unknown'
       deviceModel = result.device.model || 'unknown'
@@ -44,6 +42,6 @@ export async function getDeviceInfos() {
   return {
     type: getDeviceType(),
     vendor: deviceVendor,
-    model: deviceModel
+    model: deviceModel,
   }
 }

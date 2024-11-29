@@ -15,9 +15,8 @@ export async function getSoftwareInfos() {
     referrer: document.referrer || 'Direct visit',
     flash: detectFlash(),
     activeX: detectActiveX(),
-    // java: detectJava(), //有问题
-    javascript: detectJavascript(), // 新增的JavaScript检测
-    portScan: 'Not available' // 新增的Port Scan信息
+    javascript: detectJavascript(),
+    portScan: 'Not available',
   }
 }
 
@@ -25,19 +24,16 @@ function detectFlash(): string {
   let flashEnabled = false
 
   try {
-    // 使用类型断言，确保 TypeScript 不会报错
     if (typeof (window as any).ActiveXObject !== 'undefined') {
       flashEnabled = Boolean(
-        new (window as any).ActiveXObject('ShockwaveFlash.ShockwaveFlash')
+        new (window as any).ActiveXObject('ShockwaveFlash.ShockwaveFlash'),
       )
     }
   } catch (e) {
-    // 捕获异常，不做任何操作
     console.error('Error detecting Flash:', e)
   }
 
   if (!flashEnabled) {
-    // 通过遍历 mimeTypes 来检查是否存在 application/x-shockwave-flash
     const mimeTypes = navigator.mimeTypes
     if (mimeTypes && mimeTypes.namedItem('application/x-shockwave-flash')) {
       flashEnabled = true
@@ -58,24 +54,8 @@ function detectActiveX(): string {
   }
 }
 
-// function detectJava(): string {
-//   let javaEnabled = window.navigator.javaEnabled()
-
-//   // 额外检查 Java 插件
-//   if (!javaEnabled && navigator.plugins) {
-//     for (let i = 0; i < navigator.plugins.length; i++) {
-//       if (navigator.plugins[i].name.toLowerCase().indexOf('java') > -1) {
-//         javaEnabled = true
-//         break
-//       }
-//     }
-//   }
-
-//   return javaEnabled ? 'Enabled' : 'Disabled'
-// }
-
 function detectJavascript(): string {
-  return 'Enabled' // 如果这段代码能够执行，说明JavaScript是启用的
+  return 'Enabled'
 }
 
 async function detectAvailableFonts() {
@@ -127,12 +107,12 @@ async function detectAvailableFonts() {
     'Inter',
     'Rubik',
     'Barlow',
-    'Karla'
+    'Karla',
   ]
 
   const availableFonts = new Set<string>()
 
-  // 方法1: 测量文本高度
+  // Method 1: CSS font detection
   function createSpan(fontFamily: string) {
     const span = document.createElement('span')
     span.style.fontFamily = fontFamily
@@ -157,7 +137,7 @@ async function detectAvailableFonts() {
     const isAvailable = baseFontSpans.some(
       (baseSpan) =>
         testSpan.offsetWidth !== baseSpan.offsetWidth ||
-        testSpan.offsetHeight !== baseSpan.offsetHeight
+        testSpan.offsetHeight !== baseSpan.offsetHeight,
     )
 
     if (isAvailable) {
@@ -168,8 +148,7 @@ async function detectAvailableFonts() {
   }
 
   document.body.removeChild(testDiv)
-
-  // 方法2: 浏览器函数枚举（如果可用）
+  // Method 2: queryLocalFonts API
   if ('queryLocalFonts' in window) {
     try {
       const button = document.createElement('button')
@@ -200,8 +179,7 @@ async function detectAvailableFonts() {
   } else {
     console.log('queryLocalFonts API is not available')
   }
-
-  // 方法3: Canvas 检测
+  // Method 3: Canvas font detection
   function canvasDetect(font: string) {
     const canvas = document.createElement('canvas')
     const context = canvas.getContext('2d', { willReadFrequently: true })
@@ -214,7 +192,7 @@ async function detectAvailableFonts() {
       0,
       0,
       canvas.width,
-      canvas.height
+      canvas.height,
     ).data
 
     context.font = '12px Arial'
