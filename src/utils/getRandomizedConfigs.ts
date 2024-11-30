@@ -89,7 +89,9 @@ export function getRandomizedConfigs() {
   // TODO: window.devicePixelRatio
   storageData = { ...storageData, ...getRandomizedScreenSize() }
   // TODO: new Date().getTimezoneOffset()
-  //navigator.language 和 navigator.languages
+  //navigator.language and navigator.languages
   storageData = { ...storageData, ...getRandomizedLanguage() }
+  // webRTC
+  storageData.disableWebRTC = true
   return storageData
 }
