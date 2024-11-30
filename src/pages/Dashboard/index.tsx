@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import TrackingChart from '@/components/Dashboard/TrackingChart'
 import TrackingList from '@/components/Dashboard/TrackingList'
-import type { TrackingLog } from '@/constants/trackingData'
+import type { TrackingLog } from '@/components/Dashboard/type'
 
 const { Content } = Layout
 
@@ -18,16 +18,16 @@ const Dashboard: React.FC = () => {
     console.log('Message from dashboardLogs:', data)
 
     const logs: TrackingLog[] = Object.entries(
-      data as Record<string, Record<string, number>>
-    ).map(([domain, values]) => {
+      data as Record<string, Record<string, number>>,
+    ).map(([url, values]) => {
       const obj = {
-        ...values
+        ...values,
       }
       delete obj._timestamp
       return {
-        domain,
+        url,
         logs: obj,
-        timestamp: values._timestamp
+        timestamp: values._timestamp,
       }
     })
     setTrackingData(logs)
@@ -50,7 +50,7 @@ const Dashboard: React.FC = () => {
         style={{
           padding: '24px 40px',
           marginLeft: '220px',
-          backgroundColor: '#f0f2f5'
+          backgroundColor: '#f0f2f5',
         }}
       >
         <div className="min-h-screen bg-gray-50 py-4 px-2 sm:px-4 lg:px-6">
@@ -68,7 +68,7 @@ const Dashboard: React.FC = () => {
               <TrackingList
                 data={trackingData}
                 selectedDomain={selectedDomain}
-                onDomainChange={setSelectedDomain}
+                onUrlChange={setSelectedDomain}
                 dateRange={dateRange}
                 onDateRangeChange={setDateRange}
               />

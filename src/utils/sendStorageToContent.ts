@@ -1,7 +1,7 @@
 export default async function sendStorageToContent(tabId: number) {
   const envIP = process.env.REACT_APP_IP || 'localhost'
   const envPort = process.env.REACT_APP_PORT || '3000'
-  const BLACK_LIST = [
+  const URL_BLACK_LIST = [
     `localhost:${envPort}/dashboard`,
     `${envIP}:${envPort}/dashboard`,
   ]
@@ -26,9 +26,8 @@ export default async function sendStorageToContent(tabId: number) {
     }
   }
   async function initLog() {
-    // TODO: change variable name
-    const domain = getLogKeyName()
-    if (BLACK_LIST.includes(domain)) {
+    const url = getLogKeyName()
+    if (URL_BLACK_LIST.includes(url)) {
       return
     }
     const logs =
@@ -39,7 +38,7 @@ export default async function sendStorageToContent(tabId: number) {
     await chrome.storage.local.set({
       __antiTracking_log: {
         ...logs,
-        [domain]: {
+        [url]: {
           _timestamp: Date.now(),
         },
       },
@@ -47,23 +46,23 @@ export default async function sendStorageToContent(tabId: number) {
   }
   async function writeLogs(paramNames: string[]) {
     console.log('writeLogs', paramNames)
-    const domain = getLogKeyName()
-    if (BLACK_LIST.includes(domain)) {
+    const url = getLogKeyName()
+    if (URL_BLACK_LIST.includes(url)) {
       return
     }
     const logs =
       (await chrome.storage.local.get('__antiTracking_log'))[
         '__antiTracking_log'
       ] || {}
-    const urlLogs = { ...logs[domain] }
-    console.log('write log', domain, logs, urlLogs)
+    const urlLogs = { ...logs[url] }
+    console.log('write log', url, logs, urlLogs)
     for (const paramName of paramNames) {
       urlLogs[paramName] = urlLogs[paramName] ? urlLogs[paramName] + 1 : 1
     }
     await chrome.storage.local.set({
       __antiTracking_log: {
         ...logs,
-        [domain]: {
+        [url]: {
           ...urlLogs,
         },
       },

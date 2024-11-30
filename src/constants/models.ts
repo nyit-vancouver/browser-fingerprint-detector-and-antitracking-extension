@@ -82,5 +82,5 @@ export const MODELS = [
   'moto g(60)',
   'moto g22',
   'motorola razr 2023',
-  'vivo 1907'
+  'vivo 1907',
 ]

@@ -2,14 +2,14 @@ import { Button, Select, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import React, { useState } from 'react'
 
-import type { TrackingLog } from '@/constants/trackingData'
+import type { TrackingLog } from './type'
 
 // const { RangePicker } = DatePicker
 
 interface TrackingListProps {
   data: TrackingLog[]
   selectedDomain: string | null
-  onDomainChange: (domain: string) => void
+  onUrlChange: (url: string) => void
   dateRange: [number, number] | null
   onDateRangeChange: (range: [number, number] | null) => void
 }
@@ -17,33 +17,33 @@ interface TrackingListProps {
 const TrackingList: React.FC<TrackingListProps> = ({
   data,
   selectedDomain,
-  onDomainChange,
-  dateRange
+  onUrlChange,
+  dateRange,
   // onDateRangeChange
 }) => {
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({})
-  const domains = Array.from(new Set(data.map((item) => item.domain)))
+  const urls = Array.from(new Set(data.map((item) => item.url)))
 
   const toggleExpand = (rowKey: string) => {
     setExpandedRows((prev) => ({
       ...prev,
-      [rowKey]: !prev[rowKey]
+      [rowKey]: !prev[rowKey],
     }))
   }
 
   const columns: ColumnsType<TrackingLog> = [
     {
       title: 'URL',
-      dataIndex: 'domain',
-      key: 'domain',
-      width: '20%'
+      dataIndex: 'url',
+      key: 'url',
+      width: '20%',
     },
     {
       title: 'Time',
       dataIndex: 'timestamp',
       key: 'timestamp',
       width: '20%',
-      render: (timestamp: number) => new Date(timestamp).toLocaleString()
+      render: (timestamp: number) => new Date(timestamp).toLocaleString(),
     },
     {
       title: 'Tracking Details',
@@ -74,16 +74,16 @@ const TrackingList: React.FC<TrackingListProps> = ({
             )}
           </div>
         )
-      }
-    }
+      },
+    },
   ]
 
   const filteredData = data.filter((item) => {
-    const domainMatch = !selectedDomain || item.domain === selectedDomain
+    const urlMatch = !selectedDomain || item.url === selectedDomain
     const dateMatch =
       !dateRange ||
       (item.timestamp >= dateRange[0] && item.timestamp <= dateRange[1])
-    return domainMatch && dateMatch
+    return urlMatch && dateMatch
   })
 
   return (
@@ -93,14 +93,14 @@ const TrackingList: React.FC<TrackingListProps> = ({
           showSearch
           placeholder="Select a url"
           optionFilterProp="children"
-          onChange={onDomainChange}
+          onChange={onUrlChange}
           value={selectedDomain}
           className="w-64"
           allowClear
         >
-          {domains.map((domain) => (
-            <Select.Option key={domain} value={domain}>
-              {domain}
+          {urls.map((url) => (
+            <Select.Option key={url} value={url}>
+              {url}
             </Select.Option>
           ))}
         </Select>

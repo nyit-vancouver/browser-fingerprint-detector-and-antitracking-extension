@@ -10,7 +10,7 @@ import {
   YAxis,
 } from 'recharts'
 
-import type { TrackingLog } from '@/constants/trackingData'
+import type { TrackingLog } from './type'
 
 interface TrackingChartProps {
   data: TrackingLog[]
@@ -47,7 +47,7 @@ const TrackingChart: React.FC<TrackingChartProps> = ({
   }
 
   const latestRecord = data
-    .filter((item) => item.domain === selectedDomain)
+    .filter((item) => item.url === selectedDomain)
     .sort((a, b) => b.timestamp - a.timestamp)[0]
 
   if (!latestRecord) {
