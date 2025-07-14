@@ -2,11 +2,15 @@ const {
   override,
   addWebpackAlias,
   addWebpackPlugin,
-  addWebpackModuleRule
+  addWebpackModuleRule,
 } = require('customize-cra')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
+// const BundleAnalyzerPlugin =
+//   require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+// const smp = new SpeedMeasurePlugin()
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -15,7 +19,6 @@ const overrideEntry = (config) => {
     main: './src/popup', // the extension UI
     background: isDev ? './src/background/dev' : './src/background',
     content: './src/content',
-    options: './src/options'
   }
   return config
 }
@@ -24,29 +27,25 @@ const overrideOutput = (config) => {
   config.output = {
     ...config.output,
     filename: 'static/js/[name].js',
-    chunkFilename: 'static/js/[name].js'
+    chunkFilename: 'static/js/[name].js',
   }
   return config
 }
 
 const overridePlugins = (config) => {
-  // 移除默认的 HtmlWebpackPlugin
+  // remove default HtmlWebpackPlugin
   config.plugins = config.plugins.filter(
-    (plugin) => !(plugin instanceof HtmlWebpackPlugin)
+    (plugin) => !(plugin instanceof HtmlWebpackPlugin),
   )
 
-  // 添加新的 HtmlWebpackPlugin 实例
+  // add a new HtmlWebpackPlugin instance
   config.plugins.push(
+    // new BundleAnalyzerPlugin(),
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       filename: 'index.html',
-      chunks: ['main', 'background', 'content']
+      chunks: ['main', 'background'],
     }),
-    new HtmlWebpackPlugin({
-      template: 'public/options.html',
-      filename: 'options.html',
-      chunks: ['options']
-    })
   )
 
   return config
@@ -58,7 +57,7 @@ module.exports = {
     overrideOutput,
     overridePlugins,
     addWebpackAlias({
-      '@': path.resolve(__dirname, 'src')
+      '@': path.resolve(__dirname, 'src'),
     }),
     (config) => {
       config.resolve.fallback = {
@@ -69,27 +68,28 @@ module.exports = {
         http: require.resolve('stream-http'),
         https: require.resolve('https-browserify'),
         os: require.resolve('os-browserify'),
-        url: require.resolve('url')
+        url: require.resolve('url'),
+        vm: false,
       }
       return config
     },
     addWebpackPlugin(
       new webpack.ProvidePlugin({
         process: 'process/browser',
-        Buffer: ['buffer', 'Buffer']
-      })
+        Buffer: ['buffer', 'Buffer'],
+      }),
     ),
     addWebpackModuleRule({
       test: /\.m?js/,
       resolve: {
-        fullySpecified: false
-      }
+        fullySpecified: false,
+      },
     }),
     (config) => {
       config.resolve.plugins = config.resolve.plugins.filter(
-        (plugin) => !(plugin.constructor.name === 'ModuleScopePlugin')
+        (plugin) => !(plugin.constructor.name === 'ModuleScopePlugin'),
       )
       return config
-    }
-  )
+    },
+  ),
 }

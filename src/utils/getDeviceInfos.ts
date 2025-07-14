@@ -1,19 +1,19 @@
-import UAParser from 'ua-parser-js'
+import { UAParser } from 'ua-parser-js'
 
 function getDeviceType(): string {
   if (navigator.userAgentData) {
     return navigator.userAgentData.mobile ? 'Mobile' : 'Desktop'
   }
 
-  // 如果 userAgentData 不可用，回退到传统方法
+  // if userAgentData is not available, fallback to user agent string
   const ua = navigator.userAgent
-  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+  if (ua.match(/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i)?.length) {
     return 'Tablet'
   }
   if (
-    /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
-      ua
-    )
+    ua.match(
+      /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/i,
+    )?.length
   ) {
     return 'Mobile'
   }
@@ -24,16 +24,24 @@ export async function getDeviceInfos() {
   let deviceVendor = 'unknown'
   let deviceModel = 'unknown'
 
-  const javascriptUA = navigator.userAgent
-  const parser = new UAParser(javascriptUA)
-  const deviceInfo = parser.getDevice()
+  try {
+    const javascriptUA = navigator.userAgent
 
-  deviceVendor = deviceInfo.vendor || 'unknown'
-  deviceModel = deviceInfo.model || 'unknown'
+    const parser = new UAParser()
+    parser.setUA(javascriptUA)
+    const result = parser.getResult()
+
+    if (result.device) {
+      deviceVendor = result.device.vendor || 'unknown'
+      deviceModel = result.device.model || 'unknown'
+    }
+  } catch (error) {
+    console.error('Error parsing user agent:', error)
+  }
 
   return {
     type: getDeviceType(),
     vendor: deviceVendor,
-    model: deviceModel
+    model: deviceModel,
   }
 }

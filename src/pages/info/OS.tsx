@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { getOSInfos } from '@/utils/getOSInfos'
 import { ServerIcon } from '@heroicons/react/24/outline'
+import React, { useCallback, useEffect, useState } from 'react'
+
 import InfoSection from '@/components/InfoSection'
+import { getOSInfos } from '@/utils/getOSInfos'
 
 function OS() {
   const [info, setInfo] = useState<Record<string, any>>({
@@ -10,14 +11,14 @@ function OS() {
     details: '-'
   })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const info = await getOSInfos()
     setInfo(info)
-  }
+  }, [])
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [fetchData])
 
   return (
     <InfoSection

@@ -10,24 +10,36 @@
     "128": "icon128.png"
   },
   "background": {
-    "service_worker": "./static/js/background.js"
+    "service_worker": "./static/js/background.js",
+    "scripts": [
+      "./static/js/background.js"
+    ]
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["./static/js/content.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "./static/js/content.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
     }
   ],
-  "options_ui": {
-    "page": "options.html",
-    "open_in_tab": true
-  },
   "action": {
     "default_popup": "index.html"
   },
+  "host_permissions": ["<all_urls>"],
   "permissions": [
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "declarativeNetRequestFeedback",
     "webRequest",
     "storage",
-    "<all_urls>"
+    "<all_urls>",
+    "activeTab",
+    "tabs",
+    "scripting"
   ]
 }

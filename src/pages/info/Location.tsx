@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { getLocationInfos } from '@/utils/getLocationInfos'
 import { MapPinIcon } from '@heroicons/react/24/outline'
+import React, { useCallback, useEffect, useState } from 'react'
+
 import InfoSection from '@/components/InfoSection'
+import { getLocationInfos } from '@/utils/getLocationInfos'
 
 interface LocationInfo {
   longitude: string
@@ -36,14 +37,14 @@ function Location() {
     city: ''
   })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const locationInfo = await getLocationInfos()
     setLocation(locationInfo)
-  }
+  }, [])
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [fetchData])
 
   return (
     <InfoSection

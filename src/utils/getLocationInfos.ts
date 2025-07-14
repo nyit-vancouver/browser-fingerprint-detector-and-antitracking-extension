@@ -1,5 +1,6 @@
 export async function getLocationInfos() {
   try {
+    // TODO: mock the response for testing
     const response = await fetch('https://ipapi.co/json/')
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
@@ -15,19 +16,19 @@ export async function getLocationInfos() {
       timeZoneBasedOnIP: data.timezone || '',
       timeFromJavascript: new Date().toLocaleString(),
       timeFromIP: new Date().toLocaleString('en-US', {
-        timeZone: data.timezone
+        timeZone: data.timezone,
       }),
       // TODO: add a switch to hide the IP address
-      ip: '***', // data.ip || '',
-      webRTCIP: '***',
-      webRTCStunIP: '***',
+      ip: data.ip || '',
+      webRTCIP,
+      webRTCStunIP,
       isp: data.org || '',
       geocode:
         data.country_code && data.postal
           ? `${data.country_code}-${data.postal}`
           : '',
       region: data.region || '',
-      city: data.city || ''
+      city: data.city || '',
     }
   } catch (error) {
     console.error('Error fetching location info:', error)
@@ -44,12 +45,11 @@ export async function getLocationInfos() {
       isp: '',
       geocode: '',
       region: '',
-      city: ''
+      city: '',
     }
   }
 }
 
-// 添加新的函数来获取WebRTC IP
 async function getWebRTCIP(): Promise<string> {
   return new Promise((resolve) => {
     const pc = new RTCPeerConnection({ iceServers: [] })
@@ -58,7 +58,7 @@ async function getWebRTCIP(): Promise<string> {
     pc.onicecandidate = (ice) => {
       if (ice && ice.candidate && ice.candidate.candidate) {
         const matches = ice.candidate.candidate.match(
-          /([0-9]{1,3}(\.[0-9]{1,3}){3})/
+          /([0-9]{1,3}(\.[0-9]{1,3}){3})/,
         )
         if (matches) {
           resolve(matches[1])
@@ -69,18 +69,17 @@ async function getWebRTCIP(): Promise<string> {
   })
 }
 
-// 添加新的函数来获取WebRTC STUN IP
 async function getWebRTCStunIP(): Promise<string> {
   return new Promise((resolve) => {
     const pc = new RTCPeerConnection({
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
     })
     pc.createDataChannel('')
     pc.createOffer().then(pc.setLocalDescription.bind(pc))
     pc.onicecandidate = (ice) => {
       if (ice && ice.candidate && ice.candidate.candidate) {
         const matches = ice.candidate.candidate.match(
-          /([0-9]{1,3}(\.[0-9]{1,3}){3})/
+          /([0-9]{1,3}(\.[0-9]{1,3}){3})/,
         )
         if (matches) {
           resolve(matches[1])
@@ -91,7 +90,7 @@ async function getWebRTCStunIP(): Promise<string> {
   })
 }
 
-// 辅助函数：将十进制度数转换为度分秒格式
+// Convert decimal to DMS (Degrees, Minutes, Seconds)
 function decimalToDMS(decimal: number, isLatitude: boolean): string {
   const absolute = Math.abs(decimal)
   const degrees = Math.floor(absolute)

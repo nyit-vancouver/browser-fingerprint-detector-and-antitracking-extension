@@ -3,11 +3,9 @@ Digital fingerprints have brought great convenience and benefits to many online 
 
 ## How to run the project
 0. install `npm` and `yarn`: https://classic.yarnpkg.com/en/docs/install#mac-stable
-1. switch to `feature/user-info-page` branch
-2. run `yarn` to install modules
-3. run `yarn start` to start the project
- - functionalities needs to be implemented in `/src/utils/*.ts`
-4. run `yarn build` to build the package
+1. run `yarn` to install modules
+2. run `yarn start` to run the project
+3. run `yarn build` to build the package, load the directory in Chrome Extensions page
 
 # Paper
 K. Lin, H. Cao, A. Milani Fard, ["Browser Fingerprint Detection and Anti-Tracking”](https://arxiv.org/pdf/2502.14326), arXiv preprint arXiv:2502.14326, 2025.

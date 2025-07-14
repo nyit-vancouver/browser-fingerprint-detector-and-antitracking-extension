@@ -1,4 +1,4 @@
-import UAParser from 'ua-parser-js'
+import { UAParser } from 'ua-parser-js'
 
 export async function getBroswerInfos() {
   let browserName = 'Unknown'
@@ -7,18 +7,18 @@ export async function getBroswerInfos() {
   const javascriptUA = navigator.userAgent
 
   try {
-    // 获取 Header UA
+    // get browser info from httpbin
     const response = await fetch('https://httpbin.org/headers', {
-      method: 'GET'
+      method: 'GET',
     })
     const data = await response.json()
     headerUA = data.headers['User-Agent'] || 'Not available'
 
-    // 使用 UAParser 解析 JavaScript UA
+    // parse user agent string
     const parser = new UAParser(javascriptUA)
     const browserInfo = parser.getBrowser()
     const ua = await navigator.userAgentData?.getHighEntropyValues?.([
-      'uaFullVersion'
+      'uaFullVersion',
     ])
     browserName = browserInfo.name || 'Unknown'
     browserVersion = ua?.uaFullVersion || browserInfo.version || 'Unknown'
@@ -30,6 +30,6 @@ export async function getBroswerInfos() {
     name: browserName,
     version: browserVersion,
     header: headerUA,
-    javascript: javascriptUA
+    javascript: javascriptUA,
   }
 }

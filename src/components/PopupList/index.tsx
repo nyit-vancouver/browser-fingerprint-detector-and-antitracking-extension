@@ -1,94 +1,105 @@
-import React, { useState } from 'react'
-import { List, Switch, Tooltip } from 'antd'
 import {
-  ShieldCheckIcon,
+  AdjustmentsHorizontalIcon,
   Cog6ToothIcon,
-  DocumentTextIcon,
-  PresentationChartLineIcon
+  ComputerDesktopIcon,
+  ShieldCheckIcon,
 } from '@heroicons/react/24/solid'
+import { Tabs, Tooltip } from 'antd'
+import React, { useState } from 'react'
+import { Route, Routes } from 'react-router'
 
-import './index.scss'
+import Dashboard from '@/pages/Dashboard'
+import Info from '@/pages/Info'
+import { isDev } from '@/utils/getEnvInfo'
+
+import HeadersSetting from '../HeadersSetting'
+import Home from '../Home'
 import Layout from '../Layout'
-import _isDev from '@/utils/getEnv'
-import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import OtherSetting from '../OtherSetting'
+import UserAgentSetting from '../UserAgentSetting'
+import './index.scss'
+
+const { TabPane } = Tabs
 
 function PopupList() {
-  const [showDetail, setShowDetail] = useState(false)
-  const handleClick = (page: string) => {
-    const isDev = _isDev()
-    if (!isDev) {
-      chrome.storage.sync.set({ page }, function () {
-        console.log('set page.')
-      })
-      if (chrome.runtime.openOptionsPage) {
-        chrome.runtime.openOptionsPage()
-      } else {
-        window.open(chrome.runtime.getURL('options.html'))
-      }
-      return
-    }
-    setShowDetail(true)
+  const [showDetail] = useState(isDev())
+  const [activeTab, setActiveTab] = useState('home')
+
+  const handleTabChange = (activeKey: string) => {
+    setActiveTab(activeKey)
   }
 
-  const handleSwitch = (checked: boolean) => {
-    console.log(`switch to ${checked}`)
+  if (showDetail) {
+    return (
+      <Layout>
+        <Routes>
+          <Route path="info" element={<Info />} />
+          <Route path="dashboard" element={<Dashboard />} />
+        </Routes>
+      </Layout>
+    )
   }
 
-  return showDetail ? (
-    <Layout />
-  ) : (
+  return (
     <div className="popup-content">
-      <List>
-        <List.Item>
-          <div className="popup-list-item">
-            <ShieldCheckIcon className="icon !text-blue-600" />
-            <h1 className="font-bold flex items-center text-xl cursor-default">
-              Anti-Tracking
-            </h1>
-          </div>
-        </List.Item>
-        <List.Item>
-          <div className="flex justify-between items-center cursor-default px-5 w-full">
-            <span className="flex items-center">
-              Hide Digital Fingerprint
-              <Tooltip
-                placement="top"
-                title="Enable to randomize your fingerprint"
-              >
-                <InformationCircleIcon className="w-4 h-4 ml-2 text-gray-400 cursor-pointer" />
-              </Tooltip>
-            </span>
-            <Switch size="small" onChange={handleSwitch} />
-          </div>
-        </List.Item>
-        <List.Item
-          className="cursor-pointer"
-          onClick={() => handleClick('info')}
+      <Tabs tabPosition="left" activeKey={activeTab} onChange={handleTabChange}>
+        <TabPane
+          tab={
+            <Tooltip title="Home" placement="right">
+              <div className="tab-icon">
+                <ShieldCheckIcon className="icon" />
+              </div>
+            </Tooltip>
+          }
+          key="home"
         >
-          <div className="popup-list-item--clickable">
-            <DocumentTextIcon className="icon" />
-            <span>View Fingerprint Details</span>
+          <div className="tab-content">
+            <Home />
           </div>
-        </List.Item>
-        <List.Item
-          className="cursor-pointer"
-          onClick={() => handleClick('config')}
+        </TabPane>
+        <TabPane
+          tab={
+            <Tooltip title="UserAgent Settings" placement="right">
+              <div className="tab-icon">
+                <ComputerDesktopIcon className="icon" />
+              </div>
+            </Tooltip>
+          }
+          key="userAgent"
         >
-          <div className="popup-list-item--clickable">
-            <Cog6ToothIcon className="icon" />
-            <span>Configure your Fingerprint</span>
+          <div className="tab-content">
+            {activeTab === 'userAgent' && <UserAgentSetting />}
           </div>
-        </List.Item>
-        <List.Item
-          className="cursor-pointer"
-          onClick={() => handleClick('dashboard')}
+        </TabPane>
+        <TabPane
+          tab={
+            <Tooltip title="Headers Settings" placement="right">
+              <div className="tab-icon">
+                <AdjustmentsHorizontalIcon className="icon" />
+              </div>
+            </Tooltip>
+          }
+          key="headers"
         >
-          <div className="popup-list-item--clickable">
-            <PresentationChartLineIcon className="icon" />
-            <span>Tracking Dashboard</span>
+          <div className="tab-content">
+            {activeTab === 'headers' && <HeadersSetting />}
           </div>
-        </List.Item>
-      </List>
+        </TabPane>
+        <TabPane
+          tab={
+            <Tooltip title="Other Settings" placement="right">
+              <div className="tab-icon">
+                <Cog6ToothIcon className="icon" />
+              </div>
+            </Tooltip>
+          }
+          key="other"
+        >
+          <div className="tab-content">
+            {activeTab === 'other' && <OtherSetting />}
+          </div>
+        </TabPane>
+      </Tabs>
     </div>
   )
 }

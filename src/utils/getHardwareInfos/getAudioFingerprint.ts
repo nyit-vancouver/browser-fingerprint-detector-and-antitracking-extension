@@ -32,9 +32,12 @@ export async function getAudioFingerprint(): Promise<string> {
 
         console.log('Audio fingerprint:', fingerprint)
         resolve(crypto.createHash('md5').update(fingerprint).digest('hex'))
-
-        oscillator.stop()
-        audioContext.close()
+        try {
+          oscillator.stop()
+          audioContext.close()
+        } catch (e) {
+          console.error(e)
+        }
       }, 500)
     } catch (e) {
       console.error('Error generating audio fingerprint:', e)

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { getPluginsInfos } from '@/utils/getPluginsInfos'
 import { PuzzlePieceIcon } from '@heroicons/react/24/outline'
+import React, { useCallback, useEffect, useState } from 'react'
+
+import { getPluginsInfos } from '@/utils/getPluginsInfos'
 
 interface Plugin {
   name: string
@@ -12,14 +13,14 @@ interface Plugin {
 function Plugins() {
   const [info, setInfo] = useState<Plugin[]>([])
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const info = await getPluginsInfos()
     setInfo(info)
-  }
+  }, [])
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [fetchData])
 
   const PluginItem = ({ plugin }: { plugin: Plugin }) => (
     <li className="text-sm text-gray-700">

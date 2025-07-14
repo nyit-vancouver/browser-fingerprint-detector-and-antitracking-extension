@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { getBroswerInfos } from '@/utils/getBrowserInfos'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
+import React, { useCallback, useEffect, useState } from 'react'
+
 import InfoSection from '@/components/InfoSection'
+import { getBroswerInfos } from '@/utils/getBrowserInfos'
 
 type UaType = Record<string, any>
 
@@ -13,14 +14,14 @@ function Browser() {
     javascript: '-'
   })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const info = await getBroswerInfos()
     setInfo(info)
-  }
+  }, [])
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [fetchData])
 
   return (
     <InfoSection

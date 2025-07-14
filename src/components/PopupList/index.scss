@@ -1,20 +1,251 @@
 .popup-content {
-  width: 260px;
+  // border: 1px solid #e8e8e8;
+  width: 469px;
+  height: 408px;
 
-  .popup-list-item {
-    @apply grid gap-4 w-full items-center px-4;
-
-    grid-template-columns: 24px 1fr;
+  .ant-tabs {
+    @apply h-full;
+  }
+  .ant-tabs-tabpane {
+    @apply w-full;
+    padding-left: 0 !important;
+  }
+  .ant-tabs-tab {
+    padding: 16px !important;
+    margin: 0 !important;
 
     .icon {
-      @apply w-6 h-6 mr-3 text-gray-600;
-      font-size: 24px;
+      color: #afadad;
     }
-    &--clickable {
-      @extend .popup-list-item;
-      :hover {
-        @apply text-blue-400;
+
+    &:hover .icon {
+      color: #1890ff;
+    }
+  }
+
+  .ant-tabs-tab-active {
+    background-color: #e6f7ff;
+
+    .icon {
+      color: #1890ff;
+    }
+  }
+
+  .ant-tabs-ink-bar {
+    display: none;
+  }
+}
+
+.tab-content {
+  @apply w-full;
+  padding: 16px;
+}
+
+.platform-content {
+  .profile-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .profile-section {
+    margin-bottom: 30px;
+
+    .profile-options {
+      margin-bottom: 20px;
+
+      .profile-option {
+        margin-bottom: 12px;
+
+        input[type='radio'] {
+          margin-right: 8px;
+        }
+
+        label {
+          cursor: pointer;
+        }
       }
     }
+
+    .browser-profile-option {
+      margin-top: 20px;
+    }
+  }
+
+  .platform-selection {
+    .platform-buttons {
+      display: flex;
+      gap: 1px;
+      background-color: #e8e8e8;
+      padding: 1px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+
+      .platform-button {
+        flex: 1;
+        padding: 8px 16px;
+        background-color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s;
+
+        &:first-child {
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+        }
+
+        &:last-child {
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px;
+        }
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+
+        &.active {
+          background-color: #1890ff;
+          color: white;
+        }
+      }
+    }
+
+    .browser-list {
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      padding: 12px;
+      max-height: 280px;
+      overflow-y: auto;
+      margin-top: 8px;
+
+      .ant-select {
+        width: auto !important;
+
+        .ant-select-selector {
+          width: auto !important;
+        }
+      }
+
+      .browser-item {
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s;
+
+        input[type='radio'] {
+          margin-right: 8px;
+          cursor: pointer;
+        }
+
+        label {
+          cursor: pointer;
+          flex: 1;
+        }
+
+        &:hover {
+          background-color: #e8e8e8;
+          border-radius: 4px;
+        }
+
+        &.selected {
+          background-color: #f0f0f0;
+        }
+      }
+    }
+  }
+}
+.tab-title {
+  @apply font-bold flex items-center text-xl cursor-default mb-3;
+}
+.icon {
+  width: 28px;
+  height: 28px;
+}
+
+.tab-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    color: #666;
+  }
+}
+
+.ant-tabs-tab-active {
+  .tab-icon {
+    .icon {
+      color: #1890ff;
+    }
+  }
+}
+
+.settings-content {
+  .settings-option {
+    margin-bottom: 12px;
+
+    .ant-select,
+    .ant-input {
+      width: 100% !important;
+      margin-left: 32px !important;
+      margin-top: 4px;
+    }
+
+    .ant-checkbox-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+
+      span {
+        display: inline-block;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+.instructions-text {
+  padding: 16px;
+  margin-bottom: 16px;
+  color: #666;
+  font-size: 13px;
+  line-height: 1.5;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.link-text {
+  margin: 8px 0;
+  padding: 0 2px;
+  color: #666;
+  font-size: 13px;
+
+  .clickable-link {
+    color: #1890ff;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.home-shield-icon {
+  color: #1890ff !important;
+}
+
+.ant-select {
+  width: 100% !important;
+
+  .ant-select-selector {
+    width: 100% !important;
   }
 }

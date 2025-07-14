@@ -1,4 +1,4 @@
-import UAParser from 'ua-parser-js'
+import { UAParser } from 'ua-parser-js'
 
 export async function getOSInfos(): Promise<{
   name: string
@@ -8,23 +8,22 @@ export async function getOSInfos(): Promise<{
   let osName = 'Unknown'
   let osVersion = ''
 
-  // 使用 navigator.userAgentData（如果可用）
   if (navigator.userAgentData) {
     const platformInfo = await navigator.userAgentData.getHighEntropyValues([
       'platform',
-      'platformVersion'
+      'platformVersion',
     ])
     osName = platformInfo.platform || 'Unknown'
     osVersion = platformInfo.platformVersion || ''
   } else {
-    // 回退到使用 UAParser
+    // if userAgentData is not available, fallback to user agent string
     const parser = new UAParser()
     const result = parser.getResult()
     osName = result.os.name || 'Unknown'
     osVersion = result.os.version || ''
   }
 
-  // 对于特定平台的额外信息
+  // normalize os name
   if (osName.toLowerCase().includes('mac')) {
     osName = 'macOS'
   } else if (osName.toLowerCase().includes('win')) {

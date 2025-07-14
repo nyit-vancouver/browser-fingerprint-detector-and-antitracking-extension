@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
-import { Menu, Layout as _Layout, ConfigProvider } from 'antd'
 import { ShieldCheckIcon } from '@heroicons/react/24/solid'
-
-import Info from '@/pages/info/index'
-import Config from '@/pages/Config'
+import { ConfigProvider, Layout as LayoutComp, Menu } from 'antd'
 import { Header } from 'antd/es/layout/layout'
+import React, { useEffect, useMemo, useState } from 'react'
+import { NavLink, useLocation } from 'react-router'
 
-const { Sider, Content } = _Layout
+const { Sider, Content } = LayoutComp
 
 const siderStyle: React.CSSProperties = {
   overflow: 'auto',
@@ -16,40 +14,55 @@ const siderStyle: React.CSSProperties = {
   top: 0,
   bottom: 0,
   scrollbarWidth: 'thin',
-  scrollbarColor: 'unset'
+  scrollbarColor: 'unset',
 }
 
-const Layout = () => {
-  const [header, setHeader] = useState('info')
+interface LayoutProps {
+  children: React.ReactNode
+}
 
-  const menuItems = [
-    {
-      key: 'info',
-      label: 'Fingerprint Information',
-      onClick: () => setHeader('info')
-    },
-    {
-      key: 'config',
-      label: 'Fingerprint Configuration',
-      onClick: () => setHeader('config')
-    },
-    {
-      key: 'dashboard',
-      label: 'Tracking Dashboard',
-      onClick: () => setHeader('dashboard')
-    }
-  ]
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [header, setHeader] = useState('')
+
+  const location = useLocation()
+
+  const menuItems = useMemo(
+    () => [
+      {
+        key: 'info',
+        label: (
+          <NavLink to="/info" end>
+            Fingerprint Information
+          </NavLink>
+        ),
+      },
+      {
+        key: 'dashboard',
+        label: (
+          <NavLink to="/dashboard" end>
+            Tracking Dashboard
+          </NavLink>
+        ),
+      },
+    ],
+    [],
+  )
+
+  useEffect(() => {
+    setHeader(location.pathname.slice(1))
+  }, [location])
+
   return (
     <ConfigProvider
       theme={{
         components: {
           Layout: {
-            headerBg: '#fff'
-          }
-        }
+            headerBg: '#fff',
+          },
+        },
       }}
     >
-      <_Layout>
+      <LayoutComp>
         <Sider theme="light" width="15%" style={siderStyle}>
           <Header className="flex items-center px-0">
             <div className="flex-1 flex justify-center items-center py-4">
@@ -60,21 +73,13 @@ const Layout = () => {
             </div>
           </Header>
           <Content>
-            <Menu
-              defaultSelectedKeys={['info']}
-              mode="inline"
-              items={menuItems}
-            />
+            <Menu selectedKeys={[header]} mode="inline" items={menuItems} />
           </Content>
         </Sider>
-        <_Layout>
-          <Content>
-            {header === 'info' && <Info />}
-            {header === 'config' && <Config />}
-            {/* {header === 'dashboard' && <Dashboard />} */}
-          </Content>
-        </_Layout>
-      </_Layout>
+        <LayoutComp>
+          <Content>{children}</Content>
+        </LayoutComp>
+      </LayoutComp>
     </ConfigProvider>
   )
 }

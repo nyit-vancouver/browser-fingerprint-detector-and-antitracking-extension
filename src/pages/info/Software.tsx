@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { getSoftwareInfos } from '@/utils/getSoftwareInfos'
 import { Cog6ToothIcon } from '@heroicons/react/24/outline'
+import React, { useCallback, useEffect, useState } from 'react'
+
 import InfoSection from '@/components/InfoSection'
+import { getSoftwareInfos } from '@/utils/getSoftwareInfos'
 
 interface SoftwareInfo {
   language: string
@@ -11,7 +12,7 @@ interface SoftwareInfo {
   referrer: string
   flash: string
   activeX: string
-  java: string
+  // java: string
   javascript: string
 }
 
@@ -24,18 +25,18 @@ function Software() {
     referrer: '',
     flash: '',
     activeX: '',
-    java: '',
+    // java: '',
     javascript: ''
   })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const info = await getSoftwareInfos()
     setInfo(info)
-  }
+  }, [])
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [fetchData])
 
   return (
     <InfoSection
@@ -48,7 +49,7 @@ function Software() {
         'Referrer (Source Page)': info.referrer,
         Flash: info.flash,
         ActiveX: info.activeX,
-        Java: info.java,
+        // Java: info.java,
         JavaScript: info.javascript
       }}
       icon={Cog6ToothIcon}

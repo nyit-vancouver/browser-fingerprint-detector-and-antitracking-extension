@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { getHardwareInfos } from '@/utils/getHardwareInfos/index'
 import { CpuChipIcon } from '@heroicons/react/24/outline'
 import { Card, List } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
+
 import { useObject2List } from '@/hooks/useObject2List'
+import { getHardwareInfos } from '@/utils/getHardwareInfos/index'
 
 function Hardware() {
   const [hardware, setHardware] = useState({
@@ -15,10 +16,10 @@ function Hardware() {
     cpu: ''
   })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const hardwareInfo = await getHardwareInfos()
     setHardware(hardwareInfo)
-  }
+  }, [])
 
   const hardwareList = useObject2List(hardware)
 
@@ -32,7 +33,7 @@ function Hardware() {
     )
     console.log('WebGLRenderingContext', window.WebGLRenderingContext)
     fetchData()
-  }, [])
+  }, [fetchData])
 
   return (
     <>
